@@ -20,8 +20,18 @@ author: Ian Hanley
 ###############################################
 
 navbar-links:
-  Threat Intelligence: "tags#threat-intelligence"
-  Detection Engineering: "tags#detection-engineering"
+
+  Threat Intelligence:
+    - Cyber Security News: "/tags#cyber-security-news"
+    - High Impact: "/tags#high-impact"
+    - Analyst Notes: "/tags#analyst-notes"
+    - Threat Intelligence: "/tags#threat-intelligence"
+
+  Detection Engineering:
+    - Detection Engineering: "/tags#detection-engineering"
+    - KQL: "/tags#kql"
+    - MITRE ATT&CK: "/tags#mitre-attck"
+
   DevSecOpsDad: "https://www.hanley.cloud"
 
 ################
