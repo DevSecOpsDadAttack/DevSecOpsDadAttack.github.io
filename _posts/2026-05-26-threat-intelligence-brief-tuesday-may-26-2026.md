@@ -7,7 +7,10 @@ author: DevSecOpsDad
 categories:
   - threat-intelligence
 tags:
-  - threat-intelligence
+  - Cyber-Security-News
+  - High-Impact 
+  - Analyst-Notes
+  - Threat-Intelligence
 
 ---
 
