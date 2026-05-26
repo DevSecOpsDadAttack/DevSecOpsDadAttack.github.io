@@ -6,10 +6,9 @@ date: 2026-05-26
 author: DevSecOpsDad
 tags:
   - detection-engineering
-  - threat-intelligence
-  - microsoft-sentinel
-  - defender-xdr
-  - n8n
+  - kql
+  - MITRE ATT&CK
+
 ---
 
 ## Executive Signal
