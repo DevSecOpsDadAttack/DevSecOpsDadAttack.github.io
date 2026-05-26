@@ -59,8 +59,8 @@ round-avatar: true
 # Uncomment the links you want to show and add your information to each one.
 social-network-links:
   rss: true
-  github: https://github.com/een421
-  linkedin: https://www.linkedin.com/in/ianhanley/
+  github: een421
+  linkedin: ianhanley
 
 # If you want your website to generate an RSS feed, provide a description
 # The URL for the feed will be https://<your_website>/feed.xml
