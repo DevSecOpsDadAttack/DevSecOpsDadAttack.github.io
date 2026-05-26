@@ -20,10 +20,8 @@ author: Ian Hanley
 ###############################################
 
 navbar-links:
-  Intelligence Feed: "/"
-  Detection Engineering: "tags#detection-engineering"
   Threat Intelligence: "tags#threat-intelligence"
-  Automation Notes: "tags#automation"
+  Detection Engineering: "tags#detection-engineering"
   DevSecOpsDad: "https://www.hanley.cloud"
 
 ################
@@ -50,11 +48,9 @@ round-avatar: true
 # You can change the order that they show up on the page by changing the order here.
 # Uncomment the links you want to show and add your information to each one.
 social-network-links:
-  email: "ian@hanley.cloud"
   rss: true
-  github: devsecopsdad
-  linkedin: ian-hanley
-  bluesky: devsecopsdad.com
+  github: https://github.com/een421
+  linkedin: https://www.linkedin.com/in/ianhanley/
 
 # If you want your website to generate an RSS feed, provide a description
 # The URL for the feed will be https://<your_website>/feed.xml
@@ -67,7 +63,7 @@ rss-description: Threat intelligence and detection engineering output from DevSe
 # Select which social network share links to show in posts
 share-links-active:
   twitter: true
-  facebook: true
+  facebook: false
   linkedin: true
   vk: false
   reddit: false
