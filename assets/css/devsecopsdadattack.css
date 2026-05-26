@@ -1,0 +1,170 @@
+
+/* DevSecOpsDadAttack overlay for Beautiful Jekyll */
+:root {
+  --attack-bg: #0b1020;
+  --attack-panel: #111827;
+  --attack-panel-2: #0f172a;
+  --attack-border: #263244;
+  --attack-text: #d9e2f1;
+  --attack-muted: #94a3b8;
+  --attack-blue: #38bdf8;
+  --attack-orange: #f97316;
+  --attack-green: #22c55e;
+  --attack-red: #ef4444;
+  --attack-code: #020617;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.13), transparent 34rem),
+    radial-gradient(circle at top right, rgba(249,115,22,.12), transparent 30rem),
+    linear-gradient(180deg, #080c18 0%, var(--attack-bg) 42%, #070b14 100%);
+}
+
+body, p, .post-entry, .blog-post { color: var(--attack-text); }
+
+.navbar-custom {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-nav .nav-link {
+  letter-spacing: .08em;
+}
+
+.intro-header { margin-bottom: 0; }
+.intro-header .page-heading h1,
+.intro-header .post-heading h1 {
+  letter-spacing: -.045em;
+  text-transform: none;
+}
+
+.intro-header .page-heading .page-subheading,
+.intro-header .post-heading .post-subheading {
+  color: var(--attack-muted);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.attack-home-intro {
+  margin: 1.25rem 0 2.5rem;
+  padding: 2rem;
+  border: 1px solid var(--attack-border);
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(17,24,39,.94), rgba(15,23,42,.84));
+  box-shadow: 0 24px 80px rgba(0,0,0,.28);
+}
+
+.attack-eyebrow {
+  font-family: var(--header-font);
+  color: var(--attack-orange);
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  font-weight: 800;
+  font-size: .8rem;
+  margin: 0 0 .75rem;
+}
+
+.attack-home-intro h2 {
+  margin-top: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: -.055em;
+}
+
+.attack-home-intro > p:not(.attack-eyebrow) {
+  max-width: 860px;
+  color: var(--attack-muted);
+  font-size: 1.08rem;
+}
+
+.attack-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.attack-card {
+  padding: 1.15rem;
+  border: 1px solid var(--attack-border);
+  border-radius: 1rem;
+  background: rgba(2,6,23,.48);
+}
+
+.attack-card-label {
+  color: var(--attack-blue);
+  font-family: var(--header-font);
+  font-weight: 800;
+  font-size: .8rem;
+}
+
+.attack-card h3 { margin: .35rem 0 .5rem; }
+.attack-card p { color: var(--attack-muted); margin: 0; font-size: .98rem; }
+.attack-separator { border-top: 3px solid var(--attack-border); margin: 2rem 0; }
+
+.post-preview {
+  border: 1px solid var(--attack-border);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, .70);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.post-preview:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56,189,248,.7);
+  box-shadow: 0 18px 50px rgba(0,0,0,.28);
+}
+.post-preview a, .post-preview .post-title { color: #eef6ff; }
+.post-preview a:hover, .post-preview a:focus { color: var(--attack-blue); }
+.post-preview .post-subtitle, .post-preview .post-meta { color: var(--attack-muted); }
+.post-preview .post-read-more { color: var(--attack-orange); }
+
+.blog-tags a {
+  color: var(--attack-text);
+  border: 1px solid var(--attack-border);
+  border-radius: 999px;
+  padding: .15rem .55rem;
+  background: rgba(56,189,248,.08);
+}
+.blog-tags a:hover { border-color: var(--attack-orange); color: #fff; }
+
+.blog-post h2 {
+  border-bottom: 3px solid var(--attack-border);
+  padding-bottom: .5rem;
+  margin-top: 2.25rem;
+}
+.blog-post h3 {
+  color: var(--attack-blue);
+  margin-top: 1.75rem;
+}
+.blog-post blockquote {
+  color: var(--attack-muted);
+  border-left: .35rem solid var(--attack-orange);
+  background: rgba(249,115,22,.07);
+  padding: .75rem 1rem;
+}
+
+code, pre, .highlight pre {
+  background: var(--attack-code) !important;
+  color: #dbeafe;
+  border: 1px solid var(--attack-border);
+  border-radius: .75rem;
+}
+pre { padding: 1rem; }
+
+table {
+  background: rgba(15,23,42,.75);
+  border: 1px solid var(--attack-border);
+}
+th, td { border-color: var(--attack-border) !important; }
+th { color: var(--attack-blue); }
+
+footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
+
+@media (max-width: 900px) {
+  .attack-card-grid { grid-template-columns: 1fr; }
+  .attack-home-intro { padding: 1.25rem; }
+}
