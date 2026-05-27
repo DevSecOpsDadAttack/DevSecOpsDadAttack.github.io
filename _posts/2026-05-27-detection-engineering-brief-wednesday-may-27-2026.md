@@ -7,7 +7,6 @@ author: DevSecOpsDad
 tags:
   - detection-engineering
   - kql
-  - MITRE ATT&CK
 ---
 
 ## Executive Signal
