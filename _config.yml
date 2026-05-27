@@ -27,6 +27,10 @@ navbar-links:
   Detection Engineering:
     - Detection Engineering: "/tags#detection-engineering"
     - KQL: "/tags#kql"
+    - CVEs: "/tags#cves"
+    - TTPs: "/tags#ttps"
+    - Affected Products: "/tags#products"
+    - Targeted Platforms: "/tags#platforms"
 
   DevSecOpsDad:
     - Technical Blog: "https://www.hanley.cloud"
