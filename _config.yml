@@ -24,7 +24,7 @@ navbar-links:
   Threat Intelligence:
     - Cyber Security News: "/tags#cyber-security-news"
     - High Impact: "/tags#high-impact"
-    - Analyst Notes: "/tags#analyst-notes"
+    - Analyst Observations: "/tags#analyst-notes"
     - Threat Intelligence: "/tags#threat-intelligence"
 
   Detection Engineering:
@@ -32,7 +32,11 @@ navbar-links:
     - KQL: "/tags#kql"
     - MITRE ATT&CK: "/tags#mitre-attck"
 
-  DevSecOpsDad: "https://www.hanley.cloud"
+  DevSecOpsDad:
+    - Technical Blog: "https://www.hanley.cloud"
+    - KQL Toolbox: "https://a.co/d/082YAhxK"
+    - PowerShell Toolbox: "https://a.co/d/01Vk8FeF"
+    - Ultimate Microsoft XDR: "https://a.co/d/09ExnQtv" 
 
 ################
 # --- Logo --- #
