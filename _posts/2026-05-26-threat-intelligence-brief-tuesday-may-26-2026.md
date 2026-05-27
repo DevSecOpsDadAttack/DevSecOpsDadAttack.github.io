@@ -81,9 +81,9 @@ Two distinct Iranian APT groups running concurrent operations — one executing 
 
 ## Source Links
 
-- MuddyWater Uses DLL Side-Loading in Espionage Campaign Targeting 9 Countries — https://thehackernews.com/2026/05/muddywater-uses-dll-side-loading-in.html
-- Iranian APT Targets Aviation, Software Companies With Updated Tools — https://www.securityweek.com/iranian-apt-targets-aviation-software-companies-with-updated-tools/
-- 185,000 Likely Impacted by 7-Eleven Data Breach — https://www.securityweek.com/185000-likely-impacted-by-7-eleven-data-breach/
+- MuddyWater Uses DLL Side-Loading in Espionage Campaign Targeting 9 Countries — [https://thehackernews.com/2026/05/muddywater-uses-dll-side-loading-in.html](https://thehackernews.com/2026/05/muddywater-uses-dll-side-loading-in.html)
+- Iranian APT Targets Aviation, Software Companies With Updated Tools — [https://www.securityweek.com/iranian-apt-targets-aviation-software-companies-with-updated-tools/](https://www.securityweek.com/iranian-apt-targets-aviation-software-companies-with-updated-tools/)
+- 185,000 Likely Impacted by 7-Eleven Data Breach — [https://www.securityweek.com/185000-likely-impacted-by-7-eleven-data-breach/](https://www.securityweek.com/185000-likely-impacted-by-7-eleven-data-breach/)
 
 ---
 
