@@ -8,10 +8,6 @@ categories:
   - threat-intelligence
 tags:
   - Cyber-Security-News
-  - High-Impact 
-  - Analyst-Notes
-  - Threat-Intelligence
-
 ---
 
 ## Executive Signal
