@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Detection Engineering Brief - Tuesday, May 26, 2026"
-subtitle: "Machine-speed threat intelligence translated into detection engineering action."
+subtitle: "Threat intelligence translated into detection engineering action."
 date: 2026-05-26
 author: DevSecOpsDad
 tags:
