@@ -33,6 +33,7 @@ navbar-links:
     - Targeted Platforms: "/tags#platforms"
 
   DevSecOpsDad:
+    - About Me: "aboutme"
     - Technical Blog: "https://www.hanley.cloud"
     - KQL Toolbox: "https://a.co/d/082YAhxK"
     - PowerShell Toolbox: "https://a.co/d/01Vk8FeF"
