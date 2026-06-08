@@ -169,3 +169,15 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
   .attack-card-grid { grid-template-columns: 1fr; }
   .attack-home-intro { padding: 1.25rem; }
 }
+
+.blog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.blog-tags span {
+  flex-basis: 100%;
+  margin-bottom: 4px;
+}
