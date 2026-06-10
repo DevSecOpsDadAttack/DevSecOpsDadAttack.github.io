@@ -10,7 +10,7 @@
   --attack-blue: #38bdf8;
   --attack-orange: #f97316;
   --attack-green: #22c55e;
-  --attack-red: #ef4444;
+  --attack-red: #ef4444;z
   --attack-code: #020617;
 }
 
@@ -156,12 +156,47 @@ code, pre, .highlight pre {
 }
 pre { padding: 1rem; }
 
-table {
-  background: rgba(15,23,42,.75);
+.blog-post table {
+  width: 100%;
+  margin: 1.5rem 0;
+  background: rgba(15,23,42,.75) !important;
   border: 1px solid var(--attack-border);
+  color: var(--attack-text) !important;
+  border-collapse: collapse;
 }
-th, td { border-color: var(--attack-border) !important; }
-th { color: var(--attack-blue); }
+
+.blog-post table th,
+.blog-post table td {
+  background: transparent !important;
+  color: var(--attack-text) !important;
+  border: 1px solid var(--attack-border) !important;
+  padding: .75rem;
+  vertical-align: top;
+}
+
+.blog-post table th {
+  color: var(--attack-blue) !important;
+  font-weight: 700;
+}
+
+.blog-post table tr,
+.blog-post table tbody tr,
+.blog-post table thead tr {
+  background: transparent !important;
+}
+
+.blog-post table tr:nth-child(even),
+.blog-post table tr:nth-child(odd) {
+  background: transparent !important;
+}
+
+.blog-post table a {
+  color: var(--attack-blue);
+}
+
+.blog-post table a:hover {
+  color: #7dd3fc;
+}
 
 footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 
