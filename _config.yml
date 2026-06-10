@@ -21,17 +21,8 @@ author: Ian Hanley
 
 navbar-links:
 
-  Threat Intelligence:
-    - Cyber Security News: "/tags#cyber-security-news"
-
-  Detection Engineering:
-    - Detection Engineering: "/tags#detection-engineering"
-    - KQL: "/tags#kql"
-    - CVEs: "/tags#cves"
-    - TTPs: "/tags#ttps"
-    - Affected Products: "/tags#products"
-    - Targeted Platforms: "/tags#platforms"
-
+  Threat Intelligence: "/threatintel/"
+  Detection Engineering: "/detectionengineering/"
   DevSecOpsDad:
     - About Me: "aboutme"
     - Technical Blog: "https://www.hanley.cloud"
