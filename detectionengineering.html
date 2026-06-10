@@ -1,25 +1,25 @@
 ---
-layout: home
+
+layout: detectionengineering
 title: Detection Engineering
 subtitle: Detection logic, KQL, triage guidance, and practical engineering notes.
 permalink: /detectionengineering/
----
+---------------------------------
 
 <section class="attack-home-intro">
   <p class="attack-eyebrow">Detection logic. Triage guidance. Engineering notes.</p>
-  <img
-    src="{{ '/assets/img/DevSecOpsDadAttack.png' | relative_url }}"
-    alt="DevSecOpsDad">
+
+<img
+ src="{{ '/assets/img/DevSecOpsDadAttack.png' | relative_url }}"
+ alt="DevSecOpsDad">
+
   <h2>Detection engineering from the DevSecOpsDad lab.</h2>
-  <p>Practical detection engineering articles focused on turning threat intelligence into validated detections, KQL logic, tuning guidance, and defender-ready triage workflows.</p>
+
+  <p>
+    Practical detection engineering focused on turning threat intelligence into
+    validated detections, KQL analytics, ATT&amp;CK mapping, tuning guidance,
+    triage workflows, and operationally useful security content.
+  </p>
 </section>
 
 <hr class="attack-separator">
-
-<div class="posts-list">
-  {% for post in site.posts %}
-    {% if post.tags contains "detection-engineering" %}
-      {% include post_preview.html %}
-    {% endif %}
-  {% endfor %}
-</div>
