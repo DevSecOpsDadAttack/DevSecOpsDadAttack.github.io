@@ -1,0 +1,25 @@
+---
+layout: home
+title: Threat Intel
+subtitle: Cybersecurity news, threat activity, vulnerabilities, and executive signal.
+permalink: /threatintel/
+---
+
+<section class="attack-home-intro">
+  <p class="attack-eyebrow">Threat intelligence. Operational signal. Defender-focused context.</p>
+  <img
+    src="{{ '/assets/img/DevSecOpsDadAttack.png' | relative_url }}"
+    alt="DevSecOpsDad">
+  <h2>Threat intelligence from the DevSecOpsDad lab.</h2>
+  <p>Emerging cyber threats, exploited vulnerabilities, adversary activity, and practical security signal for defenders who need to understand what matters now.</p>
+</section>
+
+<hr class="attack-separator">
+
+<div class="posts-list">
+  {% for post in site.posts %}
+    {% if post.tags contains "Cyber-Security-News" %}
+      {% include post_preview.html %}
+    {% endif %}
+  {% endfor %}
+</div>
