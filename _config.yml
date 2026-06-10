@@ -23,6 +23,7 @@ navbar-links:
 
   Threat Intelligence: "/threatintel/"
   Detection Engineering: "/detectionengineering/"
+  Tags: "/tags/"
   DevSecOpsDad:
     - About Me: "aboutme"
     - Technical Blog: "https://www.hanley.cloud"
