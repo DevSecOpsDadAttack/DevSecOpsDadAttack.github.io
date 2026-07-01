@@ -10,7 +10,7 @@
   --attack-blue: #38bdf8;
   --attack-orange: #f97316;
   --attack-green: #22c55e;
-  --attack-red: #ef4444;z
+  --attack-red: #ef4444;
   --attack-code: #020617;
 }
 
@@ -208,7 +208,65 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 @media (max-width: 900px) {
   .attack-card-grid { grid-template-columns: 1fr; }
   .attack-home-intro { padding: 1.25rem; }
+  .attack-track-columns { grid-template-columns: 1fr; }
 }
+
+/* Threat intel / detection engineering track differentiation */
+
+.attack-track-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+
+.attack-track-column { min-width: 0; }
+
+.attack-track-col-head {
+  display: flex;
+  align-items: center;
+  padding-bottom: .6rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 2px solid var(--attack-border);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.attack-track-col-head-ti { border-bottom-color: var(--attack-red); color: var(--attack-red); }
+.attack-track-col-head-de { border-bottom-color: var(--attack-blue); color: var(--attack-blue); }
+
+.attack-track-empty { color: var(--attack-muted); font-style: italic; }
+
+.attack-track-more {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  margin-top: .25rem;
+  color: var(--attack-muted);
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.attack-track-more:hover { color: var(--attack-orange); }
+
+.attack-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: .2rem .55rem;
+  border-radius: .3rem;
+}
+.attack-badge-ti { background: rgba(239, 68, 68, .14); color: #fca5a5; }
+.attack-badge-de { background: rgba(56, 189, 248, .14); color: #93d9fb; }
+
+.post-preview-ti { border-left: 3px solid var(--attack-red); }
+.post-preview-de { border-left: 3px solid var(--attack-blue); }
 
 .blog-tags {
   display: flex;
