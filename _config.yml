@@ -239,7 +239,12 @@ timezone: "America/New_York"
 markdown: kramdown
 highlighter: rouge
 permalink: /:year-:month-:day-:title/
-paginate: 7
+# paginate: 7
+# Pagination disabled: the homepage now shows two independent per-track
+# columns (threat intel / detection engineering) instead of one combined,
+# paginated list. /threatintel/ and /detectionengineering/ already fall
+# back to site.posts when paginator is unset, so they now show their full
+# archives instead of a slice of the old combined pagination.
 
 kramdown:
   input: GFM
