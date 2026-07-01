@@ -4,6 +4,7 @@ title: 'Tag Index'
 ---
 
 {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
+{% assign cats = site.data.tag_categories %}
 
 {%- capture site_tags -%}
     {%- for tag in site.tags -%}
@@ -12,16 +13,129 @@ title: 'Tag Index'
 {%- endcapture -%}
 {%- assign tags_list = site_tags | split:',' | sort -%}
 
-{%- for tag in tags_list -%}
-    <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
-{%- endfor -%}
+<nav class="tag-index-jump" aria-label="Jump to tag category">
+  <a href="#cat-threat-actors">Threat Actors</a>
+  <a href="#cat-malware-tools">Malware &amp; Tools</a>
+  <a href="#cat-vendors-products">Vendors &amp; Products</a>
+  <a href="#cat-ttps">TTPs</a>
+  <a href="#cat-cves">CVEs</a>
+  <a href="#cat-threat-categories">Threat Categories</a>
+  <a href="#cat-platform-os">Platform &amp; OS</a>
+  <a href="#cat-sources">Sources</a>
+  <a href="#cat-other">Other</a>
+  <a href="#full-tags-list">Full A-Z list</a>
+</nav>
+
+<section id="cat-threat-actors" class="tag-index-section linked-section">
+  <h2><i class="fas fa-user-secret" aria-hidden="true"></i>&nbsp;Threat Actors &amp; Groups</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.threat_actors -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-malware-tools" class="tag-index-section linked-section">
+  <h2><i class="fas fa-bug" aria-hidden="true"></i>&nbsp;Malware &amp; Tools</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.malware_tools -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-vendors-products" class="tag-index-section linked-section">
+  <h2><i class="fas fa-building" aria-hidden="true"></i>&nbsp;Vendors &amp; Products</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.vendors_products -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-ttps" class="tag-index-section linked-section">
+  <h2><i class="fas fa-crosshairs" aria-hidden="true"></i>&nbsp;ATT&amp;CK Techniques (TTPs)</h2>
+  <input type="text" class="tag-filter-input" data-filter-target="ttps-list" placeholder="Filter techniques (e.g. T1059, credential)&hellip;" aria-label="Filter ATT&CK techniques">
+  <div class="blog-tags" id="ttps-list">
+    {%- for tag in tags_list -%}
+      {%- assign prefix = tag | slice: 0, 2 -%}
+      {%- if prefix == "T1" -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-cves" class="tag-index-section linked-section">
+  <h2><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>&nbsp;Vulnerabilities (CVEs)</h2>
+  <input type="text" class="tag-filter-input" data-filter-target="cves-list" placeholder="Filter CVEs (e.g. 2026, 10520)&hellip;" aria-label="Filter CVEs">
+  <div class="blog-tags" id="cves-list">
+    {%- for tag in tags_list -%}
+      {%- assign prefix = tag | slice: 0, 4 -%}
+      {%- if prefix == "CVE-" -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-threat-categories" class="tag-index-section linked-section">
+  <h2><i class="fas fa-layer-group" aria-hidden="true"></i>&nbsp;Threat Categories</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.threat_categories -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-platform-os" class="tag-index-section linked-section">
+  <h2><i class="fas fa-server" aria-hidden="true"></i>&nbsp;Platform &amp; OS</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.platform_os -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-sources" class="tag-index-section linked-section">
+  <h2><i class="fas fa-newspaper" aria-hidden="true"></i>&nbsp;Sources</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.sources -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section id="cat-other" class="tag-index-section linked-section">
+  <h2><i class="fas fa-ellipsis" aria-hidden="true"></i>&nbsp;Other</h2>
+  <div class="blog-tags">
+    {%- for tag in cats.other -%}
+      {%- if site.tags[tag] -%}
+        <a href="#{{- tag -}}" class="btn btn-primary tag-btn"><i class="fas fa-tag" aria-hidden="true"></i>&nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
 
 <div id="full-tags-list">
+  <h2 class="linked-section">Full A-Z tag list</h2>
 {%- for tag in tags_list -%}
-    <h2 id="{{- tag -}}" class="linked-section">
+    <h3 id="{{- tag -}}" class="linked-section">
         <i class="fas fa-tag" aria-hidden="true"></i>
         &nbsp;{{- tag -}}&nbsp;({{site.tags[tag].size}})
-    </h2>
+    </h3>
     <div class="post-list">
         {%- for post in site.tags[tag] -%}
             <div class="tag-entry">
@@ -34,3 +148,17 @@ title: 'Tag Index'
     </div>
 {%- endfor -%}
 </div>
+
+<script>
+document.querySelectorAll('.tag-filter-input').forEach(function (input) {
+  input.addEventListener('input', function () {
+    var target = document.getElementById(input.getAttribute('data-filter-target'));
+    if (!target) { return; }
+    var query = input.value.trim().toLowerCase();
+    target.querySelectorAll('a.tag-btn').forEach(function (pill) {
+      var text = pill.textContent.toLowerCase();
+      pill.style.display = text.indexOf(query) === -1 ? 'none' : '';
+    });
+  });
+});
+</script>
