@@ -1,0 +1,222 @@
+# Tag Index categorization
+#
+# Every tag used in _posts front matter (except MITRE ATT&CK technique IDs and
+# CVE IDs, which tags.html auto-detects by pattern) must appear in exactly one
+# list below. When you add a new tag to a post, add it here too, or it will
+# fall into the "other" bucket by default.
+#
+# Buckets:
+#   threat_actors     - named threat actors, APT groups, ransomware gangs
+#   malware_tools     - malware families, RATs, loaders, offensive tools, LOLBins
+#   vendors_products  - vendors, software products, SaaS platforms, dev tooling
+#   threat_categories - attack types, techniques-as-concepts, risk domains
+#   platform_os       - operating systems, directory infra, cloud/containers
+#   sources           - research orgs / publications cited as report origin
+#   other             - anything that doesn't cleanly fit the above (protocols,
+#                        target environments, victim orgs, series/format tags)
+
+threat_actors:
+- APT37
+- Akira
+- Conti
+- Dropping Elephant
+- GreyVibe
+- Handala
+- Lazarus
+- Prinz-Eugen
+- Qilin
+- Qilin-ransomware-gang
+- Sapphire Sleet
+- Storm-2697
+- The Gentlemen
+- ToddyCat
+
+malware_tools:
+- Amadey
+- Argamal
+- Cobalt Strike
+- Cobalt Strike Beacon
+- Donut
+- FlutterShell
+- Fondue.exe
+- MSI
+- Metasploit
+- Metasploit Framework
+- NetSupport RAT
+- OnyxC2-Stealer
+- PsExec
+- RAT
+- RMM
+- Remcos RAT
+- SharkLoader
+- SprySOCKS
+- StealC
+- Umbrij
+- Windows-Update-Standalone-Installer-WUSA
+
+vendors_products:
+- AWS
+- Anthropic
+- Apache ActiveMQ
+- Atlassian
+- Audiobookshelf
+- AutoGen Studio
+- Azure
+- Azure-Samples
+- ChatGPT
+- Check Point Mobile Access
+- Check Point Remote Access VPN
+- Check Point Spark Firewall
+- Check-Point
+- Check-Point-VPN
+- Chrome
+- Chromium-based browsers
+- Cisco
+- Cisco-ISE
+- Claude
+- Dalfox
+- Everest-Forms-Pro
+- FortiSandbox
+- Fortinet
+- Fortinet-firewalls
+- Fortinet-products
+- GitHub
+- GlobalProtect
+- Gmail
+- Gogs
+- Google
+- Google Workspace
+- Google-Ads
+- Google-Chrome
+- Google-Chrome-extensions
+- Google-Cloud
+- Google-Home
+- Gravity-SMTP-plugin
+- HP
+- HP-VoIP-Phones
+- Ivanti
+- Ivanti Sentry
+- Ivanti-products
+- Klue
+- LiteLLM
+- Mastra
+- Mastra-AI
+- Mastra-packages
+- Microsoft
+- Microsoft Defender
+- Microsoft-Account
+- Microsoft-Entra-ID
+- MicrosoftDocs
+- MobileIron Sentry
+- Next.js
+- Node.js
+- Oracle
+- Oracle PeopleSoft
+- Oracle PeopleSoft Enterprise PeopleTools
+- Oracle-WebLogic-Server
+- PAN-OS
+- Palo-Alto-Networks
+- PeopleTools
+- Perplexity AI
+- Prisma Access
+- Splunk
+- Splunk-AI-Toolkit
+- UEMS
+- WhatsApp
+- Windows-Server
+- Windows-Server-2016
+- WordPress
+- npm
+- npm-packages
+
+threat_categories:
+- AI-Security
+- AI-coding-agents
+- Agentjacking
+- Credential-Theft
+- Data-Breach
+- Extortion
+- Financial-Crime
+- GuardFall
+- Infrastructure-Security
+- Insider-Threat
+- Network-Breach
+- Phishing
+- Supply-Chain-Attack
+- Supply-Chain-Compromise
+- espionage
+- exploitation
+- information-stealer
+- malicious-code-execution
+- malware
+- ransomware
+- shell-injection
+- supply-chain
+- vulnerability
+- vulnerability-exploitation
+- vulnerability-management
+
+platform_os:
+- Active Directory
+- Android
+- Domain Controller
+- Linux
+- Linux-Kernel
+- Windows
+- cloud
+- cloud platforms
+- containers
+- macOS
+
+sources:
+- Adversa-AI
+- CISA
+- KEV
+- Microsoft Digital Crimes Unit
+- Microsoft Security Blog
+- SANS ISC
+- Securelist
+
+other:
+- AI agent
+- AI agent host
+- AI agent hosts
+- AI agents
+- APIs
+- CI/CD
+- CI/CD environments
+- Cal-Water
+- Cyber-Security-News
+- Endpoint
+- Government
+- Kerberos
+- LDAP
+- MCP WebSocket
+- Network
+- Novo-Nordisk
+- OAuth
+- Polymarket
+- SSH
+- Sicoob
+- Sicoob.Sdk
+- Tor
+- WeTransfer
+- Web
+- Web applications
+- Web-Application-Vulnerability
+- WebDAV
+- build environments
+- consumer endpoints
+- detection-engineering
+- developer endpoints
+- developer environments
+- developer systems
+- developer workstations
+- enterprise networks
+- federal-agencies
+- kql
+- local web services
+- messaging apps
+- software development environments
+- swagger.json
+- web browsers
