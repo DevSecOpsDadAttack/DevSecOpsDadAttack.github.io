@@ -208,7 +208,6 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 @media (max-width: 900px) {
   .attack-card-grid { grid-template-columns: 1fr; }
   .attack-home-intro { padding: 1.25rem; }
-  .attack-track-columns { grid-template-columns: 1fr; }
 }
 
 /* Threat intel / detection engineering track differentiation */
@@ -222,6 +221,15 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 }
 
 .attack-track-column { min-width: 0; }
+
+/* Stack the two tracks on phones/tablets instead of squeezing them side by side.
+   Placed after the base .attack-track-columns rule so it actually wins the cascade. */
+@media (max-width: 900px) {
+  .attack-track-columns {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
 
 .attack-track-col-head {
   display: flex;
