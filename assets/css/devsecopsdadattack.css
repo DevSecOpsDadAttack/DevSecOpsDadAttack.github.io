@@ -214,7 +214,7 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 
 .attack-track-columns {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2rem;
   align-items: start;
   margin: 1.5rem 0;
@@ -222,9 +222,15 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 
 .attack-track-column { min-width: 0; }
 
-/* Stack the two tracks on phones/tablets instead of squeezing them side by side.
+/* Step down to two columns on tablets, then stack all three on phones.
    Placed after the base .attack-track-columns rule so it actually wins the cascade. */
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .attack-track-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
   .attack-track-columns {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -243,6 +249,7 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 
 .attack-track-col-head-ti { border-bottom-color: var(--attack-red); color: var(--attack-red); }
 .attack-track-col-head-de { border-bottom-color: var(--attack-blue); color: var(--attack-blue); }
+.attack-track-col-head-kql { border-bottom-color: var(--attack-green); color: var(--attack-green); }
 
 .attack-track-empty { color: var(--attack-muted); font-style: italic; }
 
@@ -272,9 +279,11 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 }
 .attack-badge-ti { background: rgba(239, 68, 68, .14); color: #fca5a5; }
 .attack-badge-de { background: rgba(56, 189, 248, .14); color: #93d9fb; }
+.attack-badge-kql { background: rgba(34, 197, 94, .14); color: #86efac; }
 
 .post-preview-ti { border-left: 3px solid var(--attack-red); }
 .post-preview-de { border-left: 3px solid var(--attack-blue); }
+.post-preview-kql { border-left: 3px solid var(--attack-green); }
 
 .blog-tags {
   display: flex;
