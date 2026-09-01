@@ -1,6 +1,6 @@
 {% assign post = include.post %}
 {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
-{% capture track_class %}{% if post.tags contains 'detection-engineering' %}post-preview-de{% elsif post.tags contains 'Cyber-Security-News' %}post-preview-ti{% endif %}{% endcapture %}
+{% capture track_class %}{% if post.tags contains 'detection-engineering' %}post-preview-de{% elsif post.tags contains 'Cyber-Security-News' %}post-preview-ti{% elsif post.tags contains 'KQL Detection of the Week' %}post-preview-kql{% endif %}{% endcapture %}
 <li class="post-preview {{ track_class | strip }}">
   <article>
 
@@ -32,6 +32,8 @@
     <span class="attack-badge attack-badge-de"><i class="fas fa-wrench" aria-hidden="true"></i>&nbsp;Detection eng</span>
     {% elsif post.tags contains 'Cyber-Security-News' %}
     <span class="attack-badge attack-badge-ti"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>&nbsp;Threat intel</span>
+    {% elsif post.tags contains 'KQL Detection of the Week' %}
+    <span class="attack-badge attack-badge-kql"><i class="fas fa-terminal" aria-hidden="true"></i>&nbsp;KQL detection</span>
     {% endif %}
 
     <a href="{{ post.url | absolute_url }}">
