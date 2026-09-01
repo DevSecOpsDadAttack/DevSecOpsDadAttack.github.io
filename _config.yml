@@ -23,6 +23,7 @@ navbar-links:
 
   Threat Intelligence: "/threatintel/"
   Detection Engineering: "/detectionengineering/"
+  KQL Detection of the Week: "/kqldetectionoftheweek/"
   Tags: "/tags/"
   DevSecOpsDad:
     - About Me: "aboutme"
@@ -240,11 +241,12 @@ markdown: kramdown
 highlighter: rouge
 permalink: /:year-:month-:day-:title/
 # paginate: 7
-# Pagination disabled: the homepage now shows two independent per-track
-# columns (threat intel / detection engineering) instead of one combined,
-# paginated list. /threatintel/ and /detectionengineering/ already fall
-# back to site.posts when paginator is unset, so they now show their full
-# archives instead of a slice of the old combined pagination.
+# Pagination disabled: the homepage now shows three independent per-track
+# columns (threat intel / detection engineering / KQL of the week) instead
+# of one combined, paginated list. /threatintel/, /detectionengineering/,
+# and /kqldetectionoftheweek/ already fall back to site.posts when paginator is
+# unset, so they now show their full archives instead of a slice of the
+# old combined pagination.
 
 kramdown:
   input: GFM
