@@ -838,6 +838,10 @@ Loads
 
 <br/>
 
+![](/assets/img/TheStringIsNotTheThing/11.png)
+
+<br/>
+
 ### The line that does the work
 
 ```kql
