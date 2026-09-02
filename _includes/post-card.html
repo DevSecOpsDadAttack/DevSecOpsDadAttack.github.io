@@ -33,7 +33,7 @@
     {% elsif post.tags contains 'Cyber-Security-News' %}
     <span class="attack-badge attack-badge-ti"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>&nbsp;Threat Intel</span>
     {% elsif post.tags contains 'KQL Detection of the Week' %}
-    <span class="attack-badge attack-badge-kql">🔍&nbsp;KQL Detection</span>
+    <span class="attack-badge attack-badge-kql"><i class="fas fa-terminal" aria-hidden="true"></i>&nbsp;KQL Detections</span>
     {% endif %}
 
     <a href="{{ post.url | absolute_url }}">
