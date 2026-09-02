@@ -83,7 +83,7 @@ Thursday's Detection 3 does not fire: `169-254-169-254` is not any of the eight 
 
 **Third, the exclusion lists disagree with each other.** Wednesday excludes six cloud agents with `.exe` suffixes. Thursday excludes ten, including bare Linux process names (`waagent`, `cloud-init`, `google_guest_agent`). Neither list includes `kubelet` or `containerd`, which both briefs name in their false-positive sections as expected noise on Kubernetes nodes. This is a tuning gap rather than a design flaw, but two detections for one technique across two days should not have two different, both-incomplete allowlists.
 
-The fix for this act is not a better string list. It is the layer the source article asked for and nobody wrote: **detect on the resolved answer, not the requested name.** A DNS response containing a link-local address is abnormal in essentially every environment, it is provider-agnostic, and it is completely indifferent to how the attacker spelled the hostname.
+The fix for this act is not a better string list. It is the layer the source article asked for and nobody wrote: **detect on the resolved answer, not the requested name.** A DNS response containing a link-local address is unusual enough on production workloads to be security-relevant, is provider-agnostic as a detection primitive, and is completely indifferent to how the attacker spelled the hostname.
 
 <br/>
 
@@ -180,7 +180,12 @@ union DnsFromDeviceEvents, DnsFromNetworkEvents
 | where isnotempty(QueryName)
 | extend AnswerList = extract_all(
     @"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", AnswerText)
-| extend QueryNameLower = tolower(QueryName)
+// trim_end() strips a trailing root-label dot before the suffix
+// check. DNS telemetry can carry the FQDN form of a name, and
+// "169-254-169-254.nip.io." does not endswith ".nip.io" — the
+// exact same two-representations-one-meaning problem this whole
+// article is about, just one character wide.
+| extend QueryNameLower = trim_end(@"\.$", tolower(QueryName))
 // has_any() is term-based, not suffix-aware: KQL tokenizes on
 // punctuation like ".", so has_any(["nip.io"]) does not reliably
 // ask "does this name end in nip.io?" There is no array-based
@@ -272,7 +277,7 @@ union DnsFromDeviceEvents, DnsFromNetworkEvents
 
 `Answer`, not `QueryName`. That is the entire idea.
 
-Every detection in this cluster inspects what the attacker *wrote*. This one inspects what DNS *returned*. The attacker controls the first completely — it is a string in a URL they constructed, and they can spell it a hundred and twenty different ways before you even get to hostnames. They do not control the second. If the payload is going to reach the metadata service, something has to resolve to `169.254.169.254`, and that resolution lands in your telemetry as a dotted quad no matter how the name was spelled. `169-254-169-254.nip.io`, `0xa9fea9fe.attacker.com`, a one-off `1u.ms` name, a rebinding record that returns a benign address on the first lookup and the metadata address on the second — all of them produce the same answer, and this query fires on all of them identically.
+Every detection in this cluster inspects what the attacker *wrote*. This one inspects what DNS *returned*. The attacker controls the first completely — it is a string in a URL they constructed, and they can spell it a hundred and twenty different ways before you even get to hostnames. They may control the DNS answer too, but they cannot escape the invariant: if the payload is going to reach the metadata service, the resolution used by the application eventually has to produce the metadata address, and that resolution lands in your telemetry as a dotted quad no matter how the name was spelled. `169-254-169-254.nip.io`, `0xa9fea9fe.attacker.com`, a one-off `1u.ms` name, a rebinding record that returns a benign address on the first lookup and the metadata address on the second — all of them produce the same answer, and this query fires on all of them identically.
 
 The second thing worth noticing is `ipv4_is_in_range` instead of `==`. A single-host comparison against `"169.254.169.254"` is still a string comparison wearing an IP costume: it matches one address and misses `169.254.170.2` (ECS task metadata), `169.254.169.253` (AWS VPC DNS on some configurations), and every other link-local address that has no business appearing in a DNS answer. `ipv4_is_in_range` compares the parsed 32-bit value against a CIDR, which is what you actually meant. KQL has had this operator the whole time.
 
@@ -362,7 +367,7 @@ CommonSecurityLog
 
 Eight strings. Let us count what they are up against.
 
-An IPv4 address parsed by `inet_aton` — which is what most HTTP clients, most URL parsers, and most of the language runtimes behind your web applications ultimately use — accepts the address as one, two, three, or four dot-separated parts. Leading parts occupy one octet each; the final part absorbs whatever octets remain. Each part independently may be written in decimal, in octal (any leading zero), or in hexadecimal (`0x` prefix). For `169.254.169.254` that gives:
+IPv4 parsers following the historical `inet_aton` model — including the non-canonical IPv4 forms supported by modern WHATWG-style URL parsing — accept the address as one, two, three, or four dot-separated parts. Leading parts occupy one octet each; the final part absorbs whatever octets remain. Each part independently may be written in decimal, in octal (any leading zero), or in hexadecimal (`0x` prefix). For `169.254.169.254` that gives:
 
 | Form | Parts | Radix combinations | Example |
 |---|---|---|---|
