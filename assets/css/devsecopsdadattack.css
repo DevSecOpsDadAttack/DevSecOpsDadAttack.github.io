@@ -234,6 +234,30 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 
 /* Threat intel / detection engineering track differentiation */
 
+/* Jump-to-track nav: hidden on desktop (all 3 columns are already
+   side by side, no need to skip), shown once the layout drops below
+   3 columns so mobile/tablet visitors can skip straight to a track
+   instead of scrolling past a full column of cards first. */
+.attack-track-jump {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 1.5rem;
+}
+.attack-track-jump a {
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  color: var(--attack-text);
+  border: 1px solid var(--attack-border);
+  border-radius: .3rem;
+  padding: .3rem .75rem;
+  font-size: .85rem;
+  font-weight: 700;
+  background: rgba(56,189,248,.06);
+}
+.attack-track-jump a:hover { border-color: var(--attack-orange); color: #fff; }
+
 .attack-track-columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -251,12 +275,25 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
   .attack-track-columns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .attack-track-jump { display: flex; }
+  /* Trim each column to 4 visible cards once a 3rd track has to wrap
+     onto its own row below the first two — "Older ___" still links
+     to the full archive for that track. */
+  .attack-track-column .posts-list > li:nth-of-type(n+5) {
+    display: none;
+  }
 }
 
 @media (max-width: 700px) {
   .attack-track-columns {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+  }
+  /* All three tracks stack on phones — trim further, to 3 cards
+     each, so reaching the next track is a short scroll instead of
+     a full column of 8. */
+  .attack-track-column .posts-list > li:nth-of-type(n+4) {
+    display: none;
   }
 }
 
