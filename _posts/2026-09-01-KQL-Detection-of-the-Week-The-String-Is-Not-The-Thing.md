@@ -943,7 +943,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheStringIsNotTheThing/Outro.png)
+![Outro](/assets/img/TheStringIsNotTheThing/9.png)
 
 <br/>
 
