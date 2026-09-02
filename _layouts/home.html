@@ -9,9 +9,15 @@ layout: page
 {% assign de_posts = site.posts | where_exp: "post", "post.tags contains 'detection-engineering'" %}
 {% assign kql_posts = site.posts | where_exp: "post", "post.tags contains 'KQL Detection of the Week'" %}
 
+<nav class="attack-track-jump" aria-label="Jump to track">
+  <a href="#track-ti"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>&nbsp;Threat Intel</a>
+  <a href="#track-de"><i class="fas fa-wrench" aria-hidden="true"></i>&nbsp;Detection Eng</a>
+  <a href="#track-kql"><i class="fas fa-terminal" aria-hidden="true"></i>&nbsp;KQL Detections</a>
+</nav>
+
 <div class="attack-track-columns">
 
-  <div class="attack-track-column">
+  <div class="attack-track-column" id="track-ti">
     <div class="attack-track-col-head attack-track-col-head-ti">
       <span><i class="fas fa-triangle-exclamation" aria-hidden="true"></i>&nbsp;Threat Intelligence</span>
     </div>
@@ -32,7 +38,7 @@ layout: page
     </a>
   </div>
 
-  <div class="attack-track-column">
+  <div class="attack-track-column" id="track-de">
     <div class="attack-track-col-head attack-track-col-head-de">
       <span><i class="fas fa-wrench" aria-hidden="true"></i>&nbsp;Detection Engineering</span>
     </div>
@@ -53,7 +59,7 @@ layout: page
     </a>
   </div>
 
-  <div class="attack-track-column">
+  <div class="attack-track-column" id="track-kql">
     <div class="attack-track-col-head attack-track-col-head-kql">
       <span><i class="fas fa-terminal" aria-hidden="true"></i>&nbsp;KQL Detection of the Week</span>
     </div>
