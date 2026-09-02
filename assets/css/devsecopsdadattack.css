@@ -49,7 +49,7 @@ body, p, .post-entry, .blog-post { color: var(--attack-text); }
 }
 
 .attack-home-intro {
-  max-width: 1400px;
+  max-width: 800px;
   margin: 1.25rem auto 2.5rem;
   padding: 2rem;
   border: 1px solid var(--attack-border);
