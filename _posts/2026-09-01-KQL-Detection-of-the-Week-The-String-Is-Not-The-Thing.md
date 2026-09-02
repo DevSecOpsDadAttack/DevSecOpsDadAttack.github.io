@@ -838,7 +838,7 @@ Loads
 
 <br/>
 
-![](/assets/img/TheStringIsNotTheThing/11.png)
+![](/assets/img/TheStringIsNotTheThing/9.png)
 
 <br/>
 
@@ -947,7 +947,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheStringIsNotTheThing/9.png)
+![Outro](/assets/img/TheStringIsNotTheThing/11.png)
 
 <br/>
 
