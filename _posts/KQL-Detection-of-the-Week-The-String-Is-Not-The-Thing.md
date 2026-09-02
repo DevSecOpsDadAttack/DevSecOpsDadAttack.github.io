@@ -4,6 +4,9 @@ title: "KQL Detection of the Week: The String Is Not the Thing"
 subtitle: "Detecting Metadata SSRF When the Attacker Owns the Hostname, Normalising IP Obfuscation Instead of Enumerating It, and Why an Empty SHA256 Doesn't Mean Unsigned"
 date: 2026-08-31
 author: DevSecOpsDad
+tags:
+  - KQL Detection of the Week
+  - kql
 ---
 
 ![The String Is Not The Thing](/assets/img/TheStringIsNotTheThing/intro.png)
@@ -178,8 +181,23 @@ union DnsFromDeviceEvents, DnsFromNetworkEvents
 | extend AnswerList = extract_all(
     @"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", AnswerText)
 | extend QueryNameLower = tolower(QueryName)
-| extend UsesWildcardDns   = QueryNameLower has_any (WildcardDnsSuffixes)
-| extend UsesProviderName  = QueryNameLower has_any (ProviderMetadataNames)
+// has_any() is term-based, not suffix-aware: KQL tokenizes on
+// punctuation like ".", so has_any(["nip.io"]) does not reliably
+// ask "does this name end in nip.io?" There is no array-based
+// endswith in KQL, so the suffix list above (WildcardDnsSuffixes)
+// stays as the source of truth for what to add here, and each
+// suffix gets an explicit endswith. ProviderMetadataNames are
+// exact hostnames, not suffixes, so in~() is the correct operator
+// there — it's built for exact match against a dynamic array.
+| extend UsesWildcardDns = QueryNameLower endswith ".nip.io"
+    or QueryNameLower endswith ".sslip.io"
+    or QueryNameLower endswith ".1u.ms"
+    or QueryNameLower endswith ".traefik.me"
+    or QueryNameLower endswith ".localtest.me"
+    or QueryNameLower endswith ".vcap.me"
+    or QueryNameLower endswith ".xip.io"
+    or QueryNameLower endswith ".lvh.me"
+| extend UsesProviderName = QueryNameLower in~ (ProviderMetadataNames)
 // Keep resolutions with no A record only if the NAME itself is
 // interesting; otherwise expand the answers.
 | extend AnswerList = iff(array_length(AnswerList) == 0,
@@ -524,16 +542,36 @@ let NumericHits =
 // flag the suffix itself. It is a weaker signal than a DNS
 // answer and it belongs in the same result set anyway.
 // ============================================================
+// The same has_any() problem shows up here, one layer removed: the
+// candidate hostname isn't the URL's own authority (the whole point
+// of the SSRF is that the target address travels as data inside a
+// request to a trusted host), so parse_url().Host would only ever
+// return the trusted outer host and miss it entirely. The regex
+// below already extracts a suffix-anchored token correctly wherever
+// it occurs in the string. The fix is to test membership on that
+// extracted TOKEN instead of has_any-ing the raw URL: endswith for
+// the wildcard-DNS suffixes, in~() for the exact provider hostnames.
 let HostnameHits =
     Base
-    | where Url has_any (WildcardDnsSuffixes)
-         or Url has_any (ProviderMetadataNames)
+    | extend Token = extract(@"([a-z0-9\-\.]+\.(?:nip\.io|sslip\.io|1u\.ms|traefik\.me|localtest\.me|vcap\.me|xip\.io|lvh\.me|google\.internal|goog|ec2\.internal))", 1, Url)
+    | where isnotempty(Token)
+    | extend IsWildcardDnsHost = Token endswith ".nip.io"
+        or Token endswith ".sslip.io"
+        or Token endswith ".1u.ms"
+        or Token endswith ".traefik.me"
+        or Token endswith ".localtest.me"
+        or Token endswith ".vcap.me"
+        or Token endswith ".xip.io"
+        or Token endswith ".lvh.me"
+    | extend IsProviderMetadataHost = Token in~ (ProviderMetadataNames)
+    // A token can match the regex's suffix alternation (e.g. an
+    // attacker-chosen lookalike ending in "google.internal") without
+    // being an exact provider hostname or a true wildcard-DNS suffix.
+    // Drop those rather than defaulting them into either verdict.
+    | where IsWildcardDnsHost or IsProviderMetadataHost
     | extend
-        Token            = extract(@"([a-z0-9\-\.]+\.(?:nip\.io|sslip\.io|1u\.ms|traefik\.me|localtest\.me|vcap\.me|xip\.io|lvh\.me|google\.internal|goog|ec2\.internal))", 1, Url),
         NormalizedIP     = "",
-        ObfuscationClass = iff(Url has_any (WildcardDnsSuffixes),
-                               "WildcardDnsHostname",
-                               "ProviderMetadataHostname"),
+        ObfuscationClass = iff(IsWildcardDnsHost, "WildcardDnsHostname", "ProviderMetadataHostname"),
         PartCount        = int(null)
     | project RowKey, Token, NormalizedIP, ObfuscationClass, PartCount;
 // ============================================================
