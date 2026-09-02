@@ -49,7 +49,8 @@ body, p, .post-entry, .blog-post { color: var(--attack-text); }
 }
 
 .attack-home-intro {
-  margin: 1.25rem 0 2.5rem;
+  max-width: 1400px;
+  margin: 1.25rem auto 2.5rem;
   padding: 2rem;
   border: 1px solid var(--attack-border);
   border-radius: 1.25rem;
@@ -217,7 +218,8 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2rem;
   align-items: start;
-  margin: 1.5rem 0;
+  max-width: 1400px;
+  margin: 1.5rem auto;
 }
 
 .attack-track-column { min-width: 0; }
