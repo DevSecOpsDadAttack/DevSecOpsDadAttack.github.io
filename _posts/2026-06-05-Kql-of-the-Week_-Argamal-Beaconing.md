@@ -239,10 +239,6 @@ DevSecOpsDadAttack publishes daily:
 
 Visit [DevSecOpsDadAttack.com](https://devsecopsdadattack.com) for the latest intelligence and detection content.
 
-<br/>
-
-![DevSecOpsDadAttack!](/assets/img/Attack1.png)
-
 <br/><br/>
 
 # 📚 Want to go deeper?

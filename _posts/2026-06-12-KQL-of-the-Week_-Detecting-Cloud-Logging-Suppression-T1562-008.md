@@ -258,9 +258,8 @@ All three came straight out of this week's daily briefs — every detection writ
 
 If you want this kind of detection content landing in your inbox every morning, that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://DevSecOpsDadAttack.com)** — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving.
 
----
 
-<br/>
+<br/><br/>
 
 # Stay Ahead of Emerging Threats
 
@@ -273,10 +272,6 @@ DevSecOpsDadAttack publishes daily:
 🔍 Practical analysis designed for SOC teams, threat hunters, detection engineers, and security leaders <br/><br/>
 
 Visit [DevSecOpsDadAttack.com](https://devsecopsdadattack.com) for the latest intelligence and detection content.
-
-<br/>
-
-![DevSecOpsDadAttack!](/assets/img/Attack1.png)
 
 <br/><br/>
 
