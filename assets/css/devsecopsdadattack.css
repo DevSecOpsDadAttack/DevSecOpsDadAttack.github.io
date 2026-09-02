@@ -28,6 +28,19 @@ body, p, .post-entry, .blog-post { color: var(--attack-text); }
   box-shadow: 0 10px 30px rgba(0,0,0,.28);
 }
 
+.navbar-custom .navbar-nav .nav-link.nav-link-ti { color: var(--attack-red); }
+.navbar-custom .navbar-nav .nav-link.nav-link-de { color: var(--attack-blue); }
+.navbar-custom .navbar-nav .nav-link.nav-link-kql { color: var(--attack-green); }
+
+.navbar-custom .navbar-nav .nav-link.nav-link-ti:hover,
+.navbar-custom .navbar-nav .nav-link.nav-link-ti:focus,
+.navbar-custom .navbar-nav .nav-link.nav-link-de:hover,
+.navbar-custom .navbar-nav .nav-link.nav-link-de:focus,
+.navbar-custom .navbar-nav .nav-link.nav-link-kql:hover,
+.navbar-custom .navbar-nav .nav-link.nav-link-kql:focus {
+  color: var(--hover-col);
+}
+
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-nav .nav-link {
   letter-spacing: .08em;
