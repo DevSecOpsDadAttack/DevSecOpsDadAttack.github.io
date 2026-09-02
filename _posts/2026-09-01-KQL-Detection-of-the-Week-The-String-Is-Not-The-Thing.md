@@ -2,7 +2,7 @@
 layout: post
 title: "KQL Detection of the Week: The String Is Not the Thing"
 subtitle: "Detecting Metadata SSRF When the Attacker Owns the Hostname, Normalising IP Obfuscation Instead of Enumerating It, and Why an Empty SHA256 Doesn't Mean Unsigned"
-date: 2026-08-31
+date: 2026-09-01
 author: DevSecOpsDad
 tags:
   - KQL Detection of the Week
