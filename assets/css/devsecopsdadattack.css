@@ -69,6 +69,14 @@ body, p, .post-entry, .blog-post { color: var(--attack-text); }
   margin: 0 0 .75rem;
 }
 
+.attack-home-intro img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+}
+
 .attack-home-intro h2 {
   margin-top: 0;
   font-size: clamp(2rem, 5vw, 4rem);
@@ -252,6 +260,15 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 .attack-track-col-head-ti { border-bottom-color: var(--attack-red); color: var(--attack-red); }
 .attack-track-col-head-de { border-bottom-color: var(--attack-blue); color: var(--attack-blue); }
 .attack-track-col-head-kql { border-bottom-color: var(--attack-green); color: var(--attack-green); }
+
+/* Carry the track color onto each category's own landing page header */
+.attack-home-intro-ti { border-top: 3px solid var(--attack-red); }
+.attack-home-intro-de { border-top: 3px solid var(--attack-blue); }
+.attack-home-intro-kql { border-top: 3px solid var(--attack-green); }
+
+.attack-home-intro-ti .attack-eyebrow { color: var(--attack-red); }
+.attack-home-intro-de .attack-eyebrow { color: var(--attack-blue); }
+.attack-home-intro-kql .attack-eyebrow { color: var(--attack-green); }
 
 .attack-track-empty { color: var(--attack-muted); font-style: italic; }
 
