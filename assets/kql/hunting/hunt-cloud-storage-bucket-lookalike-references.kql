@@ -1,0 +1,37 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects references to cloud storage buckets whose names are lookalikes of known legitimate ones
+// — dashes swapped for underscores, homoglyphs, plausibly-typosquatted variants. Compares
+// references in traffic/config against a curated list of your real bucket names, since bucket
+// names are globally unique.
+// Source: KQL Detection of the Week: A Name Is a Claim, Not a Fact (2026-06-29) — https://devsecopsdadattack.com/2026-06-29-KQL-Detection-of-the-Week_-A-Name-Is-a-Claim_-Not-a-Fact/
+
+let lookback = 90d;
+let hijackWindow = 30d;
+let deletions = AzureActivity
+| where TimeGenerated > ago(lookback)
+| where tolower(OperationName) has "microsoft.storage/storageaccounts"
+    and tolower(OperationName) has "delete"
+| where ActivityStatus =~ "Succeeded"
+| extend DeletedResource = tolower(tostring(split(ResourceId, "/")[-1]))
+| where isnotempty(DeletedResource)
+| project DeleteTime = TimeGenerated, DeletedResource, DeletedBy = Caller,
+    DeletedFromIP = CallerIpAddress, SubscriptionId;
+let creations = AzureActivity
+| where TimeGenerated > ago(hijackWindow)
+| where tolower(OperationName) has "microsoft.storage/storageaccounts"
+    and (tolower(OperationName) has "write" or tolower(OperationName) has "create")
+| where ActivityStatus =~ "Succeeded"
+| extend CreatedResource = tolower(tostring(split(ResourceId, "/")[-1]))
+| where isnotempty(CreatedResource)
+| project CreateTime = TimeGenerated, CreatedResource, CreatedBy = Caller,
+    CreatedFromIP = CallerIpAddress, SubscriptionId, ResourceGroup;
+deletions
+| join kind=inner (creations) on $left.DeletedResource == $right.CreatedResource
+| where CreateTime > DeleteTime
+| where CreatedBy != DeletedBy
+| project
+    DeleteTime, CreateTime, DeletedResource,
+    DeletedBy, DeletedFromIP,
+    CreatedBy, CreatedFromIP,
+    SubscriptionId, ResourceGroup
+| order by CreateTime desc

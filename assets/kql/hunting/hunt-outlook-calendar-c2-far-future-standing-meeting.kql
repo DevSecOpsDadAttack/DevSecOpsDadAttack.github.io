@@ -1,0 +1,106 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects Project CAV3RN's Outlook calendar C2 by hunting for standing meetings scheduled decades
+// in the future in fixed low-attention time windows — carrying the operator-agent traffic in the
+// event body. Reads OfficeActivity for calendar-item creation with far-future StartTime and
+// repeating cadence.
+// Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+
+let lookback = 7d;
+let RenameWindowSec = 300;
+let DeadDropMarkers = dynamic(["Event ID:", "Boss update ID:", "Boss Report ID:"]);
+let CalendarFolderNames = dynamic(["Calendar","Kalender","Calendrier","Calendario","Agenda","カレンダー","日历","Календарь","לוח שנה"]);
+let CalendarOps = OfficeActivity
+| where TimeGenerated > ago(lookback)
+| where OfficeWorkload =~ "Exchange"
+| where Operation in~ ("Create", "Update", "SoftDelete", "HardDelete", "MoveToDeletedItems")
+// Item is a STRING column in OfficeActivity, not dynamic. parse_json() is required.
+| extend ItemJson = parse_json(Item)
+| extend
+    ItemId      = tostring(ItemJson.Id),
+    ItemSubject = coalesce(tostring(ItemJson.Subject), ItemName),
+    FolderPath  = coalesce(tostring(ItemJson.ParentFolder.Path), Folder)
+| where FolderPath has_any (CalendarFolderNames)
+| where isnotempty(ItemId)
+// The mailbox is the entity, and MailboxGuid is the only stable name for it —
+// it survives a UPN change and is populated more reliably on app-only records.
+// UserId is the ACTOR. It is never a fallback for a mailbox. Check the casing
+// of MailboxGuid in your own workspace before you run this.
+| extend Mailbox = coalesce(tostring(MailboxGuid), MailboxOwnerUPN)
+| where isnotempty(Mailbox)
+| project
+    TimeGenerated, Mailbox, MailboxOwnerUPN, ItemId, ItemSubject, Operation, FolderPath,
+    UserId, UserType, ClientIP, ClientInfoString, AppId;
+let MarkerHits = CalendarOps
+| where ItemSubject has_any (DeadDropMarkers)
+// long(null), matching tolong() below. int and long unioned together split into
+// two columns the first time either side's type changes.
+| extend Signal = "SubjectMarker", RenameLatencySec = long(null);
+let PlaceholderRenames = CalendarOps
+// Sort key and partition guard must both be the FULL entity: an item ID is only
+// unique within a mailbox, so Mailbox comes first and both keys are compared below.
+| sort by Mailbox asc, ItemId asc, TimeGenerated asc
+| extend
+    PrevMailbox = prev(Mailbox),
+    PrevItemId  = prev(ItemId),
+    PrevOp      = prev(Operation),
+    PrevSubject = prev(ItemSubject),
+    PrevTime    = prev(TimeGenerated)
+| where Mailbox == PrevMailbox and ItemId == PrevItemId
+| where PrevOp =~ "Create" and Operation =~ "Update"
+// between (1 .. 2), NOT <= 2 — an empty PrevSubject would otherwise match every create/update pair
+| where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
+| where isnotempty(ItemSubject) and PrevSubject != ItemSubject
+| extend RenameLatencySec = tolong(datetime_diff('second', TimeGenerated, PrevTime))
+| where RenameLatencySec between (0 .. RenameWindowSec)
+| extend Signal = "PlaceholderRename"
+| project-away Prev*;
+let Findings = union MarkerHits, PlaceholderRenames
+| extend EventKey = strcat(Mailbox, "|", ItemId, "|", tostring(TimeGenerated), "|", Operation);
+// Stage 1 — corroboration is settled at the ITEM, not the mailbox.
+// The two branches test different FACTS, not different events: MarkerHits reads
+// the subject's content after the patch; PlaceholderRenames reads the transition.
+// The protocol forces both to resolve on the same Update record, so DistinctEvents == 1
+// is the TIGHTEST association available, not a duplicate. It leads the ranking.
+let ItemVerdicts = Findings
+| summarize
+    ItemSignals    = make_set(Signal),
+    DistinctEvents = dcount(EventKey)
+    by Mailbox, ItemId
+| extend
+    ItemCorroborated    = array_length(ItemSignals) > 1,
+    ItemMarkerViaRename = array_length(ItemSignals) > 1 and DistinctEvents == 1;
+// Stage 2 — the mailbox is the REPORTING unit. Counts are de-duplicated on EventKey
+// for the same reason: a dual-signal row must not inflate the volume it's ranked on.
+Findings
+| summarize
+    Events       = dcount(EventKey),
+    Items        = dcount(ItemId),
+    Signals      = make_set(Signal),
+    Subjects     = make_set(ItemSubject, 10),
+    Operations   = make_set(Operation, 10),
+    Actors       = make_set(UserId, 5),
+    ActorTypes   = make_set(UserType, 5),
+    Clients      = make_set(ClientInfoString, 5),
+    ClientIPs    = make_set(ClientIP, 5),
+    AppIds       = make_set(AppId, 5),
+    UPNs         = make_set(MailboxOwnerUPN, 3),
+    MinRenameSec = min(RenameLatencySec),
+    FirstSeen    = min(TimeGenerated),
+    LastSeen     = max(TimeGenerated)
+    by Mailbox
+| join kind=leftouter (
+    ItemVerdicts
+    | summarize
+        MarkerViaRenameItems = countif(ItemMarkerViaRename),
+        CorroboratedItems    = countif(ItemCorroborated),
+        SuspectItems         = count()
+        by Mailbox
+  ) on Mailbox
+| project-away Mailbox1
+| extend
+    BothSignals = CorroboratedItems > 0,
+    MixedActors = array_length(ActorTypes) > 1
+// MarkerViaRenameItems first: marker content arriving VIA a placeholder rename on one
+// record is the CAV3RN signature. Two signals spread across two records on the same
+// item is a looser association and ranks below it.
+| order by MarkerViaRenameItems desc, CorroboratedItems desc, MixedActors desc, Items desc, Events desc

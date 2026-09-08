@@ -1,0 +1,32 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Sequence detection for T1562.008 cloud-logging suppression: pairs an Azure diagnostic-setting
+// deletion with any follow-on activity by the same Caller within 60 minutes. Separates admins from
+// attackers by shape rather than event content — one modifies logging and goes to lunch, the other
+// modifies logging and starts touching things.
+// Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+
+let lookback = 4h;
+let followOnWindow = 60m;
+let deletionOps = dynamic([
+    "microsoft.insights/diagnosticsettings/delete",
+    "microsoft.insights/logprofiles/delete",
+    "microsoft.operationalinsights/workspaces/delete"
+]);
+let loggingDeletions = AzureActivity
+    | where TimeGenerated > ago(lookback)
+    | where tolower(OperationName) in (deletionOps)
+    | where ActivityStatus in ("Succeeded", "Success")
+    | project DeletionTime = TimeGenerated, Caller, DeletedResource = ResourceId, CallerIpAddress;
+let followOnActivity = AzureActivity
+    | where TimeGenerated > ago(lookback)
+    | where ActivityStatus in ("Succeeded", "Success")
+    | where tolower(OperationName) !in (deletionOps)
+    | summarize FollowOnTime = min(TimeGenerated), FollowOnOperation = take_any(OperationName), FollowOnResource = take_any(ResourceId) by Caller, bin(TimeGenerated, 1m)
+    | project FollowOnTime, Caller, FollowOnResource, FollowOnOperation;
+loggingDeletions
+| join kind=inner followOnActivity on Caller
+| where FollowOnTime >= DeletionTime and FollowOnTime <= DeletionTime + followOnWindow
+| where FollowOnResource != DeletedResource
+| extend TimeDeltaMinutes = datetime_diff('minute', FollowOnTime, DeletionTime)
+| project DeletionTime, FollowOnTime, TimeDeltaMinutes, Caller, CallerIpAddress, DeletedResource, FollowOnResource, FollowOnOperation
+| order by DeletionTime desc

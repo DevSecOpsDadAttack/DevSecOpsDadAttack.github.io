@@ -1,0 +1,117 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Endpoint side of the CAV3RN detection — hunts for the local file artifact ('logAzure.txt' and
+// family) the module writes for config persistence. Written for the endpoint victim rather than
+// the calendar-hosting tenant.
+// Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+
+let lookback = 30d;
+let ConfigArtifacts = dynamic(["logAzure.txt"]);
+let ModuleImages    = dynamic(["AzureCommunication.dll"]);
+let GraphEndpoints  = dynamic(["graph.microsoft.com", "login.microsoftonline.com"]);
+let ExpectedGraphClients = dynamic([
+    "outlook.exe", "olk.exe", "teams.exe", "ms-teams.exe", "msteams.exe",
+    "onedrive.exe", "msedge.exe", "chrome.exe", "firefox.exe",
+    "excel.exe", "winword.exe", "powerpnt.exe", "onenote.exe",
+    "officeclicktorun.exe", "msoia.exe",
+    "powershell.exe", "pwsh.exe", "azurecli.exe", "msedgewebview2.exe",
+    "mssense.exe", "senseir.exe", "msmpeng.exe",
+    // Windows itself. svchost (Web Account Manager / TokenBroker) alone will dominate
+    // login.microsoftonline.com volume on every managed fleet.
+    "svchost.exe", "searchhost.exe", "searchapp.exe", "runtimebroker.exe",
+    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe"
+    // Deliberately NOT here: rundll32.exe, regsvr32.exe, dllhost.exe. They produce
+    // little legitimate Graph traffic in most estates and exist to run other people's
+    // code. If yours are noisy against Graph, add them from your own baseline query
+    // and understand what you're giving up -- don't inherit them from this list.
+]);
+let ConfigWrites = DeviceFileEvents
+| where Timestamp > ago(lookback)
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where FileName in~ (ConfigArtifacts)
+// Row-level branch: first and last are the same instant. Name them anyway, so the
+// union carries one vocabulary and the outer summarize has nothing to guess about.
+// Connections/ActiveDays are long(0) here for the same reason — they describe the
+// network branch, and 0 reads as "not a network finding", not as a missing value.
+| extend FirstSeen = Timestamp, LastSeen = Timestamp
+| extend Connections = long(0), ActiveDays = long(0)
+| project
+    FirstSeen, LastSeen, DeviceId, DeviceName,
+    Process     = InitiatingProcessFileName,
+    ProcessPath = InitiatingProcessFolderPath,
+    Account     = InitiatingProcessAccountName,
+    Connections, ActiveDays,
+    Detail      = strcat(FolderPath, " <- ", InitiatingProcessCommandLine)
+| extend Signal = "ConfigArtifactWrite";
+// The module is a DLL. This branch is the only one that sees it regardless of
+// which host process loaded it — including the module hosts on the allowlist above.
+// It is not more durable than the filename check; it is durable against a
+// DIFFERENT thing. Both die on a rename in the next build.
+let ModuleLoads = DeviceImageLoadEvents
+| where Timestamp > ago(lookback)
+| where FileName in~ (ModuleImages)
+| extend FirstSeen = Timestamp, LastSeen = Timestamp
+| extend Connections = long(0), ActiveDays = long(0)
+| project
+    FirstSeen, LastSeen, DeviceId, DeviceName,
+    Process     = InitiatingProcessFileName,
+    ProcessPath = InitiatingProcessFolderPath,
+    Account     = InitiatingProcessAccountName,
+    Connections, ActiveDays,
+    Detail      = strcat(FolderPath, " loaded by ", InitiatingProcessFileName,
+                         " [", coalesce(SHA256, "no hash"), "]")
+| extend Signal = "ModuleImageLoad";
+let UnexpectedGraphClients = DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where ActionType == "ConnectionSuccess"
+| where isnotempty(RemoteUrl)
+// RemoteUrl is populated inconsistently -- sometimes a bare host, sometimes a full
+// URL with scheme, port, or path. Exact equality against a hostname list silently
+// misses every non-bare form. Normalize to a host, THEN match exactly.
+// This is a positive selector, so breadth here is free; the endswith-vs-has_any
+// argument later applies to SUPPRESSION filters, where breadth is a hole.
+| extend RemoteHost = tolower(tostring(split(
+             trim_start(@"[a-zA-Z]+://", tostring(RemoteUrl)), "/")[0]))
+| extend RemoteHost = tostring(split(RemoteHost, ":")[0])
+| where RemoteHost in~ (GraphEndpoints)
+| where isnotempty(InitiatingProcessFileName)
+| where not(InitiatingProcessFileName in~ (ExpectedGraphClients))
+| summarize
+    FirstSeen   = min(Timestamp),
+    LastSeen    = max(Timestamp),
+    Connections = count(),
+    ActiveDays  = dcount(bin(Timestamp, 1d)),
+    Endpoints   = make_set(RemoteHost, 5)
+    by DeviceId, DeviceName,
+       Process     = InitiatingProcessFileName,
+       ProcessPath = InitiatingProcessFolderPath,
+       Account     = InitiatingProcessAccountName
+// Detail carries the endpoints only. Connections and ActiveDays stay first-class
+// columns so they can be sorted, filtered, and thresholded — not parsed out of prose.
+| extend
+    Detail = strcat_array(Endpoints, ", "),
+    Signal = "UnexpectedGraphClient"
+| project-away Endpoints;
+union ConfigWrites, ModuleLoads, UnexpectedGraphClients
+// DeviceId ONLY. DeviceName is a label: it collides across a fleet and changes on
+// rename, and a rename mid-window would split one host into two findings.
+| summarize
+    DeviceNames = make_set(DeviceName, 3),
+    Signals     = make_set(Signal),
+    Processes   = make_set(Process, 10),
+    Paths       = make_set(ProcessPath, 10),
+    Accounts    = make_set(Account, 5),
+    Details     = make_set(Detail, 10),
+    Connections = sum(Connections),
+    ActiveDays  = max(ActiveDays),
+    FirstSeen   = min(FirstSeen),
+    LastSeen    = max(LastSeen)
+    by DeviceId
+| extend
+    HasConfigArtifact = set_has_element(Signals, "ConfigArtifactWrite"),
+    HasModuleLoad     = set_has_element(Signals, "ModuleImageLoad"),
+    SignalCount       = array_length(Signals),
+    RenamedInWindow   = array_length(DeviceNames) > 1,
+    ActiveSpanDays    = datetime_diff('day', LastSeen, FirstSeen)
+// Fidelity first, then breadth, then behavior. Raw volume is not in the ordering
+// at all — a beacon and a busy integration are not separable by counting.
+| order by SignalCount desc, HasModuleLoad desc, HasConfigArtifact desc, ActiveDays desc, LastSeen desc

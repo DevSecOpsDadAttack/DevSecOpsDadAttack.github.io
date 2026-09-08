@@ -1,0 +1,25 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Enhanced variant of the log-suppression sequence detection that further requires the follow-on
+// activity to share the same CallerIpAddress as the deletion — same session, not just same
+// identity. Reduces false positives when the same admin identity is legitimately active in an
+// unrelated session at the same time.
+// Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+
+let followOnActivity = AzureActivity
+    | where TimeGenerated > ago(lookback)
+    | where ActivityStatus in ("Succeeded", "Success")
+    | where tolower(OperationName) !in (deletionOps)
+    | summarize FollowOnTime = min(TimeGenerated),
+        FollowOnOperation = take_any(OperationName),
+        FollowOnResource = take_any(ResourceId),
+        FollowOnIp = take_any(CallerIpAddress)            // carry the IP through
+        by Caller, bin(TimeGenerated, 1m)
+    | project FollowOnTime, Caller, FollowOnResource, FollowOnOperation, FollowOnIp;
+loggingDeletions
+| join kind=inner followOnActivity on Caller
+| where FollowOnTime >= DeletionTime and FollowOnTime <= DeletionTime + followOnWindow
+| where FollowOnResource != DeletedResource
+| where FollowOnIp == CallerIpAddress                     // same session, not just same person
+| extend TimeDeltaMinutes = datetime_diff('minute', FollowOnTime, DeletionTime)
+| project DeletionTime, FollowOnTime, TimeDeltaMinutes, Caller, CallerIpAddress, DeletedResource, FollowOnResource, FollowOnOperation
+| order by DeletionTime desc

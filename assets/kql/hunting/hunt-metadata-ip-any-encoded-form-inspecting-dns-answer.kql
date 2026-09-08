@@ -1,0 +1,226 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches
+// the eight-plus obfuscated string forms of the AWS/GCP/Azure metadata IPs by normalizing at the
+// resolver level. Compares the resolved IP against 169.254.169.254 / fd00:ec2::254 rather than
+// trying to enumerate every writable form.
+// Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+
+let lookback = 1d;
+// ============================================================
+// DIGIT MAP.
+//
+// KQL has no base-N string parser, so we fold the digits by
+// hand: value = sum(digit * radix^position). This dictionary is
+// the digit-to-value lookup for bases up to 16. It is the only
+// part of this query that looks like a hack, and it is the part
+// that makes the rest possible.
+// ============================================================
+let HexMap = dynamic({
+    "0":0, "1":1, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7,
+    "8":8, "9":9, "a":10,"b":11,"c":12,"d":13,"e":14,"f":15
+});
+let WildcardDnsSuffixes = dynamic([
+    "nip.io", "sslip.io", "1u.ms", "traefik.me",
+    "localtest.me", "vcap.me", "xip.io", "lvh.me"
+]);
+let ProviderMetadataNames = dynamic([
+    "metadata.google.internal", "metadata.goog",
+    "instance-data.ec2.internal"
+]);
+// ============================================================
+// STEP 1: BASE SET — one row per logged request, with a stable
+// key so we can fold digits and then reassemble.
+//
+// The percent-decoding is deliberately narrow: dots and slashes
+// only, two passes to catch the double-encoded form. This is
+// not a general URL decoder and it is not trying to be; it
+// covers the separator obfuscation that actually shows up in
+// SSRF payloads.
+// ============================================================
+let Base =
+    CommonSecurityLog
+    | where TimeGenerated >= ago(lookback)
+    | where isnotempty(RequestURL)
+    | extend RowKey = strcat(
+        tostring(TimeGenerated), "|", SourceIP, "|",
+        DeviceProduct, "|", hash_sha256(RequestURL))
+    | extend Url = tolower(RequestURL)
+    | extend Url = replace_string(replace_string(Url, "%252e", "%2e"), "%2e", ".")
+    | extend Url = replace_string(replace_string(Url, "%252f", "%2f"), "%2f", "/")
+    | project
+        RowKey, TimeGenerated, SourceIP, DestinationIP, RequestURL, Url,
+        RequestClientApplication, HttpRequestMethod,
+        DeviceVendor, DeviceProduct, DeviceName,
+        DeviceAction;
+// ============================================================
+// STEP 2: CANDIDATE EXTRACTION.
+//
+// Pull out every token shaped like an inet_aton argument,
+// wherever it appears — after a scheme, inside a query
+// parameter, after an @ in the userinfo position. We
+// deliberately over-generate: a token that isn't an address
+// decodes to some number that isn't in a metadata range and
+// falls out at STEP 5. Over-generating costs compute; under-
+// generating costs detections.
+// ============================================================
+let Candidates =
+    Base
+    | extend Tokens = extract_all(
+        @"(?:^|[/@=:\[\.,&\?])((?:0x[0-9a-f]+|[0-9]+)(?:\.(?:0x[0-9a-f]+|[0-9]+)){0,3})",
+        Url)
+    | mv-expand Token = Tokens to typeof(string)
+    | where strlen(Token) >= 7 and strlen(Token) <= 45
+    | extend Parts = split(Token, ".")
+    | extend PartCount = array_length(Parts)
+    | where PartCount between (1 .. 4)
+    | project RowKey, Token, Parts, PartCount;
+// ============================================================
+// STEP 3: DECODE EACH PART.
+//
+// Radix detection follows inet_aton exactly: 0x is hex, a
+// leading zero is octal, anything else is decimal. Note that
+// "0376" is 254 and not 376 — the leading zero is not
+// cosmetic, and treating it as decimal is how a naive
+// normaliser gets fooled in the opposite direction.
+// ============================================================
+let PartValues =
+    Candidates
+    | mv-expand with_itemindex = PartIdx Part = Parts to typeof(string)
+    | extend Part = tostring(Part)
+    | extend Radix = case(
+          Part startswith "0x",              16,
+          Part matches regex @"^0[0-7]+$",    8,
+          Part matches regex @"^[0-9]+$",    10,
+                                              0)
+    | where Radix > 0
+    | extend Body = iff(Radix == 16, substring(Part, 2), Part)
+    | where strlen(Body) between (1 .. 11)
+    | mv-expand with_itemindex = DigIdx Digit = extract_all(@"(.)", Body)
+        to typeof(string)
+    | extend DigitValue = toint(HexMap[tostring(Digit)])
+    | where isnotnull(DigitValue) and DigitValue < Radix
+    | summarize PartValue = sum(
+          tolong(DigitValue) * tolong(pow(Radix, strlen(Body) - DigIdx - 1)))
+        by RowKey, Token, PartIdx, PartCount, Radix;
+// ============================================================
+// STEP 4: REASSEMBLE PER inet_aton SEMANTICS.
+//
+// Leading parts each take one octet from the top; the final
+// part absorbs the remaining (5 - PartCount) octets. This is
+// the rule that makes "169.16689662" and "0xa9fea9fe" the same
+// address, and it is the rule the eight-string list was trying
+// to enumerate by hand.
+// ============================================================
+let Decoded =
+    PartValues
+    | extend Shift = iff(PartIdx < PartCount - 1, 8 * (3 - PartIdx), 0)
+    | extend PartValid = iff(
+          PartIdx < PartCount - 1,
+          PartValue <= 255,
+          PartValue < tolong(pow(256, 5 - PartCount)))
+    | summarize
+        DecodedLong  = sum(PartValue * tolong(pow(2, Shift))),
+        InvalidParts = countif(not(PartValid)),
+        PartsDecoded = count(),
+        Radices      = make_set(Radix, 4)
+        by RowKey, Token, PartCount
+    // A candidate is only an address if EVERY part parsed and
+    // every part was in range. This is where "0xa9fe.0xa9fe"
+    // gets rejected — exactly as a real parser rejects it.
+    | where InvalidParts == 0 and PartsDecoded == PartCount
+    | where DecodedLong between (0 .. 4294967295);
+// ============================================================
+// STEP 5: NORMALISE AND TEST.
+//
+// format_ipv4() turns the decoded 32-bit value back into a
+// canonical dotted quad, and ipv4_is_in_range() does the
+// comparison against a CIDR rather than a literal.
+// ============================================================
+let NumericHits =
+    Decoded
+    | extend NormalizedIP = format_ipv4(DecodedLong)
+    | where isnotempty(NormalizedIP)
+    | where ipv4_is_in_range(NormalizedIP, "169.254.0.0/16")
+         or ipv4_is_in_range(NormalizedIP, "192.0.0.192/32")
+         or ipv4_is_in_range(NormalizedIP, "100.100.100.200/32")
+    | extend ObfuscationClass = case(
+          Token == NormalizedIP,                              "Literal",
+          PartCount == 1,                                     "DwordCollapsed",
+          set_has_element(Radices, 16)
+              and set_has_element(Radices, 8),                "MixedRadix",
+          set_has_element(Radices, 16),                       "Hexadecimal",
+          set_has_element(Radices, 8),                        "Octal",
+          PartCount < 4,                                      "PartialCollapse",
+                                                              "Decimal")
+    | project RowKey, Token, NormalizedIP, ObfuscationClass, PartCount;
+// ============================================================
+// STEP 6: THE HOSTNAME BRANCH.
+//
+// The decoder cannot see what Act I sees. A request to
+// 169-254-169-254.nip.io carries no numeric token the decoder
+// recognises, because the address is in a DNS name and the
+// dashes are not dots. At the WAF layer the best we can do is
+// flag the suffix itself. It is a weaker signal than a DNS
+// answer and it belongs in the same result set anyway.
+// ============================================================
+// The same has_any() problem shows up here, one layer removed: the
+// candidate hostname isn't the URL's own authority (the whole point
+// of the SSRF is that the target address travels as data inside a
+// request to a trusted host), so parse_url().Host would only ever
+// return the trusted outer host and miss it entirely. The regex
+// below already extracts a suffix-anchored token correctly wherever
+// it occurs in the string. The fix is to test membership on that
+// extracted TOKEN instead of has_any-ing the raw URL: endswith for
+// the wildcard-DNS suffixes, in~() for the exact provider hostnames.
+let HostnameHits =
+    Base
+    | extend Token = extract(@"([a-z0-9\-\.]+\.(?:nip\.io|sslip\.io|1u\.ms|traefik\.me|localtest\.me|vcap\.me|xip\.io|lvh\.me|google\.internal|goog|ec2\.internal))", 1, Url)
+    | where isnotempty(Token)
+    | extend IsWildcardDnsHost = Token endswith ".nip.io"
+        or Token endswith ".sslip.io"
+        or Token endswith ".1u.ms"
+        or Token endswith ".traefik.me"
+        or Token endswith ".localtest.me"
+        or Token endswith ".vcap.me"
+        or Token endswith ".xip.io"
+        or Token endswith ".lvh.me"
+    | extend IsProviderMetadataHost = Token in~ (ProviderMetadataNames)
+    // A token can match the regex's suffix alternation (e.g. an
+    // attacker-chosen lookalike ending in "google.internal") without
+    // being an exact provider hostname or a true wildcard-DNS suffix.
+    // Drop those rather than defaulting them into either verdict.
+    | where IsWildcardDnsHost or IsProviderMetadataHost
+    | extend
+        NormalizedIP     = "",
+        ObfuscationClass = iff(IsWildcardDnsHost, "WildcardDnsHostname", "ProviderMetadataHostname"),
+        PartCount        = int(null)
+    | project RowKey, Token, NormalizedIP, ObfuscationClass, PartCount;
+// ============================================================
+// STEP 7: JOIN BACK FOR CONTEXT AND RANK.
+// ============================================================
+union NumericHits, HostnameHits
+| join kind=inner Base on RowKey
+| extend WasBlocked = DeviceAction has_any ("block", "deny", "drop", "reset")
+| summarize
+    Requests        = count(),
+    Tokens          = make_set(Token, 15),
+    NormalizedIPs   = make_set(NormalizedIP, 5),
+    Classes         = make_set(ObfuscationClass, 6),
+    DistinctClasses = dcount(ObfuscationClass),
+    SampleUrl       = take_any(RequestURL),
+    Methods         = make_set(HttpRequestMethod, 5),
+    UserAgents      = make_set(RequestClientApplication, 5),
+    Appliances      = make_set(strcat(DeviceVendor, "/", DeviceProduct), 5),
+    BlockedCount    = countif(WasBlocked),
+    AllowedCount    = countif(not(WasBlocked)),
+    FirstSeen       = min(TimeGenerated),
+    LastSeen        = max(TimeGenerated)
+    by SourceIP
+// An attacker cycling through encodings is trying to find the
+// one your filter misses. More distinct classes from one source
+// is a stronger signal than more requests.
+| extend ProbeConfidence = case(
+      DistinctClasses >= 3, "High",
+      DistinctClasses == 2, "Medium",
+                            "Low")
+| order by AllowedCount desc, DistinctClasses desc, Requests desc

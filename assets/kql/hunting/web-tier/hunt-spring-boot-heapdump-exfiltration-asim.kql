@@ -1,0 +1,163 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID
+// as a path segment (position-independent) instead of hardcoding /actuator/heapdump — recovers the real
+// base path from traffic and ranks by response-size verdict, not by request volume.
+// Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+
+let lookback = 7d;
+// Endpoint IDs are fixed by Spring. The BASE PATH is not -- the ISC capture shows
+// /admin-api/actuator/heapdump, and management.endpoints.web.base-path can move it
+// anywhere. Anything that hardcodes "/actuator/heapdump" is matching a default,
+// not a protocol.
+let ActuatorEndpoints = dynamic([
+    "heapdump","env","configprops","beans","threaddump","mappings",
+    "loggers","httpexchanges","httptrace","auditevents","jolokia","dump","trace"
+]);
+// Endpoints that leak secrets directly rather than structure. Used for RANKING,
+// not for filtering -- a 200 on /beans is still an exposed management surface.
+let SecretBearing   = dynamic(["heapdump","env","configprops","jolokia","dump"]);
+// DERIVED from the endpoint list, not maintained beside it. The prefilter has to be a
+// SUPERSET of the authoritative test or it narrows the detection silently -- and a
+// hand-kept parallel copy drifts, which is exactly what mine did (see below). The
+// "actuator" term is added as free breadth, not because the path is assumed to
+// contain it. See the encoding caveat below.
+let PrefilterTerms  = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
+// A ranking hint, NOT a gate. Nothing is discarded for being under it.
+let ServedFloorBytes = 1048576;
+_Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
+// --- Path normalization. Decode FIRST: an encoded slash is a slash to the server
+// and is not a slash to split(). Then strip scheme+authority (HTTPSession events
+// carry them, WebServerSession events don't), then query, fragment, matrix params.
+| extend UrlLower = tolower(url_decode(tostring(Url)))
+| extend PathOnly = trim_start(@"[a-z][a-z0-9+.\-]*://[^/]*", UrlLower)
+| extend PathOnly = tostring(split(PathOnly, "?")[0])
+| extend PathOnly = tostring(split(PathOnly, "#")[0])
+| extend PathOnly = tostring(split(PathOnly, ";")[0])
+// Collapse //, then drop trailing slashes, so /actuator//heapdump/ and
+// /actuator/heapdump are the same request -- because to Spring, they are.
+| extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
+| extend Segments = split(NormPath, "/")
+// THE authoritative test: exact equality against a parsed path SEGMENT, at ANY
+// position. Not `Url has "heapdump"` -- that is a question about a term appearing
+// somewhere, which is a different question and answers yes to /docs/heapdump-howto.html.
+// And not the LAST segment either: /env, /loggers, /metrics and /health all take a path
+// selector, and jolokia is mounted at /**, so on those the endpoint ID is never final.
+| extend Matched = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+// Matched is almost always a single element. When it isn't (a selector that happens to
+// equal another endpoint ID -- rare, e.g. /actuator/env/loggers), the element order of
+// set_intersect is not documented, so Matched[0] is arbitrary rather than "the first in
+// the path". `Matched` stays in the output so you can see when that happened.
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+// Everything BEFORE the endpoint ID is the management base path, recovered from the
+// data rather than assumed. Everything AFTER it is the selector, and the selector is
+// evidence: /env/spring.datasource.password is a targeted secret read, /env is a sweep.
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
+| extend TargetedSelector = isnotempty(Selector)
+// --- Result. EventResultDetails is the HTTP status code; HttpStatusCode is an alias.
+// EventOriginalResultDetails holds the source's raw value when normalization couldn't
+// map it, so it's the better second look before falling back to anything coarser.
+| extend StatusRaw  = coalesce(tostring(EventResultDetails),
+                               tostring(column_ifexists("EventOriginalResultDetails","")))
+| extend StatusCode = toint(extract(@"(\d{3})", 1, StatusRaw))
+// THREE states again, and for a sharper reason than the size field. ASIM defines
+// EventResult "Success" as status < 400 -- that is NOT evidence of a 200. A 302 to a
+// login page is Success, and a 302 to a login page is the single most common response
+// a PROPERLY PROTECTED actuator endpoint gives. Collapsing it into "answered" would
+// launder the most important negative in this query into a positive.
+| extend AnswerVerdict = case(
+      StatusCode == 200,                   "Served",
+      StatusCode between (300 .. 399),     "Redirected",
+      StatusCode in (401, 403),            "AuthWall",
+      StatusCode == 404,                   "NotPresent",
+      isnotnull(StatusCode),               "OtherStatus",
+      tostring(EventResult) =~ "Success",  "MaybeServed",   // sub-400, code unknown
+                                           "NotServed")
+| extend
+    Served      = AnswerVerdict == "Served",
+    MaybeServed = AnswerVerdict == "MaybeServed"
+// --- Size. DstBytes is defined as bytes from the destination to the source, so on a
+// web session it is the RESPONSE. HttpResponseBodyBytes is more precise and arrived in
+// schema 0.2.7, so it may not exist in your parser at all -- column_ifexists, not
+// coalesce, because coalesce on an absent column is a semantic error, not a null.
+| extend RespBodyBytes = column_ifexists("HttpResponseBodyBytes", long(null))
+| extend RespDstBytes  = column_ifexists("DstBytes", long(null))
+// Resolve zero-as-null HERE, not only in the verdict below. coalesce() takes the first
+// non-null value, so a parser that writes 0 into the PRECISE column shadows a real
+// measurement sitting in the coarse one, and the more accurate field silently makes
+// the answer worse. iff() on a null predicate returns the else branch, so an absent
+// column and a zero both fall through to DstBytes.
+| extend RespBytes = coalesce(iff(RespBodyBytes > 0, RespBodyBytes, long(null)),
+                              RespDstBytes)
+// Three states, not two. "No byte count" is NOT "small response" -- see the bonus.
+| extend SizeVerdict = case(
+      isnull(RespBytes),                "Unknown",
+      RespBytes == 0,                   "Unknown",     // most parsers write 0 for absent
+      RespBytes >= ServedFloorBytes,    "LargeBody",
+                                        "SmallBody")
+// Resolve optional columns ONCE, up here. column_ifexists() inside a summarize
+// aggregate is asking a schema question in a place that should only see values.
+| extend
+    Client      = tostring(SrcIpAddr),
+    ForwardedFor= tostring(column_ifexists("HttpRequestXff", "")),
+    UserAgent   = tostring(column_ifexists("HttpUserAgent", "")),
+    Service     = coalesce(tostring(column_ifexists("HttpHost","")),
+                           tostring(column_ifexists("DstFQDN","")),
+                           tostring(DstIpAddr)),
+    Secretive   = Endpoint in (SecretBearing)
+// Entity = the CLIENT. The service is an attribute here; it becomes the entity in the
+// honorable mention, because "who took it" and "what of mine answers" are two questions.
+| summarize
+    Requests        = count(),
+    ServedHits      = countif(Served),
+    MaybeServedHits = countif(MaybeServed),
+    SecretHits      = countif(Served and Secretive),
+    SecretMaybeHits = countif(MaybeServed and Secretive),
+    // A selector means the caller named a specific property, logger or MBean rather
+    // than sweeping the endpoint. Ranked, not gated -- a bare /heapdump has no selector
+    // and is still the worst row in this table.
+    TargetedHits    = countif(TargetedSelector),
+    // A sub-400 with an unknown code and a multi-megabyte body is served in
+    // everything but the paperwork, so this counter spans both verdicts.
+    LargeBodyHits   = countif((Served or MaybeServed) and SizeVerdict == "LargeBody"),
+    UnknownSizeHits = countif(Served and SizeVerdict == "Unknown"),
+    MaxRespBytes    = max(RespBytes),
+    Endpoints       = make_set(Endpoint, 15),
+    MultiMatchPaths = make_set_if(NormPath, array_length(Matched) > 1, 5),
+    Services        = make_set(Service, 10),
+    Paths           = make_set(NormPath, 10),
+    BasePaths       = make_set_if(BasePath, isnotempty(BasePath), 10),
+    Selectors       = make_set_if(Selector, isnotempty(Selector), 10),
+    Statuses        = make_set(StatusRaw, 10),
+    Verdicts        = make_set(AnswerVerdict, 8),
+    UserAgents      = make_set(UserAgent, 5),
+    Methods         = make_set(HttpRequestMethod, 5),
+    Xff             = make_set_if(ForwardedFor, isnotempty(ForwardedFor), 5),
+    Sources         = make_set(EventProduct, 5),
+    ActiveDays      = dcount(bin(TimeGenerated, 1d)),
+    FirstSeen       = min(TimeGenerated),
+    LastSeen        = max(TimeGenerated)
+    by Client
+| extend
+    DistinctEndpoints = array_length(Endpoints),
+    Enumerating       = array_length(Endpoints) > 2,
+    // ipv4_is_private() returns null for a v6 literal, so an unguarded call leaves a
+    // v6 client as neither internal nor external. Default to "not internal" -- same
+    // direction as the honorable mention, for the same reason.
+    ProbablyInternal  = coalesce(ipv4_is_private(Client), false),
+    MaxRespReadable   = format_bytes(coalesce(MaxRespBytes, long(0)))
+// Ranking, in order of what actually changes your afternoon:
+//   1. a secret-bearing endpoint returned a CONFIRMED 200
+//   2. it answered with a body big enough to be a real dump
+//   3. it answered and we CANNOT TELL how big -- an unknown outranks a small body
+//   4. a secret-bearing endpoint answered sub-400 with no status code -- unverified,
+//      and unverified belongs above "nothing", never above "confirmed"
+//   5. breadth of enumeration
+// Raw request volume is deliberately last. One successful GET is the whole incident;
+// ten thousand 404s are Tuesday.
+| order by SecretHits desc, LargeBodyHits desc, UnknownSizeHits desc,
+           SecretMaybeHits desc, TargetedHits desc, DistinctEndpoints desc,
+           ServedHits desc

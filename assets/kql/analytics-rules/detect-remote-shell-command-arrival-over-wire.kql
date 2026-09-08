@@ -1,0 +1,26 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects a shell command that arrived over the network — a fresh detection built around the
+// observation that legitimate remote code execution rarely originates from an
+// outbound-then-inbound-executed script. Third-listener honorable mention pattern.
+// Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+
+let psexec_shells = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("psexec.exe", "psexec64.exe")
+| where FileName in~ ("cmd.exe", "powershell.exe")
+| project ShellTime = Timestamp, DeviceName, AccountName, AccountDomain,
+    InitiatingProcessFileName, InitiatingProcessCommandLine,
+    InitiatingProcessParentFileName, ChildProcess = FileName, ProcessCommandLine;
+let smb_logons = DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where LogonType == 3
+| where isnotempty(RemoteIP)
+| where RemoteIP !in ("127.0.0.1", "::1")
+| project LogonTime = Timestamp, DeviceName, AccountName, AccountDomain, RemoteIP;
+smb_logons
+| join kind=inner psexec_shells on DeviceName, AccountName, AccountDomain
+| where ShellTime >= LogonTime and datetime_diff('second', ShellTime, LogonTime) <= 120
+| project ShellTime, LogonTime, DeviceName, AccountName, AccountDomain,
+    RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine,
+    InitiatingProcessParentFileName, ChildProcess, ProcessCommandLine
+| order by ShellTime desc

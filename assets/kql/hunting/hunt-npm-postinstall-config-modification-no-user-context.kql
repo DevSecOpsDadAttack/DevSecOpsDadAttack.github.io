@@ -1,0 +1,39 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Hunts npm postinstall/lifecycle scripts that modified config files without a corresponding
+// interactive user command — the AsyncAPI-shaped supply-chain compromise where the config change
+// is real but no human ever asked for it.
+// Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+
+DeviceFileEvents
+| where TimeGenerated > ago(1d)
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where
+    FolderPath has_any (
+        @".github\workflows", ".github/workflows",
+        ".gitlab-ci", ".circleci", ".travis",
+        "azure-pipelines"
+    )
+    or FileName in~ (
+        ".gitlab-ci.yml", "Jenkinsfile", ".travis.yml",
+        "circle.yml", "azure-pipelines.yml", ".drone.yml"
+    )
+| where InitiatingProcessFileName !in~ (
+    "git", "git.exe",
+    "code", "code.exe",
+    "idea", "idea64.exe",
+    "vim", "nano", "emacs",
+    "runner", "runner.exe",
+    "agent", "agent.exe"
+)
+| project
+    TimeGenerated,
+    DeviceName,
+    InitiatingProcessAccountName,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    ActionType,
+    FolderPath,
+    FileName,
+    SHA256
+| order by TimeGenerated desc

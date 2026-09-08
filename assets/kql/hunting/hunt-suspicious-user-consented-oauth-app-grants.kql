@@ -1,0 +1,30 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects the backdoor a user approved themselves — an OAuth application consent that grants broad
+// Graph permissions to an app the user has never seen before. Focuses on the CONSENT event (the
+// identity backdoor being installed) rather than the login events that follow.
+// Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+
+let lookback = 1d;
+let googleKeywords = dynamic(["google", "gmail", "googleapis", "workspace"]);
+let oauthGrants = AuditLogs
+| where TimeGenerated >= ago(lookback)
+| where OperationName =~ "Add delegated permission grant" or OperationName =~ "Consent to application"
+| extend TargetResource = tostring(TargetResources[0].displayName)
+| extend TargetResourceId = tostring(TargetResources[0].id)
+| extend InitiatedByUPN = tostring(InitiatedBy.user.userPrincipalName)
+| extend InitiatedByIP = tostring(InitiatedBy.user.ipAddress)
+| where isnotempty(InitiatedByUPN)
+| where TargetResource has_any (googleKeywords)
+    or TargetResourceId has_any (googleKeywords)
+    or tostring(AdditionalDetails) has_any (googleKeywords)
+| project GrantTime = TimeGenerated, InitiatedByUPN, InitiatedByIP, TargetResource, TargetResourceId, OperationName, CorrelationId;
+let recentSignins = SigninLogs
+| where TimeGenerated >= ago(lookback)
+| where ResultType == 0
+| project SigninTime = TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName, ConditionalAccessStatus;
+oauthGrants
+| join kind=inner recentSignins
+    on $left.InitiatedByUPN == $right.UserPrincipalName
+| where SigninTime <= GrantTime and GrantTime <= SigninTime + 30m
+| project GrantTime, SigninTime, InitiatedByUPN, InitiatedByIP, TargetResource, TargetResourceId, OperationName, AppDisplayName, ConditionalAccessStatus, CorrelationId
+| order by GrantTime desc

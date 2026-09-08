@@ -1,0 +1,119 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects C2 traffic hidden inside blockchain-RPC calls to public utilities — the 'dead drop is a
+// public utility' pattern where legitimate services like QuickNode/Alchemy carry attacker
+// commands. Looks for anomalous RPC method sequences and payload sizes to services that are
+// legitimately used but rarely by dev workstations.
+// Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+
+let lookback  = 14d;   // findings window
+let baseline  = 45d;   // total window; baseline is (45d .. 14d ago)
+// Parse a destination host out of RemoteUrl, which arrives as a bare hostname from some
+// sensors, a full URL from others, and empty for a raw socket. Order matters: strip the
+// scheme FIRST or "https" reads as a hostname, and strip the path BEFORE the port or a
+// URL like https://host/a:b loses everything after the colon in the PATH.
+let HostOf = (u:string) {
+    let lower    = tolower(tostring(u));
+    let noScheme = trim_start(@"[a-z][a-z0-9+.\-]*://", lower);
+    let noPath   = tostring(split(noScheme, "/")[0]);
+    // A bracketed IPv6 literal must lose its brackets, not be split on its own colons.
+    let noPort   = iff(noPath startswith "[",
+                       trim_start(@"\[", tostring(split(noPath, "]")[0])),
+                       tostring(split(noPath, ":")[0]));
+    trim_end(@"\.", noPort)   // the FQDN root dot: "infura.io." and "infura.io" are one host
+};
+// REGISTRABLE DOMAINS, not URLs and not substrings. Every real RPC endpoint is a
+// subdomain -- mainnet.infura.io, eth-mainnet.g.alchemy.com, x.ethereum.quiknode.pro --
+// so the test has to be suffix-shaped. Used for LABELLING, not filtering.
+// NOTE: quiknode.pro, not quicknode.pro. The brief has the marketing domain.
+let RpcSuffixes = dynamic([
+    "infura.io","alchemy.com","quiknode.pro","ankr.com","publicnode.com","llamarpc.com",
+    "drpc.org","blastapi.io","chainstack.com","chainstacklabs.com","nodereal.io",
+    "blockpi.network","1rpc.io","etherscan.io","blockscout.com","cloudflare-eth.com",
+    "flashbots.net","merkle.io","tenderly.co","moralis.io","omniatech.io","gateway.fm",
+    "binance.org","polygon-rpc.com"
+]);
+// Self-hosted / local nodes. Kept because a build host talking to ANY of these is odd,
+// not because the worm's provider would use them.
+let RpcPorts   = dynamic([8545, 8546, 8551, 30303]);
+let BuildProcs = dynamic(["node","npm","npx","yarn","pnpm","bun","sh","bash","dash","zsh",
+                          "curl","wget","python","python3","cmd","powershell","pwsh"]);
+// materialize() because this is referenced twice below. Without it the subexpression is
+// evaluated twice -- double cost, and two evaluations that can straddle a boundary and
+// disagree about what "45 days ago" meant.
+let Egress = materialize(
+    DeviceNetworkEvents
+    | where Timestamp > ago(baseline)
+    | where InitiatingProcessFileName has_any (BuildProcs)
+    | extend Host = HostOf(tostring(column_ifexists("RemoteUrl", "")))
+    // THREE states, not two. An empty Host is not "no destination" -- it is a raw socket
+    // whose only identity is an IP, and those are exactly the connections a domain list
+    // can never see. Collapsing them into the name space would silently baseline them all
+    // together under "".
+    | extend DestKind = case(
+          isnotempty(Host),                    "Name",
+          isnotempty(tostring(RemoteIP)),      "IpOnly",
+                                               "Unknown")
+    | extend Dest = case(
+          DestKind == "Name",   Host,
+          DestKind == "IpOnly", strcat("ip:", tostring(RemoteIP)),
+                                "unknown")
+    | project Timestamp, DeviceId, DeviceName, Dest, DestKind, Host, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName, InitiatingProcessAccountName, ActionType
+);
+let Prior = Egress
+| where Timestamp between (ago(baseline) .. ago(lookback))
+| summarize by DeviceId, Dest;
+Egress
+| where Timestamp > ago(lookback)
+// Dot-anchored suffix match. NOT has_any: "infura.io" is two terms to the tokenizer and
+// has is a whole-term test. NOT contains either: `Host contains "ankr.com"` is true for
+// ankr.com.attacker.tld, which is a free bypass. Equality-or-dotted-suffix is the only
+// form that means "this host, or something under it".
+| mv-apply Suffix = RpcSuffixes to typeof(string) on (
+      summarize RpcMatch = make_set_if(Suffix,
+            Host == Suffix or Host endswith strcat(".", Suffix), 3)
+  )
+| extend KnownRpcHost = array_length(RpcMatch) > 0
+| extend RpcPortHit   = RemotePort in (RpcPorts)
+// leftouter + isnull, NOT leftanti. leftanti would DELETE the baselined rows, and the
+// baselined rows are how you tell "this host has always talked to Infura" (a web3 team)
+// from "this host started last Tuesday" (the finding). Classify, then rank.
+| join kind=leftouter (Prior | extend SeenBefore = true) on DeviceId, Dest
+| extend FirstSeenForDevice = isnull(SeenBefore)
+| extend Verdict = case(
+      KnownRpcHost and FirstSeenForDevice,          "NewBlockchainRpc",
+      KnownRpcHost,                                 "BaselinedBlockchainRpc",
+      RpcPortHit,                                   "RpcPortDestination",
+      FirstSeenForDevice and DestKind == "IpOnly",  "NewUnnamedDestination",
+      FirstSeenForDevice,                           "NewDestination",
+                                                    "Baselined")
+| summarize
+    Connections   = count(),
+    Successes     = countif(ActionType == "ConnectionSuccess"),
+    Ports         = make_set(RemotePort, 10),
+    Ips           = make_set_if(tostring(RemoteIP), isnotempty(tostring(RemoteIP)), 10),
+    RpcLabels     = make_set_if(tostring(RpcMatch), KnownRpcHost, 5),
+    Processes     = make_set(InitiatingProcessFileName, 10),
+    // The grandparent again: a curl whose grandparent is node is a lifecycle script
+    // reaching the network, which is the exact chain Act I ranks. This column is the
+    // join between the two queries, and it costs nothing.
+    Grandparents  = make_set_if(InitiatingProcessParentFileName,
+                                isnotempty(InitiatingProcessParentFileName), 10),
+    SampleCmd     = take_any(InitiatingProcessCommandLine),
+    Accounts      = make_set(InitiatingProcessAccountName, 5),
+    DeviceNames   = make_set(DeviceName, 5),
+    ActiveDays    = dcount(bin(Timestamp, 1d)),
+    FirstSeen     = min(Timestamp),
+    LastSeen      = max(Timestamp)
+    by DeviceId, Dest, DestKind, Verdict
+| extend
+    NpmAncestry = set_intersect(Grandparents, dynamic(["node","npm","node.exe","npm.cmd"])),
+    Beaconish   = ActiveDays >= 3 and Connections >= (ActiveDays * 5)
+| extend HasNpmAncestry = array_length(NpmAncestry) > 0
+// A first-seen blockchain endpoint reached by a process whose grandparent is node is the
+// top of this table and there is nothing close to it. Everything below that is a hunt.
+| order by HasNpmAncestry desc,
+           (Verdict == "NewBlockchainRpc") desc,
+           (Verdict == "NewUnnamedDestination") desc,
+           Beaconish desc, Connections desc

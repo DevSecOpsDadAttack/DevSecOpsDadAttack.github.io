@@ -1,0 +1,131 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects the SharePoint ToolShell RCE by looking for encoded PowerShell arriving via SharePoint
+// worker processes — the shape eight consecutive briefs each tried to build eight different ways.
+// Collapses those attempts into a single query that gets the term-matching right (multi-token
+// needles like 'certutil -decode' need contains, not has_any).
+// Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+
+let lookback = 7d;
+// Normalize image names: strip path and extension so w3wp.exe, w3wp, and
+// /usr/bin/w3wp all compare as one token. Same function as last week; copied
+// rather than imported because KQL has no imports, and a function you have to
+// remember to paste is a function you will forget on the one query that needed it.
+let Bare = (s:string) {
+    trim_end(@"\.(exe|cmd|bat|com|ps1)", tolower(extract(@"([^\\/]+)$", 1, tostring(s))))
+};
+// The children worth looking for. LOLBins, scripting engines, recon tools,
+// network tools. These lists define the DETECTION BOUNDARY — anything not
+// in them is dropped by the prefilter below. The case() classifier then
+// ranks what survives so analysts see structure instead of a flat list.
+let ShellsAndInterpreters = dynamic([
+    "cmd","powershell","pwsh","cscript","wscript","mshta","bash","sh"
+]);
+let ReconTools = dynamic([
+    "whoami","nltest","net","net1","ipconfig","systeminfo","tasklist",
+    "hostname","quser","query","dsquery","klist","nslookup"
+]);
+let LOLBins = dynamic([
+    "certutil","bitsadmin","rundll32","regsvr32","msiexec","mshta",
+    "wmic","forfiles","csc","installutil","regasm","regsvcs","msbuild"
+]);
+let NetworkTools = dynamic([
+    "curl","wget","powershell","pwsh","certutil","bitsadmin","ssh","scp"
+]);
+// POST-EXPLOITATION FRAGMENTS. Two lists, because they need two operators.
+// Clean terms: true single terms with no delimiters. These survive has_any
+// because each entry is one contiguous alphanumeric token — no hyphens, no
+// dots, no spaces. If it contains punctuation, it belongs in Fragments.
+let PostExploitTerms = dynamic([
+    "FromBase64","EncodedCommand","IEX","DownloadString","DownloadFile",
+    "WebClient","nishang","powercat","mimikatz","rubeus"
+]);
+// Delimiter-bearing fragments: must use contains, never has_any.
+// Every entry here has a dot, dash, space, or slash in it. The hyphenated
+// cmdlets (Invoke-Expression, etc.) belong here, not in PostExploitTerms:
+// a hyphen is a term delimiter, so has_any("Invoke-Expression") matches
+// any command line containing both "invoke" and "expression" as separate
+// terms, regardless of adjacency. contains matches the exact substring.
+let PostExploitFragments = dynamic([
+    "Invoke-Expression","Invoke-WebRequest","Invoke-RestMethod",
+    "certutil -decode","certutil -urlcache","bitsadmin /transfer",
+    "Start-Process","Net.WebClient","New-Object System.Net",
+    "-nop -w hidden","-noni -nop -ep bypass","[Convert]::FromBase64",
+    "powershell -e ","cmd /c echo","cmd.exe /c powershell"
+]);
+// Prefilter: every term from ALL child-classification lists, derived so
+// the prefilter cannot drift from the authoritative classification. This
+// is the detection boundary — anything not in these lists is invisible.
+let AllChildTerms = array_concat(ShellsAndInterpreters, ReconTools, LOLBins, NetworkTools);
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+// THE SCOPING FIX: w3wp.exe announces its application pool in its own command
+// line. "-ap" is the argument, and the value is quoted. This is how you know
+// the worker is SharePoint without a device list, without a device group, and
+// without asking the infrastructure team. Extract it once, filter on it, and
+// put it in the output so the analyst never has to go looking.
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| extend AppPool = extract(@'-ap\s+"([^"]+)"', 1, tostring(InitiatingProcessCommandLine))
+// "SharePoint" in the application pool name is the scoping test. The default
+// pool names are "SharePoint - 80", "SharePoint - 443", "SharePoint Web Services",
+// and "SecurityTokenServiceApplicationPool" (STS). Custom pool names are a
+// known blind spot: this filter fails closed. If your organisation renames
+// SharePoint pools, use device/farm scoping instead. AppPool remains in the
+// surviving output to make analyst triage immediate.
+| where AppPool contains "SharePoint"
+     or AppPool contains "SecurityTokenService"
+// Indexed prefilter on the child image. This is the detection boundary:
+// anything not in AllChildTerms is dropped here and never classified.
+| where FileName has_any (AllChildTerms)
+| extend Self = Bare(FileName)
+// Classify the child process. The prefilter above is the gate; the case()
+// below is the label. A whoami.exe under w3wp.exe survived the prefilter
+// because it's in the list; now it gets ranked so the analyst sees
+// structure. "Other" catches anything the prefilter let through that
+// doesn't match a specific category (possible via has_any tokenization).
+| extend ChildClass = case(
+      Self in (ShellsAndInterpreters), "ShellOrInterpreter",
+      Self in (ReconTools),            "ReconTool",
+      Self in (LOLBins),               "LOLBin",
+      Self in (NetworkTools),          "NetworkTool",
+                                       "Other")
+| extend CmdLower = tolower(tostring(ProcessCommandLine))
+// Post-exploitation indicators: two tests, two operators.
+// Term-clean needles via has_any (indexed, fast).
+| extend TermHit = CmdLower has_any (PostExploitTerms)
+// Delimiter-bearing fragments via mv-apply + contains (correct).
+| mv-apply Frag = PostExploitFragments to typeof(string) on (
+      summarize FragHits = make_set_if(Frag, CmdLower contains Frag, 5)
+  )
+| extend HasPostExploit = TermHit or array_length(FragHits) > 0
+// The parent-of-parent: w3wp.exe should be spawned by the IIS Windows Process
+// Activation Service (WAS), which runs as svchost.exe. If w3wp.exe's parent is
+// something else, that's a different kind of interesting.
+| extend GrandParent = Bare(InitiatingProcessParentFileName)
+| extend NormalIISChain = GrandParent in ("svchost","services")
+| summarize
+    Events        = count(),
+    ShellEvents   = countif(ChildClass == "ShellOrInterpreter"),
+    ReconEvents   = countif(ChildClass == "ReconTool"),
+    LOLBinEvents  = countif(ChildClass == "LOLBin"),
+    PostExploits  = countif(HasPostExploit),
+    Children      = make_set(Self, 20),
+    ChildClasses  = make_set(ChildClass, 5),
+    AppPools      = make_set(AppPool, 5),
+    SampleCmd     = take_anyif(ProcessCommandLine, HasPostExploit),
+    SampleCleanCmd = take_anyif(ProcessCommandLine, not(HasPostExploit)),
+    Accounts      = make_set(AccountName, 5),
+    DeviceNames   = make_set(DeviceName, 5),
+    IISChains     = make_set(strcat(GrandParent, " > w3wp > ", Self), 15),
+    NormalChains  = countif(NormalIISChain),
+    ActiveDays    = dcount(bin(Timestamp, 1d)),
+    FirstSeen     = min(Timestamp),
+    LastSeen      = max(Timestamp)
+    by DeviceId
+| extend
+    DistinctChildren = array_length(Children),
+    HasReconOrLOLBin = ReconEvents > 0 or LOLBinEvents > 0
+// Ranking: post-exploitation patterns first, then recon/LOLBins, then raw
+// shell spawns. Event count is last. One powershell with -enc is the incident;
+// a thousand legitimate cmd.exe invocations are Tuesday.
+| order by PostExploits desc, ReconEvents desc, LOLBinEvents desc,
+           ShellEvents desc, DistinctChildren desc, Events desc

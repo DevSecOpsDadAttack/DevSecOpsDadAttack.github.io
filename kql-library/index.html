@@ -29,7 +29,7 @@ js:
     type="search"
     id="kql-lib-search"
     class="tag-filter-input kql-lib-search"
-    placeholder="Search 67 queries by title, description, or category…"
+    placeholder="Search 107 queries by title, description, or category…"
     aria-label="Search KQL queries">
   <p class="kql-lib-hint" id="kql-lib-hint">
     Type to search all queries, or pick a category below.
@@ -40,7 +40,7 @@ js:
   <a class="kql-lib-cat-card" href="{{ '/kql-library/analytics-rules/' | relative_url }}">
     <span class="kql-lib-cat-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
     <span class="kql-lib-cat-title">Analytics Rules</span>
-    <span class="kql-lib-cat-count">3 queries</span>
+    <span class="kql-lib-cat-count">19 queries</span>
     <span class="kql-lib-cat-desc">Queries designed (or used) as the body of a Sentinel Analytics Rule — they're written to produce discrete detection events on a schedule rather than to be run interactively.</span>
   </a>
   <a class="kql-lib-cat-card" href="{{ '/kql-library/cost-and-ingest/' | relative_url }}">
@@ -64,7 +64,7 @@ js:
   <a class="kql-lib-cat-card" href="{{ '/kql-library/hunting/' | relative_url }}">
     <span class="kql-lib-cat-icon"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></span>
     <span class="kql-lib-cat-title">Hunting</span>
-    <span class="kql-lib-cat-count">10 queries</span>
+    <span class="kql-lib-cat-count">32 queries</span>
     <span class="kql-lib-cat-desc">Ad-hoc investigative queries. These aren't packaged as Sentinel Analytics Rules — they're the "let me pull on this thread" queries you reach for during triage, incident response, or when a stakeholder asks a specific question.</span>
   </a>
   <a class="kql-lib-cat-card" href="{{ '/kql-library/identity/' | relative_url }}">
@@ -88,8 +88,8 @@ js:
   <a class="kql-lib-cat-card" href="{{ '/kql-library/posture/' | relative_url }}">
     <span class="kql-lib-cat-icon"><i class="fas fa-server" aria-hidden="true"></i></span>
     <span class="kql-lib-cat-title">Posture</span>
-    <span class="kql-lib-cat-count">2 queries</span>
-    <span class="kql-lib-cat-desc">Attack-surface and asset-posture queries against Defender for Endpoint's TVM tables.</span>
+    <span class="kql-lib-cat-count">4 queries</span>
+    <span class="kql-lib-cat-desc">Attack-surface and asset-posture queries — the inventory-style queries that hand you a finite, closable list rather than an infinite stream of adversary telemetry.</span>
   </a>
   <a class="kql-lib-cat-card" href="{{ '/kql-library/reference/' | relative_url }}">
     <span class="kql-lib-cat-icon"><i class="fas fa-book" aria-hidden="true"></i></span>
@@ -107,6 +107,118 @@ js:
 </div>
 
 <ul class="kql-lib-results list-unstyled" id="kql-lib-results" role="list" hidden>
+  <li class="kql-lib-result" data-title="detect autogen studio agent tool execution anomaly" data-desc="autogen studio-hosted ai agent taking code-execution or sensitive-tool actions outside its baseline set — the 'autojack' agent-abuse shape." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-autogen-studio-agent-tool-execution-anomaly/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Autogen Studio Agent Tool Execution Anomaly</span>
+    </a>
+    <p class="kql-lib-result-desc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect ci build egress to first seen domain" data-desc="ci/cd build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'" data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-ci-build-egress-to-first-seen-domain/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Ci Build Egress To First Seen Domain</span>
+    </a>
+    <p class="kql-lib-result-desc">CI/CD build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect diagnostic deletion then tenant activity same session" data-desc="enhanced log-suppression sequence detection that further requires the follow-on activity to share the same calleripaddress — same session, not just same identity." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-same-session/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Diagnostic Deletion Then Tenant Activity Same Session</span>
+    </a>
+    <p class="kql-lib-result-desc">Enhanced log-suppression sequence detection that further requires the follow-on activity to share the same CallerIpAddress — same session, not just same identity.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect diagnostic deletion then tenant activity sequence" data-desc="t1562.008 sequence: azure diagnostic-setting deletion followed by any activity from the same caller within 60 minutes." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-sequence/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Diagnostic Deletion Then Tenant Activity Sequence</span>
+    </a>
+    <p class="kql-lib-result-desc">T1562.008 sequence: Azure diagnostic-setting deletion followed by any activity from the same Caller within 60 minutes.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect dll masquerading as microsoft defender" data-desc="dlls pretending to be microsoft defender via resource-level publisher/original-filename metadata — a vidar stealer ttp." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-dll-masquerading-as-microsoft-defender/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Dll Masquerading As Microsoft Defender</span>
+    </a>
+    <p class="kql-lib-result-desc">DLLs pretending to be Microsoft Defender via resource-level publisher/original-filename metadata — a Vidar Stealer TTP.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect excel xll addin spawning shell or network" data-desc="excel loading an xll add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-excel-xll-addin-spawning-shell-or-network/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Excel Xll Addin Spawning Shell Or Network</span>
+    </a>
+    <p class="kql-lib-result-desc">Excel loading an XLL add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect nextjs middleware authorization bypass" data-desc="next.js middleware authorization-bypass pattern — successful requests to authenticated routes without going through the expected auth path." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-nextjs-middleware-authorization-bypass/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Nextjs Middleware Authorization Bypass</span>
+    </a>
+    <p class="kql-lib-result-desc">Next.js middleware authorization-bypass pattern — successful requests to authenticated routes without going through the expected auth path.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect oauth token used from novel country" data-desc="oauth token used from a country the user has never signed in from — toddycat/umbrij downstream shape where the token itself is the payload." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-oauth-token-used-from-novel-country/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Oauth Token Used From Novel Country</span>
+    </a>
+    <p class="kql-lib-result-desc">OAuth token used from a country the user has never signed in from — ToddyCat/Umbrij downstream shape where the token itself is the payload.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect peoplesoft process spawning unexpected shell" data-desc="oracle peoplesoft server processes (psadmin, psappsrv, java) spawning cmd, bash, whoami, curl, or net — post-exploitation shape of a peoplesoft rce." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-peoplesoft-process-spawning-unexpected-shell/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Peoplesoft Process Spawning Unexpected Shell</span>
+    </a>
+    <p class="kql-lib-result-desc">Oracle PeopleSoft server processes (psadmin, psappsrv, java) spawning cmd, bash, whoami, curl, or net — post-exploitation shape of a PeopleSoft RCE.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect remote shell command arrival over wire" data-desc="shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-remote-shell-command-arrival-over-wire/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Remote Shell Command Arrival Over Wire</span>
+    </a>
+    <p class="kql-lib-result-desc">Shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect sharepoint toolshell rce encoded command" data-desc="sharepoint toolshell rce: encoded powershell arriving via sharepoint worker processes. multi-token needles (`certutil -decode`) need `contains`, not `has_any`." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-sharepoint-toolshell-rce-encoded-command/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Sharepoint Toolshell Rce Encoded Command</span>
+    </a>
+    <p class="kql-lib-result-desc">SharePoint ToolShell RCE: encoded PowerShell arriving via SharePoint worker processes. Multi-token needles (`certutil -decode`) need `contains`, not `has_any`.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect smartconnect session without signin" data-desc="microsoft smartconnect (cve-2026-55040) sessions lacking a corresponding sign-in event — absence-detection with windowed leftouter + countif." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-smartconnect-session-without-signin/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Smartconnect Session Without Signin</span>
+    </a>
+    <p class="kql-lib-result-desc">Microsoft SmartConnect (CVE-2026-55040) sessions lacking a corresponding sign-in event — absence-detection with windowed leftouter + countif.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect successful login following distributed ssh brute force" data-desc="successful ssh login against a host that just weathered a distributed brute-force campaign. pair with the act-i hunt to know if the lightning hit anything." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-successful-login-following-distributed-ssh-brute-force/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Successful Login Following Distributed Ssh Brute Force</span>
+    </a>
+    <p class="kql-lib-result-desc">Successful SSH login against a host that just weathered a distributed brute-force campaign. Pair with the Act-I hunt to know if the lightning hit anything.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect telegram tdata session theft file access" data-desc="theft of telegram's tdata session directory by an unexpected process. uses actual devicefileevents actiontypes (filecreated/modified) — `fileread` doesn't exist." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-telegram-tdata-session-theft-file-access/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Telegram Tdata Session Theft File Access</span>
+    </a>
+    <p class="kql-lib-result-desc">Theft of Telegram's tdata session directory by an unexpected process. Uses actual DeviceFileEvents ActionTypes (FileCreated/Modified) — `FileRead` doesn't exist.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect unsigned dll load verified signing state" data-desc="unsigned dll loads, using issigned/signingstatus rather than treating an empty sha256 as unsigned (the field is documented as usually-populated, not always)." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-unsigned-dll-load-verified-signing-state/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Unsigned Dll Load Verified Signing State</span>
+    </a>
+    <p class="kql-lib-result-desc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect vpn session without prior authentication" data-desc="pan-os globalprotect vpn sessions established without a matching auth event in the preceding 5 minutes — the shape of cve-2026-0257. uses windowed leftouter, not range-predicate leftanti." data-cat="analytics rules" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-vpn-session-without-prior-authentication/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-result-title">Detect Vpn Session Without Prior Authentication</span>
+    </a>
+    <p class="kql-lib-result-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
   <li class="kql-lib-result" data-title="failed login attempts" data-desc="3+ failed sign-ins (`resulttype == 50126` — invalid username or password) for the same upn within a 2-minute window. written for a demo that pairs with a logic app to auto-disable or lock the account." data-cat="analytics rules failed logins" data-catslug="analytics-rules">
     <a href="{{ '/kql-library/analytics-rules/failed-login-attempts/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Analytics Rules</span>
@@ -395,6 +507,139 @@ js:
     </a>
     <p class="kql-lib-result-desc">Top 10 alert names over 90 days with percentage of total and color-coded impact level (High / Moderate / Low).</p>
   </li>
+  <li class="kql-lib-result" data-title="hunt azure diagnostic setting deletions" data-desc="deletions of azure diagnostic settings — the moment an attacker turns off logging (t1562.008). step 1 of a two-step sequence." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-azure-diagnostic-setting-deletions/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Azure Diagnostic Setting Deletions</span>
+    </a>
+    <p class="kql-lib-result-desc">Deletions of Azure diagnostic settings — the moment an attacker turns off logging (T1562.008). Step 1 of a two-step sequence.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt blockchain rpc c2 dead drop" data-desc="c2 traffic hidden inside blockchain-rpc calls to public utilities (quicknode, alchemy) — 'the dead drop is a public utility.'" data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-blockchain-rpc-c2-dead-drop/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Blockchain Rpc C2 Dead Drop</span>
+    </a>
+    <p class="kql-lib-result-desc">C2 traffic hidden inside blockchain-RPC calls to public utilities (QuickNode, Alchemy) — 'the dead drop is a public utility.'</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt c2 beacon by connection window rhythm" data-desc="low-and-slow c2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-c2-beacon-by-connection-window-rhythm/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt C2 Beacon By Connection Window Rhythm</span>
+    </a>
+    <p class="kql-lib-result-desc">Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt cav3rn endpoint local log file artifact" data-desc="endpoint-side hunt for project cav3rn's local file artifact (`logazure.txt` and family) — config persistence written by the module." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-cav3rn-endpoint-local-log-file-artifact/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Cav3rn Endpoint Local Log File Artifact</span>
+    </a>
+    <p class="kql-lib-result-desc">Endpoint-side hunt for Project CAV3RN's local file artifact (`logAzure.txt` and family) — config persistence written by the module.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt cloud metadata ssrf normalized forms" data-desc="cloud instance-metadata ssrf across every string-form the attacker can write — dotted, dotless, octal, hex, ipv6, dashed hostnames, encoded slashes. normalizes before matching." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-result-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt cloud storage bucket lookalike references" data-desc="references to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-storage-bucket-lookalike-references/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Cloud Storage Bucket Lookalike References</span>
+    </a>
+    <p class="kql-lib-result-desc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt credential compromise signin audit alert three table" data-desc="three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream securityalert on the same user." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-result-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt distributed ssh brute force per target" data-desc="ssh brute-force hunt that pivots on the target host, not the source ip — catches distributed attacks that stay under per-source thresholds by using thousands of ips." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-distributed-ssh-brute-force-per-target/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Distributed Ssh Brute Force Per Target</span>
+    </a>
+    <p class="kql-lib-result-desc">SSH brute-force hunt that pivots on the target host, not the source IP — catches distributed attacks that stay under per-source thresholds by using thousands of IPs.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt dns aaaa record covert recovery channel" data-desc="project cav3rn's dns aaaa-record recovery channel — ipv6 addresses returned in aaaa queries that decode as ascii or structured config." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-dns-aaaa-record-covert-recovery-channel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt DNS Aaaa Record Covert Recovery Channel</span>
+    </a>
+    <p class="kql-lib-result-desc">Project CAV3RN's DNS AAAA-record recovery channel — IPv6 addresses returned in AAAA queries that decode as ASCII or structured config.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt encoded command usage across fleet time baseline" data-desc="encoded-command executions correlated across the fleet against a rolling per-host time baseline. timebucket alone as the join key — deliberately no deviceid." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-encoded-command-usage-across-fleet-time-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Encoded Command Usage Across Fleet Time Baseline</span>
+    </a>
+    <p class="kql-lib-result-desc">Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt first time admin operation user baseline" data-desc="baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'" data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-first-time-admin-operation-user-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt First Time Admin Operation User Baseline</span>
+    </a>
+    <p class="kql-lib-result-desc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt inflated file payload evading size based av scan" data-desc="file downloads anomalously large for their kind — vidar's null-byte padding trick to slip past av scanners that skip files above a size ceiling." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-inflated-file-payload-evading-size-based-av-scan/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Inflated File Payload Evading Size Based Av Scan</span>
+    </a>
+    <p class="kql-lib-result-desc">File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt linux process argv0 vs executable mismatch" data-desc="linux processes where argv[0] doesn't match the actual binary that was executed — a process wearing another process's name tag." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-linux-process-argv0-vs-executable-mismatch/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Linux Process Argv0 Vs Executable Mismatch</span>
+    </a>
+    <p class="kql-lib-result-desc">Linux processes where argv[0] doesn't match the actual binary that was executed — a process wearing another process's name tag.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt metadata ip any encoded form inspecting dns answer" data-desc="inspects what dns actually resolved to (the answer field), not what the caller wrote — catches every obfuscated string form of the metadata ips at the resolver level." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+    </a>
+    <p class="kql-lib-result-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt npm postinstall config modification no user context" data-desc="npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — asyncapi-shaped supply-chain compromise." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-config-modification-no-user-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Npm Postinstall Config Modification No User Context</span>
+    </a>
+    <p class="kql-lib-result-desc">npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — AsyncAPI-shaped supply-chain compromise.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt npm postinstall grandchild network payload" data-desc="npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. traces npm → sh -c → curl." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+    </a>
+    <p class="kql-lib-result-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt outlook calendar c2 far future standing meeting" data-desc="project cav3rn's outlook calendar c2 — standing meetings scheduled decades in the future in fixed low-attention windows, carrying operator-agent traffic in the event body." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-outlook-calendar-c2-far-future-standing-meeting/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Outlook Calendar C2 Far Future Standing Meeting</span>
+    </a>
+    <p class="kql-lib-result-desc">Project CAV3RN's Outlook calendar C2 — standing meetings scheduled decades in the future in fixed low-attention windows, carrying operator-agent traffic in the event body.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt suspicious user consented oauth app grants" data-desc="'the backdoor you approved yourself' — oauth application consents granting broad graph permissions to unfamiliar apps. focuses on consent events, not the logins that follow." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-suspicious-user-consented-oauth-app-grants/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Suspicious User Consented Oauth App Grants</span>
+    </a>
+    <p class="kql-lib-result-desc">'The backdoor you approved yourself' — OAuth application consents granting broad Graph permissions to unfamiliar apps. Focuses on CONSENT events, not the logins that follow.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt teams phishing then suspicious login correlation" data-desc="teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with externalaccess not being populated by falling back to sender-domain-outside-org." data-cat="hunting" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-teams-phishing-then-suspicious-login-correlation/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-result-title">Hunt Teams Phishing Then Suspicious Login Correlation</span>
+    </a>
+    <p class="kql-lib-result-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
+  </li>
   <li class="kql-lib-result" data-title="how many times does this eventid fire from this machine" data-desc="count of a specific event id from a specific machine, bucketed daily and rendered as a column chart." data-cat="hunting eventid forensics" data-catslug="hunting">
     <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Hunting</span>
@@ -443,13 +688,21 @@ js:
     </a>
     <p class="kql-lib-result-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
   </li>
-  <li class="kql-lib-result" data-title="file activity audit" data-desc="timestamped file activity (open, read, modify, delete, create) by user and device, joining `deviceevents`, `devicenetworkevents`, and `devicefileevents`. written for a client that needed to demonstrate this capability to an auditor." data-cat="hunting file activity" data-catslug="hunting">
+  <li class="kql-lib-result" data-title="detect spring boot heapdump artifact on disk" data-desc="detects spring boot actuator heap-dump theft by the artifact spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). the filename is proof an http request hit the endpoint even when the web tier didn't log the url." data-cat="hunting file activity" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">File Activity</span>
+      <span class="kql-lib-result-title">Detect Spring Boot Heapdump Artifact On Disk</span>
+    </a>
+    <p class="kql-lib-result-desc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
+  </li>
+  <li class="kql-lib-result" data-title="file activity audit" data-desc="timestamped file activity (open, read, modify, delete, create) by user and device. written for a client that needed to demonstrate this capability to an auditor." data-cat="hunting file activity" data-catslug="hunting">
     <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Hunting</span>
       <span class="attack-badge attack-badge-sub">File Activity</span>
       <span class="kql-lib-result-title">File Activity Audit</span>
     </a>
-    <p class="kql-lib-result-desc">Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor.</p>
+    <p class="kql-lib-result-desc">Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor.</p>
   </li>
   <li class="kql-lib-result" data-title="rdp logins per day per user" data-desc="rdp logins per user per day (30d) rendered as a timechart. use for baselining "normal" login volume before hunting for anomalies." data-cat="hunting user activity" data-catslug="hunting">
     <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
@@ -474,6 +727,22 @@ js:
       <span class="kql-lib-result-title">Whos Logging In And When</span>
     </a>
     <p class="kql-lib-result-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt spring boot heapdump exfiltration asim" data-desc="hunts spring boot actuator heap-dump exfiltration in asim web session data by matching the endpoint id as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. recovers the real base path from traffic and ranks by response-size verdict." data-cat="hunting web tier" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Web Tier</span>
+      <span class="kql-lib-result-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+    </a>
+    <p class="kql-lib-result-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-result" data-title="hunt spring boot heapdump exfiltration commonsecuritylog" data-desc="non-asim (`commonsecuritylog`) variant of the heap-dump hunt. uses correct cef field names (`receivedbytes` / `sentbytes`) and carries both byte directions because cef doesn't tell you which side is the response." data-cat="hunting web tier" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Web Tier</span>
+      <span class="kql-lib-result-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+    </a>
+    <p class="kql-lib-result-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
   </li>
   <li class="kql-lib-result" data-title="who deleted an ad user" data-desc="who deleted an ad user (`securityevent` eventid `4726`) over the last 90 days." data-cat="identity" data-catslug="identity">
     <a href="{{ '/kql-library/identity/who-deleted-an-ad-user/' | relative_url }}">
@@ -572,6 +841,20 @@ js:
       <span class="kql-lib-result-title">Top Clients</span>
     </a>
     <p class="kql-lib-result-desc">Top 10 clients by DNS query count.</p>
+  </li>
+  <li class="kql-lib-result" data-title="inventory exposed spring boot actuator endpoints" data-desc="inventory of spring boot actuator endpoints that answer 200 anywhere in your estate — flips the entity from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). recovers the real management base path from traffic." data-cat="posture" data-catslug="posture">
+    <a href="{{ '/kql-library/posture/inventory-exposed-spring-boot-actuator-endpoints/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-result-title">Inventory Exposed Spring Boot Actuator Endpoints</span>
+    </a>
+    <p class="kql-lib-result-desc">Inventory of Spring Boot Actuator endpoints that answer 200 anywhere in your estate — flips the entity from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). Recovers the real management base path from traffic.</p>
+  </li>
+  <li class="kql-lib-result" data-title="inventory installed npm packages with lifecycle scripts" data-desc="inventory of npm packages installed across your fleet that carry postinstall / preinstall / install lifecycle scripts — the finite, closable population for sins-of-the-grandfather class attacks." data-cat="posture" data-catslug="posture">
+    <a href="{{ '/kql-library/posture/inventory-installed-npm-packages-with-lifecycle-scripts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-result-title">Inventory Installed Npm Packages With Lifecycle Scripts</span>
+    </a>
+    <p class="kql-lib-result-desc">Inventory of npm packages installed across your fleet that carry postinstall / preinstall / install lifecycle scripts — the finite, closable population for sins-of-the-grandfather class attacks.</p>
   </li>
   <li class="kql-lib-result" data-title="which devices are internet facing" data-desc="identify internet-facing devices — walks through what "public" actually means for both ipv4 and ipv6 before matching." data-cat="posture" data-catslug="posture">
     <a href="{{ '/kql-library/posture/which-devices-are-internet-facing/' | relative_url }}">

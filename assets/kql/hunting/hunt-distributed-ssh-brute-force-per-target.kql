@@ -1,0 +1,26 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// SSH brute-force hunt that pivots on the *target host* instead of the source IP — catches
+// distributed attacks that stay under per-source thresholds by using thousands of IPs, one attempt
+// each. Counts distinct source IPs failing against the same destination, which is the signature of
+// the botnet-scale spray.
+// Source: KQL Detection of the Week: The Attack That Stayed Under the Threshold (2026-06-19) — https://devsecopsdadattack.com/2026-06-19-KQL-of-the-Week_-The-Attack-That-Stayed-Under-the-Threshold/
+
+let WindowMinutes = 10;
+let DistinctIPThreshold = 10;
+let FailedSSHSyslog = Syslog
+| where (Facility == "auth" or SyslogMessage has "sshd")
+| where SyslogMessage has_any ("Failed password", "Invalid user", "authentication failure")
+| extend SourceIP = extract(@"from ([\d\.a-fA-F:]+)", 1, SyslogMessage)
+| extend TargetUser = extract(@"(?:for|user) (\S+) from", 1, SyslogMessage)
+| where isnotempty(SourceIP)
+| project TimeGenerated, Computer, SourceIP, TargetUser, SyslogMessage;
+FailedSSHSyslog
+| summarize
+    DistinctSourceIPs = dcount(SourceIP),
+    TotalFailures = count(),
+    SourceIPList = make_set(SourceIP, 20),
+    SampleUsernames = make_set(TargetUser, 10)
+    by Computer, bin(TimeGenerated, totimespan(strcat(tostring(WindowMinutes), "m")))
+| where DistinctSourceIPs >= DistinctIPThreshold
+| project TimeGenerated, Computer, DistinctSourceIPs, TotalFailures, SourceIPList, SampleUsernames
+| order by DistinctSourceIPs desc, TimeGenerated desc

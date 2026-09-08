@@ -1,0 +1,84 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Non-ASIM (CommonSecurityLog) variant of the Spring Boot Actuator heap-dump exfiltration hunt.
+// Uses correct CEF field names (ReceivedBytes / SentBytes, not BytesReceived) and carries BOTH
+// byte directions because CEF does not tell you which side is the response — run the byte-direction
+// validation query at the bottom to settle it once per source.
+// Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+
+let lookback = 7d;
+let ActuatorEndpoints = dynamic([
+    "heapdump","env","configprops","beans","threaddump","mappings",
+    "loggers","httpexchanges","httptrace","auditevents","jolokia","dump","trace"
+]);
+// Derived, for the same reason as the ASIM version: a prefilter that is not a superset
+// of the authoritative list is a silent narrowing you cannot see from the results.
+let PrefilterTerms = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
+CommonSecurityLog
+| where TimeGenerated > ago(lookback)
+| where isnotempty(RequestURL)
+| where RequestURL has_any (PrefilterTerms)
+| extend UrlLower = tolower(url_decode(RequestURL))
+| extend PathOnly = trim_start(@"[a-z][a-z0-9+.\-]*://[^/]*", UrlLower)
+| extend PathOnly = tostring(split(tostring(split(tostring(split(PathOnly,"?")[0]),"#")[0]),";")[0])
+| extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
+| extend Segments = split(NormPath, "/")
+| extend Matched  = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
+// BOTH directions are carried, because CEF does not tell you which one is the
+// response. Run the validation query below, then delete the column you don't need.
+// Zero is read as "not reported" on the way in, not on the way out -- otherwise
+// NoByteCounts below reads a column full of zeros as a column full of measurements.
+| extend
+    BytesIn  = iff(tolong(column_ifexists("ReceivedBytes", long(null))) > 0,
+                   tolong(column_ifexists("ReceivedBytes", long(null))), long(null)),
+    BytesOut = iff(tolong(column_ifexists("SentBytes",     long(null))) > 0,
+                   tolong(column_ifexists("SentBytes",     long(null))), long(null))
+| extend BiggestSide = max_of(coalesce(BytesIn, long(0)), coalesce(BytesOut, long(0)))
+// EventOutcome is documented as success/failure. Some sources write a status code,
+// some write a word, some write "200 OK". Read it; don't gate on it.
+| summarize
+    Requests     = count(),
+    Outcomes     = make_set(EventOutcome, 10),
+    Endpoints    = make_set(Endpoint, 15),
+    Paths        = make_set(NormPath, 10),
+    BasePaths    = make_set_if(BasePath, isnotempty(BasePath), 10),
+    Selectors    = make_set_if(Selector, isnotempty(Selector), 10),
+    Devices      = make_set(DeviceName, 5),
+    Vendors      = make_set(strcat(DeviceVendor, "/", DeviceProduct), 5),
+    Agents       = make_set(RequestClientApplication, 5),
+    MaxBytesIn   = max(BytesIn),
+    MaxBytesOut  = max(BytesOut),
+    MaxEitherSide= max(BiggestSide),
+    ActiveDays   = dcount(bin(TimeGenerated, 1d)),
+    FirstSeen    = min(TimeGenerated),
+    LastSeen     = max(TimeGenerated)
+    by SourceIP
+| extend
+    NoByteCounts = isnull(MaxBytesIn) and isnull(MaxBytesOut),
+    Readable     = format_bytes(coalesce(MaxEitherSide, long(0))),
+    Enumerating  = array_length(Endpoints) > 2
+| order by MaxEitherSide desc, NoByteCounts desc, Enumerating desc, Requests desc
+
+// --- Byte-direction validation. Download something large and known through the device,
+// then run this to see which column moves. On GET traffic the response is 1-3 orders
+// of magnitude larger than the request, so the column with the big P99 on GET is your
+// response column. Delete the other one from the query above once you know.
+//
+// CommonSecurityLog
+// | where TimeGenerated > ago(1d)
+// | where isnotempty(RequestURL)
+// | summarize
+//     Records   = count(),
+//     WithIn    = countif(isnotnull(ReceivedBytes) and ReceivedBytes > 0),
+//     WithOut   = countif(isnotnull(SentBytes)     and SentBytes > 0),
+//     MedianIn  = percentile(ReceivedBytes, 50),
+//     MedianOut = percentile(SentBytes, 50),
+//     P99In     = percentile(ReceivedBytes, 99),
+//     P99Out    = percentile(SentBytes, 99)
+//     by DeviceVendor, DeviceProduct, RequestMethod
+// | order by Records desc

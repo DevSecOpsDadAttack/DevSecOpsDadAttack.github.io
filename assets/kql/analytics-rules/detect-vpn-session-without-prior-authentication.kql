@@ -1,0 +1,30 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects PAN-OS GlobalProtect VPN sessions established without a matching authentication event in
+// the preceding 5 minutes — the shape of CVE-2026-0257 auth-bypass exploitation. Uses leftouter
+// join + windowed countif instead of leftanti with range predicates (the latter silently
+// suppresses alerts when any same-IP auth exists anywhere in the lookback).
+// Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+
+let lookback = 1d;
+let window = 5m;
+let AuthEvents = CommonSecurityLog
+| where TimeGenerated > ago(lookback)
+| where DeviceVendor =~ "Palo Alto Networks"
+| where DeviceProduct has_any ("GlobalProtect", "PAN-OS")
+| where Activity has_any ("login", "authenticate", "auth-success", "prelogin")
+    or Message has_any ("login", "authenticate", "prelogin")
+| project AuthTime = TimeGenerated, SourceIP;
+CommonSecurityLog
+| where TimeGenerated > ago(lookback)
+| where DeviceVendor =~ "Palo Alto Networks"
+| where DeviceProduct has_any ("GlobalProtect", "PAN-OS")
+| where Activity has_any ("connected", "tunnel-established", "gateway-connected")
+    or Message has_any ("connected", "tunnel established")
+| where not(ipv4_is_private(SourceIP))
+| project SessionTime = TimeGenerated, SourceIP, DeviceProduct, Activity, DeviceAction, Message, LogSeverity, DestinationIP
+| join kind=leftouter (AuthEvents) on SourceIP
+| extend AuthInWindow = AuthTime between ((SessionTime - window) .. SessionTime)
+| summarize PriorAuthCount = countif(AuthInWindow == true)
+    by SessionTime, SourceIP, DeviceProduct, Activity, DeviceAction, Message, LogSeverity, DestinationIP
+| where PriorAuthCount == 0
+| sort by SessionTime desc

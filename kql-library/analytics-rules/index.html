@@ -13,6 +13,121 @@ permalink: /kql-library/analytics-rules/
 
 <p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
 
+<h3 class="kql-lib-subcat-heading">Standalone</h3>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-autogen-studio-agent-tool-execution-anomaly/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Autogen Studio Agent Tool Execution Anomaly</span>
+      <code class="kql-lib-query-file">detect-autogen-studio-agent-tool-execution-anomaly.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-ci-build-egress-to-first-seen-domain/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Ci Build Egress To First Seen Domain</span>
+      <code class="kql-lib-query-file">detect-ci-build-egress-to-first-seen-domain.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">CI/CD build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-same-session/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Diagnostic Deletion Then Tenant Activity Same Session</span>
+      <code class="kql-lib-query-file">detect-diagnostic-deletion-then-tenant-activity-same-session.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Enhanced log-suppression sequence detection that further requires the follow-on activity to share the same CallerIpAddress — same session, not just same identity.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-sequence/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Diagnostic Deletion Then Tenant Activity Sequence</span>
+      <code class="kql-lib-query-file">detect-diagnostic-deletion-then-tenant-activity-sequence.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">T1562.008 sequence: Azure diagnostic-setting deletion followed by any activity from the same Caller within 60 minutes.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-dll-masquerading-as-microsoft-defender/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Dll Masquerading As Microsoft Defender</span>
+      <code class="kql-lib-query-file">detect-dll-masquerading-as-microsoft-defender.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">DLLs pretending to be Microsoft Defender via resource-level publisher/original-filename metadata — a Vidar Stealer TTP.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-excel-xll-addin-spawning-shell-or-network/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Excel Xll Addin Spawning Shell Or Network</span>
+      <code class="kql-lib-query-file">detect-excel-xll-addin-spawning-shell-or-network.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Excel loading an XLL add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-nextjs-middleware-authorization-bypass/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Nextjs Middleware Authorization Bypass</span>
+      <code class="kql-lib-query-file">detect-nextjs-middleware-authorization-bypass.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Next.js middleware authorization-bypass pattern — successful requests to authenticated routes without going through the expected auth path.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-oauth-token-used-from-novel-country/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Oauth Token Used From Novel Country</span>
+      <code class="kql-lib-query-file">detect-oauth-token-used-from-novel-country.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">OAuth token used from a country the user has never signed in from — ToddyCat/Umbrij downstream shape where the token itself is the payload.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-peoplesoft-process-spawning-unexpected-shell/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Peoplesoft Process Spawning Unexpected Shell</span>
+      <code class="kql-lib-query-file">detect-peoplesoft-process-spawning-unexpected-shell.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Oracle PeopleSoft server processes (psadmin, psappsrv, java) spawning cmd, bash, whoami, curl, or net — post-exploitation shape of a PeopleSoft RCE.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-remote-shell-command-arrival-over-wire/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Remote Shell Command Arrival Over Wire</span>
+      <code class="kql-lib-query-file">detect-remote-shell-command-arrival-over-wire.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-sharepoint-toolshell-rce-encoded-command/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Sharepoint Toolshell Rce Encoded Command</span>
+      <code class="kql-lib-query-file">detect-sharepoint-toolshell-rce-encoded-command.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">SharePoint ToolShell RCE: encoded PowerShell arriving via SharePoint worker processes. Multi-token needles (`certutil -decode`) need `contains`, not `has_any`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-smartconnect-session-without-signin/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Smartconnect Session Without Signin</span>
+      <code class="kql-lib-query-file">detect-smartconnect-session-without-signin.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Microsoft SmartConnect (CVE-2026-55040) sessions lacking a corresponding sign-in event — absence-detection with windowed leftouter + countif.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-successful-login-following-distributed-ssh-brute-force/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Successful Login Following Distributed Ssh Brute Force</span>
+      <code class="kql-lib-query-file">detect-successful-login-following-distributed-ssh-brute-force.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Successful SSH login against a host that just weathered a distributed brute-force campaign. Pair with the Act-I hunt to know if the lightning hit anything.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-telegram-tdata-session-theft-file-access/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Telegram Tdata Session Theft File Access</span>
+      <code class="kql-lib-query-file">detect-telegram-tdata-session-theft-file-access.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Theft of Telegram's tdata session directory by an unexpected process. Uses actual DeviceFileEvents ActionTypes (FileCreated/Modified) — `FileRead` doesn't exist.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-unsigned-dll-load-verified-signing-state/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Unsigned Dll Load Verified Signing State</span>
+      <code class="kql-lib-query-file">detect-unsigned-dll-load-verified-signing-state.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-vpn-session-without-prior-authentication/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Vpn Session Without Prior Authentication</span>
+      <code class="kql-lib-query-file">detect-vpn-session-without-prior-authentication.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
+</ul>
 <h3 class="kql-lib-subcat-heading">Failed Logins</h3>
 <p class="kql-lib-subcat-intro">Brute-force / failed-login threshold rules.</p>
 <ul class="kql-lib-query-list list-unstyled" role="list">

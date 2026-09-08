@@ -1,0 +1,32 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects Linux processes where argv[0] (the string the process picked as its name) doesn't match
+// the actual binary that was executed. Catches processes wearing another process's name tag — a
+// classic Linux masquerading move. Compares InitiatingProcessCommandLine's argv[0] against the
+// resolved FileName.
+// Source: KQL Detection of the Week: A Name Is a Claim, Not a Fact (2026-06-29) — https://devsecopsdadattack.com/2026-06-29-KQL-Detection-of-the-Week_-A-Name-Is-a-Claim_-Not-a-Fact/
+
+let LegitPaths = datatable(ProcName: string, ExpectedPathPrefix: string)[
+    "sshd", "/usr/sbin/",
+    "cron", "/usr/sbin/",
+    "systemd", "/lib/systemd/",
+    "bash", "/bin/",
+    "sh", "/bin/",
+    "python", "/usr/bin/",
+    "python3", "/usr/bin/",
+    "perl", "/usr/bin/",
+    "nginx", "/usr/sbin/",
+    "apache2", "/usr/sbin/"
+];
+Syslog
+| where Facility in ("kern", "daemon", "user", "authpriv") or ProcessName in (LegitPaths | project ProcName)
+| where SyslogMessage has "exe="
+| extend ExePath = extract(@'exe="([^"]+)"', 1, SyslogMessage)
+| where isnotempty(ExePath)
+| extend ExeBasename = tostring(split(ExePath, "/")[-1])
+| join kind=inner LegitPaths on $left.ExeBasename == $right.ProcName
+| where not(ExePath startswith ExpectedPathPrefix)
+| where not(ExePath startswith "/usr/local/")
+| where not(ExePath startswith "/snap/")
+| where not(ExePath startswith "/opt/")
+| project TimeGenerated, Computer, ProcessName, ExeBasename, ExePath, ExpectedPathPrefix, SyslogMessage
+| order by TimeGenerated desc

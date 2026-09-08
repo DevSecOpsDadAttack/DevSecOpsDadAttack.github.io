@@ -1,7 +1,7 @@
 ---
 layout: page
 title: File Activity Audit
-subtitle: "Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor."
+subtitle: "Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor."
 permalink: /kql-library/hunting/file-activity-audit/
 js:
   - "/assets/js/kql-library.js"
@@ -19,7 +19,7 @@ js:
   <code class="kql-lib-query-file">file-activity-audit.kql</code>
 </div>
 
-<p class="kql-lib-query-longdesc">Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor.</p>
+<p class="kql-lib-query-longdesc">Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor.</p>
 
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-file-activity-audit">

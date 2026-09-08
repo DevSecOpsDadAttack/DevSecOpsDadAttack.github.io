@@ -1,0 +1,43 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects Excel loading an XLL add-in that then spawns a shell or beacons out — the
+// spreadsheet-as-shell malware delivery vector. Weekly-freshest detection built around Excel.exe
+// as InitiatingProcess and XLL file activity as the trigger.
+// Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+
+let lookback = 1h;
+let csvUploads = DeviceFileEvents
+| where Timestamp > ago(lookback)
+| where ActionType == "FileCreated"
+| where FileName endswith ".csv"
+| where FolderPath has_any ("flowise", "uploads", "tmp")
+| project DeviceName, CSVCreatedTime = Timestamp, CSVFile = FileName, FolderPath;
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where FileName in~ ("python", "python3", "python3.exe", "python.exe")
+| where InitiatingProcessFileName has_any ("node", "flowise")
+| project
+    DeviceName,
+    PythonSpawnTime = Timestamp,
+    AccountName,
+    ProcessCommandLine,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine,
+    InitiatingProcessParentFileName,
+    SHA256,
+    InitiatingProcessSHA256
+| join kind=leftouter csvUploads on DeviceName
+| where isnull(CSVCreatedTime) or PythonSpawnTime between (CSVCreatedTime .. (CSVCreatedTime + 5min))
+| project
+    DeviceName,
+    AccountName,
+    PythonSpawnTime,
+    ProcessCommandLine,
+    InitiatingProcessFileName,
+    InitiatingProcessCommandLine,
+    InitiatingProcessParentFileName,
+    SHA256,
+    InitiatingProcessSHA256,
+    CSVCreatedTime,
+    CSVFile,
+    FolderPath
+| order by PythonSpawnTime desc

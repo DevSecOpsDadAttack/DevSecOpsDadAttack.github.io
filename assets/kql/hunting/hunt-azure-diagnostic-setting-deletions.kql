@@ -1,0 +1,24 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects deletions of Azure diagnostic settings — the moment an attacker turns off logging before
+// touching resources (T1562.008). Step 1 of a two-step sequence: this is the event, the follow-on
+// activity is the sequence detection.
+// Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+
+AzureActivity
+| where TimeGenerated > ago(1d)
+| where tolower(OperationName) has_any (
+    "microsoft.insights/diagnosticsettings/delete",
+    "microsoft.insights/diagnosticsettings/write",
+    "microsoft.operationalinsights/workspaces/delete",
+    "microsoft.operationalinsights/workspaces/write"
+  )
+| where ActivityStatusValue =~ "Success" or ActivityStatus =~ "Succeeded"
+| extend InitiatorUPN = tostring(parse_json(tostring(parse_json(InitiatedBy).user)).userPrincipalName)
+| extend InitiatorApp = tostring(parse_json(tostring(parse_json(InitiatedBy).app)).displayName)
+| extend ActorType = case(
+    isnotempty(InitiatorUPN), "User",
+    isnotempty(InitiatorApp), "ServicePrincipal",
+    "Unknown"
+  )
+| project TimeGenerated, OperationName, ActivityStatus, CallerIpAddress, ResourceId, ResourceGroup, SubscriptionId, InitiatorUPN, InitiatorApp, ActorType
+| order by TimeGenerated desc

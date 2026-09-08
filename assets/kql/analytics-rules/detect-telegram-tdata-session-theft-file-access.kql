@@ -1,0 +1,123 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects theft of Telegram's tdata session directory by an unexpected process. Sidesteps the four
+// defective briefs that hardcoded the wrong ActionType or assumed a FileRead field exists —
+// DeviceFileEvents doesn't emit generic reads. Uses FileCreated/FileModified against tdata's
+// actual write patterns instead.
+// Source: KQL Detection of the Week: The Field That Wasn't There (2026-08-26) — https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/
+
+let lookback = 1d;
+// LEGITIMATE TELEGRAM PROCESSES. These are the processes that belong in
+// tdata. Telegram.exe is the client. Updater.exe is the auto-updater.
+// If your environment uses a Telegram fork (Unigram, Telegram Desktop
+// from Flathub, etc.), add its binary name here — but verify the path,
+// not just the name, because an infostealer named "Telegram.exe" in
+// C:\Users\Public\Downloads is not the Telegram client.
+let LegitTelegramProcs = dynamic([
+    "Telegram.exe", "Updater.exe", "telegram", "updater"
+]);
+// KNOWN-BENIGN ACCESSORS. These are the processes you *expect* to touch
+// AppData directories during normal operation. The list is a starting
+// point — after baselining, extend it with your AV engine, your backup
+// agent, and your endpoint management tool. Every entry here is a false-
+// positive you are choosing not to see, so add entries one at a time,
+// with the process path confirmed, not just the name.
+let KnownBenignProcs = dynamic([
+    "MsMpEng.exe", "MpCmdRun.exe",     // Defender AV
+    "SenseIR.exe", "MsSense.exe",       // MDE sensor
+    "SearchProtocolHost.exe",            // Windows Search indexer
+    "svchost.exe"                        // Only if your baselining confirms
+]);
+// PROCESS CLASSIFICATION. Instead of a flat exclusion list, classify the
+// accessor so the analyst sees structure. Archive tools and script engines
+// are higher-signal than AV scanners; an unknown binary is highest.
+let ArchiveTools = dynamic([
+    "7z.exe", "7z", "WinRAR.exe", "rar.exe", "zip", "tar",
+    "bandizip.exe", "peazip.exe"
+]);
+let ScriptEngines = dynamic([
+    "python.exe", "python3", "python", "node.exe", "node",
+    "powershell.exe", "pwsh.exe", "cmd.exe",
+    "wscript.exe", "cscript.exe", "mshta.exe",
+    "bash", "sh"
+]);
+let CopyTools = dynamic([
+    "xcopy.exe", "robocopy.exe", "rsync", "rclone.exe", "rclone",
+    "cp", "copy"
+]);
+// ============================================================
+// STEP 1: FILE-LEVEL SIGNAL — tdata directory access.
+//
+// THE FIX: Do NOT filter on ActionType. Every version of this
+// detection this week filters on FileRead, FileAccessed, or
+// FileCopied — ActionType values that MDE may not emit on your
+// endpoints. Instead, we take EVERY file event in the tdata
+// directory from a non-Telegram process and keep ActionType as
+// an OUTPUT field. The analyst sees what type of access occurred;
+// the detection doesn't silently fail when the type isn't there.
+//
+// The tradeoff: without the ActionType filter, you will see
+// FileCreated and FileModified events — a process writing INTO
+// tdata, not reading FROM it. That is a different signal (possibly
+// more concerning — something is modifying session state), and it
+// is worth seeing rather than filtering out. If your MDE deployment
+// does emit FileRead, you can add it back as a severity booster
+// in the extend below, not as a where-clause gate.
+// ============================================================
+DeviceFileEvents
+| where TimeGenerated >= ago(lookback)
+| where FolderPath has_all ("Telegram Desktop", "tdata")
+| where not(InitiatingProcessFileName in~ (LegitTelegramProcs))
+| where not(InitiatingProcessFileName in~ (KnownBenignProcs))
+// Classify the accessing process. The prefilter above is the gate;
+// the case below is the label.
+| extend Self = tolower(InitiatingProcessFileName)
+| extend AccessorClass = case(
+      Self in (ArchiveTools),    "ArchiveTool",
+      Self in (ScriptEngines),   "ScriptEngine",
+      Self in (CopyTools),       "CopyTool",
+                                 "Other"
+  )
+// ActionType as a SIGNAL, not a GATE. If FileRead is present, the
+// signal is stronger. If it's FileCreated or FileModified, the signal
+// is different but still worth investigating. If the only ActionType
+// your environment produces is FileCreated, this detection still fires.
+| extend IsReadLikeAction = ActionType in ("FileRead", "FileAccessed", "FileCopied")
+// Path depth within tdata: are we seeing access to the top-level
+// directory listing, or to specific session files inside it?
+| extend TdataDepth = countof(FolderPath, "\\") - countof(
+    extract(@"^(.*\\tdata)", 1, FolderPath), "\\")
+| project
+    TimeGenerated,
+    DeviceName,
+    DeviceId,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    InitiatingProcessAccountName,
+    FileName,
+    FolderPath,
+    ActionType,
+    IsReadLikeAction,
+    AccessorClass,
+    TdataDepth,
+    SHA256,
+    InitiatingProcessId
+| summarize
+    Events        = count(),
+    ReadLikeEvents = countif(IsReadLikeAction),
+    ActionTypes   = make_set(ActionType, 10),
+    FilesTouched  = dcount(FileName),
+    FileList      = make_set(FileName, 15),
+    FolderList    = make_set(FolderPath, 10),
+    SampleCmd     = take_any(InitiatingProcessCommandLine),
+    ProcessPath   = take_any(InitiatingProcessFolderPath),
+    Accounts      = make_set(InitiatingProcessAccountName, 5),
+    FirstSeen     = min(TimeGenerated),
+    LastSeen      = max(TimeGenerated)
+    by DeviceName, DeviceId, InitiatingProcessFileName,
+       AccessorClass, SHA256
+// Ranking: script engines and archive tools first (infostealer
+// pattern), then "Other" (unknown binaries), then by volume.
+// ReadLikeEvents > 0 is a severity booster, not a filter.
+| order by AccessorClass asc, ReadLikeEvents desc,
+           FilesTouched desc, Events desc

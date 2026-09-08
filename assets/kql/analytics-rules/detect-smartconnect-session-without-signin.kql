@@ -1,0 +1,28 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects Microsoft SmartConnect (CVE-2026-55040) sessions that lack a corresponding sign-in event
+// — the classic absence-detection pattern applied to the SmartConnect auth-bypass. Uses windowed
+// leftouter + countif for reliable time-bounded absence.
+// Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+
+let accessWindow = 1d;
+let signinWindow = 2d;
+let sharepoint_access = OfficeActivity
+| where TimeGenerated > ago(accessWindow)
+| where OfficeWorkload == "SharePoint"
+| where ResultStatus =~ "Succeeded"
+| extend CompositeKey = strcat(tolower(UserId), "|", ClientIP)
+| project SPTime = TimeGenerated, UserId, ClientIP, Operation, SiteUrl, CompositeKey;
+let all_signins = union
+    (SigninLogs
+    | where TimeGenerated > ago(signinWindow)
+    | where ResultType == 0
+    | project CompositeKey = strcat(tolower(UserPrincipalName), "|", IPAddress)),
+    (AADNonInteractiveUserSignInLogs
+    | where TimeGenerated > ago(signinWindow)
+    | where ResultType == 0
+    | project CompositeKey = strcat(tolower(UserPrincipalName), "|", IPAddress))
+| distinct CompositeKey;
+sharepoint_access
+| join kind=leftanti all_signins on CompositeKey
+| project SPTime, UserId, ClientIP, Operation, SiteUrl
+| order by SPTime desc

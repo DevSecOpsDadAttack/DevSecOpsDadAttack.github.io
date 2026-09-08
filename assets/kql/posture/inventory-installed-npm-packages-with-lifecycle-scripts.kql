@@ -1,0 +1,74 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Inventories npm packages installed across your fleet that carry postinstall / preinstall /
+// install lifecycle scripts — the finite, closable population for the sins-of-the-grandfather
+// class of attacks. Not adversary telemetry, configuration inventory: 'the thing you can close.'
+// Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+
+let window = 30d;
+let Bare = (s:string) {
+    trim_end(@"\.(exe|cmd|bat|com|ps1)", tolower(extract(@"([^\\/]+)$", 1, tostring(s))))
+};
+let PkgRuntimes  = dynamic(["node","npm","npx","yarn","pnpm","bun","corepack"]);
+let ScriptShells = dynamic(["sh","bash","dash","zsh","ash","busybox","cmd","powershell","pwsh"]);
+// Same derived-prefilter discipline as Act I, same reason.
+let AllTerms = array_concat(PkgRuntimes, ScriptShells);
+DeviceProcessEvents
+| where Timestamp > ago(window)
+| where FileName has_any (AllTerms)
+     or InitiatingProcessFileName has_any (AllTerms)
+     or InitiatingProcessParentFileName has_any (AllTerms)
+| extend Self   = Bare(FileName),
+         Parent = Bare(InitiatingProcessFileName),
+         Grand  = Bare(InitiatingProcessParentFileName)
+| extend CmdLower  = tolower(tostring(ProcessCommandLine)),
+         ParentCmd = tolower(tostring(InitiatingProcessCommandLine))
+// An install INVOCATION: the runtime running a package manager in an install phase.
+// \binstall\b deliberately does NOT match "postinstall" -- there is no word boundary
+// between the t and the i, which is the behaviour we want here and would be a bug
+// three lines down.
+| extend IsInstallInvocation = Self in (PkgRuntimes)
+        and (CmdLower contains "npm-cli.js" or CmdLower contains "yarn"
+             or CmdLower contains "pnpm" or Self in ("npm","yarn","pnpm","bun"))
+        and CmdLower matches regex @"\b(install|ci)\b"
+// A lifecycle script EXECUTING: the mandatory shell layer, spawned by the runtime.
+| extend IsLifecycleShell = Self in (ScriptShells) and Parent in (PkgRuntimes)
+// The payload layer: whatever that shell then ran. Generation 2, same as Act I.
+| extend IsLifecyclePayload = Parent in (ScriptShells) and Grand in (PkgRuntimes)
+| where IsInstallInvocation or IsLifecycleShell or IsLifecyclePayload
+// Which package's script. Scoped names carry a slash, hence the optional group.
+| extend Pkg = extract(@"node_modules/((?:@[^/\s]+/)?[^/\s]+)/", 1,
+                       strcat(ParentCmd, " ", CmdLower))
+// Only observable when the flag is on the COMMAND LINE. ignore-scripts set in .npmrc or
+// via NPM_CONFIG_IGNORE_SCRIPTS is invisible here -- see the caveat below.
+| extend ExplicitIgnoreFlag = CmdLower contains "--ignore-scripts"
+// Entity = the DEVICE, because the device is what you remediate.
+| summarize
+    Installs          = countif(IsInstallInvocation),
+    InstallsWithFlag  = countif(IsInstallInvocation and ExplicitIgnoreFlag),
+    LifecycleShells   = countif(IsLifecycleShell),
+    LifecyclePayloads = countif(IsLifecyclePayload),
+    Packages          = make_set_if(Pkg, isnotempty(Pkg), 100),
+    PayloadImages     = make_set_if(Self, IsLifecyclePayload, 30),
+    Accounts          = make_set(AccountName, 10),
+    DeviceNames       = make_set(DeviceName, 5),
+    ActiveDays        = dcount(bin(Timestamp, 1d)),
+    FirstSeen         = min(Timestamp),
+    LastSeen          = max(Timestamp)
+    by DeviceId
+| extend
+    DistinctPackages = array_length(Packages),
+    DistinctPayloads = array_length(PayloadImages),
+    // real(null), not 0. A device with no installs has no coverage ratio -- it does not
+    // have a ratio of zero, and a zero would sort it alongside the worst offenders.
+    FlagCoverage     = iff(Installs > 0, round(100.0 * InstallsWithFlag / Installs, 1),
+                           real(null))
+// Posture, ranked. Note the third state: "probably disabled" is an INFERENCE from an
+// absence, not a measurement, and it is labelled as one rather than reported as safety.
+| extend Posture = case(
+      Installs == 0 and LifecycleShells == 0,   "NoInstallActivity",
+      LifecyclePayloads > 0,                    "ScriptsExecutingWithPayloads",
+      LifecycleShells > 0,                      "ScriptsExecuting",
+      Installs > 0,                             "ScriptsProbablyDisabled",
+                                                "Unclear")
+| order by LifecyclePayloads desc, DistinctPackages desc, LifecycleShells desc,
+           Installs desc

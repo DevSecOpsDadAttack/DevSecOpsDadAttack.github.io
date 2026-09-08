@@ -1,0 +1,130 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Inventory of Spring Boot Actuator endpoints that answer 200 anywhere in your estate — flips the entity
+// from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). Recovers the
+// real management base path from traffic, classifies P1-P5 by secret-bearing vs state-changing endpoint,
+// and requires ONE confirmed 200 in 30 days rather than a request-volume threshold.
+// Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+
+let lookback = 30d;
+let ActuatorEndpoints = dynamic([
+    "heapdump","env","configprops","beans","threaddump","mappings",
+    "loggers","httpexchanges","httptrace","auditevents","jolokia","dump","trace",
+    "health","info","metrics","shutdown","restart","refresh"
+]);
+let SecretBearing = dynamic(["heapdump","env","configprops","jolokia","dump"]);
+let StateChanging = dynamic(["shutdown","restart","refresh","loggers"]);
+// DERIVED. This one mattered more than Act I's: `health` and `info` are on the endpoint
+// list deliberately, so that base-path recovery works on services where the only thing
+// anyone ever requests is the health check -- and my hand-written prefilter omitted
+// both, which defeated the entire reason they were there.
+let PrefilterTerms = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
+_Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
+| extend UrlLower = tolower(url_decode(tostring(Url)))
+| extend PathOnly = trim_start(@"[a-z][a-z0-9+.\-]*://[^/]*", UrlLower)
+| extend PathOnly = tostring(split(tostring(split(tostring(split(PathOnly,"?")[0]),"#")[0]),";")[0])
+| extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
+| extend Segments = split(NormPath, "/")
+// Position-independent, same as Act I -- /health/{component}, /metrics/{name} and
+// /env/{property} all put the endpoint ID in the middle of the path.
+| extend Matched = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+// The management BASE PATH, recovered from the data rather than assumed. This is the
+// output that goes to the platform team: it tells them where their surface actually is.
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
+// Same three-state result verdict as Act I. EventResult "Success" is ANY status below
+// 400, so it cannot stand in for a 200 -- and on this endpoint the sub-400 response
+// you'll actually meet is a 302 to a login page, i.e. the healthy case.
+| extend StatusRaw  = coalesce(tostring(EventResultDetails),
+                               tostring(column_ifexists("EventOriginalResultDetails","")))
+| extend StatusCode = toint(extract(@"(\d{3})", 1, StatusRaw))
+| extend AnswerVerdict = case(
+      StatusCode == 200,                   "Served",
+      StatusCode between (300 .. 399),     "Redirected",
+      StatusCode in (401, 403),            "AuthWall",
+      StatusCode == 404,                   "NotPresent",
+      isnotnull(StatusCode),               "OtherStatus",
+      tostring(EventResult) =~ "Success",  "MaybeServed",
+                                           "NotServed")
+| extend RespBodyBytes = column_ifexists("HttpResponseBodyBytes", long(null))
+| extend RespDstBytes  = column_ifexists("DstBytes", long(null))
+| extend RespBytes = coalesce(iff(RespBodyBytes > 0, RespBodyBytes, long(null)),
+                              RespDstBytes)
+// A row with no destination identity is NOT dropped. It is bucketed. An unattributable
+// 200 on /heapdump is a telemetry finding AND possibly a security one, and `where
+// isnotempty(Service)` -- which is what I originally wrote here -- deletes both.
+| extend
+    Service   = coalesce(tostring(column_ifexists("HttpHost","")),
+                         tostring(column_ifexists("DstFQDN","")),
+                         tostring(DstIpAddr),
+                         "UNATTRIBUTED"),
+    UserAgent = tostring(column_ifexists("HttpUserAgent", ""))
+// ipv4_is_private() returns null for a v6 literal, and not(null) is null, so a v6
+// client would count as neither internal nor external. Default it to external --
+// the safer direction for a surface report.
+| extend ExternalClient = coalesce(not(ipv4_is_private(tostring(SrcIpAddr))), true)
+// Entity = the SERVICE and the ENDPOINT. One row per thing you might have to fix.
+| summarize
+    Requests        = count(),
+    ServedHits      = countif(AnswerVerdict == "Served"),
+    MaybeServedHits = countif(AnswerVerdict == "MaybeServed"),
+    RedirectHits    = countif(AnswerVerdict == "Redirected"),
+    NotFoundHits    = countif(AnswerVerdict == "NotPresent"),
+    AuthWallHits    = countif(AnswerVerdict == "AuthWall"),
+    // A 500 or a 405 is not "not mounted" -- it is a mounted endpoint failing. Counted,
+    // because without this counter those rows fall through the case below into
+    // "OK - not mounted" and get filtered out of the report entirely.
+    OtherStatusHits = countif(AnswerVerdict == "OtherStatus"),
+    DistinctClients = dcount(SrcIpAddr),
+    ExternalClients = dcountif(SrcIpAddr, ExternalClient),
+    MaxRespBytes    = max(RespBytes),
+    BasePaths       = make_set_if(BasePath, isnotempty(BasePath), 5),
+    Selectors       = make_set_if(Selector, isnotempty(Selector), 10),
+    SampleClients   = make_set(SrcIpAddr, 10),
+    Statuses        = make_set(StatusRaw, 10),
+    Verdicts        = make_set(AnswerVerdict, 8),
+    Agents          = make_set(UserAgent, 5),
+    ActiveDays      = dcount(bin(TimeGenerated, 1d)),
+    FirstSeen       = min(TimeGenerated),
+    LastSeen        = max(TimeGenerated)
+    by Service, Endpoint
+// Exposed == it returned a CONFIRMED 200 at least once. Not "answered a lot". Once.
+// A redirect is not an answer -- it is usually the auth wall doing its job.
+| extend
+    Exposed         = ServedHits > 0,
+    PossiblyExposed = ServedHits == 0 and MaybeServedHits > 0,
+    Protected       = ServedHits == 0 and MaybeServedHits == 0
+                          and (AuthWallHits > 0 or RedirectHits > 0),
+    // Mounted and failing. Evidence of a management surface, just not of a served one.
+    MountedErroring = ServedHits == 0 and MaybeServedHits == 0
+                          and AuthWallHits == 0 and RedirectHits == 0
+                          and OtherStatusHits > 0,
+    NotPresent      = ServedHits == 0 and MaybeServedHits == 0
+                          and AuthWallHits == 0 and RedirectHits == 0
+                          and OtherStatusHits == 0 and NotFoundHits > 0,
+    LeaksSecrets    = Endpoint in (SecretBearing),
+    ChangesState    = Endpoint in (StateChanging),
+    FoundExternally = ExternalClients > 0,
+    MaxReadable     = format_bytes(coalesce(MaxRespBytes, long(0)))
+// The size field resolves most of the unverified band without a status code: a 302
+// carries a few hundred bytes and a heap dump carries hundreds of megabytes. Null
+// MaxRespBytes makes this null, the case falls through, and the row stays unverified.
+| extend LikelyServed = PossiblyExposed and MaxRespBytes >= 1048576
+| extend Confirmed = Exposed or LikelyServed
+| extend Priority = case(
+      Confirmed and LeaksSecrets and FoundExternally, "P1 - secrets, externally reachable",
+      Confirmed and ChangesState and FoundExternally, "P1 - state change, externally reachable",
+      Confirmed and LeaksSecrets,                     "P2 - secrets, internal callers only",
+      Confirmed and ChangesState,                     "P2 - state change, internal callers only",
+      Confirmed,                                      "P3 - management surface exposed",
+      PossiblyExposed and LeaksSecrets,               "P4 - unverified, secrets endpoint answered sub-400",
+      PossiblyExposed,                                "P4 - unverified, sub-400 with no status code",
+      Protected,                                      "P5 - mounted, authenticated or redirected",
+      MountedErroring,                                "P5 - mounted, erroring",
+                                                      "OK - not mounted")
+| extend Unattributed = Service == "UNATTRIBUTED"
+| where not(Priority startswith "OK")
+| order by Priority asc, MaxRespBytes desc, ExternalClients desc, ServedHits desc

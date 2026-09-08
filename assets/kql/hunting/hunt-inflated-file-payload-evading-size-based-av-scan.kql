@@ -1,0 +1,40 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Hunts for file downloads that are anomalously large for their kind — Vidar's second costume
+// where the payload is padded with null bytes to slip past AV scanners that skip files above a
+// size ceiling. Ranks downloads whose size:entropy ratio suggests inflation.
+// Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated", "FileModified")
+| where FileName endswith ".exe" or FileName endswith ".dll"
+| where isnotnull(FileSize) and FileSize > 52428800
+| where not (
+    InitiatingProcessFileName has_any (
+        "msiexec.exe", "setup.exe", "install.exe", "winget.exe",
+        "MicrosoftEdgeUpdate.exe", "WindowsUpdateBox.exe",
+        "wuauclt.exe", "TiWorker.exe", "TrustedInstaller.exe"
+    )
+)
+| where not (
+    FolderPath startswith @"C:\Windows\"
+    or FolderPath startswith @"C:\Program Files\"
+    or FolderPath startswith @"C:\Program Files (x86)\"
+)
+| extend HighRiskPath = (
+    FolderPath has_any ("AppData", "Temp", "Downloads", "Desktop", "Public")
+)
+| project
+    Timestamp,
+    DeviceName,
+    DeviceId,
+    FileName,
+    FolderPath,
+    FileSize,
+    SHA256,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    InitiatingProcessSHA256,
+    HighRiskPath
+| order by FileSize desc

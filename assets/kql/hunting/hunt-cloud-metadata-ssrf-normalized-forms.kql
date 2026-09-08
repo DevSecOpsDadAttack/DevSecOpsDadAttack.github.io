@@ -1,0 +1,174 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects cloud instance-metadata SSRF attempts across every string-form the attacker can write —
+// dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes the URL to its
+// resolved target before matching, instead of hardcoding '169.254.169.254' the way four
+// consecutive briefs did.
+// Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+
+let lookback = 1d;
+// ============================================================
+// WILDCARD-DNS SERVICES.
+//
+// These domains exist to resolve an arbitrary hostname to an
+// arbitrary address chosen by whoever constructed the name.
+// A workload resolving one of these is a finding regardless of
+// what came back, because there is no legitimate reason for a
+// production application to dereference an attacker-controlled
+// name-to-address mapping service.
+//
+// 1u.ms is the one named in the SANS reporting. nip.io and
+// sslip.io are the two Sean observed. The rest are the common
+// alternatives; add any others you find in your own DNS data.
+// ============================================================
+let WildcardDnsSuffixes = dynamic([
+    "nip.io", "sslip.io", "1u.ms", "traefik.me",
+    "localtest.me", "vcap.me", "xip.io", "lvh.me"
+]);
+// ============================================================
+// PROVIDER METADATA HOSTNAMES.
+//
+// GCP publishes a real hostname for its metadata service, which
+// means "metadata.google.internal" is both a legitimate string
+// on GCP workloads and an SSRF payload on everything else.
+// Context decides; the query surfaces it either way.
+// ============================================================
+let ProviderMetadataNames = dynamic([
+    "metadata.google.internal", "metadata.goog",
+    "instance-data.ec2.internal"
+]);
+// ============================================================
+// SOURCE 1: DeviceEvents / DnsQueryResponse.
+//
+// The MDE sensor's own DNS telemetry. AdditionalFields carries
+// the query string and the response. Key names have varied
+// across sensor versions — run VALIDATION 1 below and confirm
+// which keys your tenant actually emits before you trust this
+// branch. coalesce() covers the two forms I have seen.
+// ============================================================
+let DnsFromDeviceEvents =
+    DeviceEvents
+    | where Timestamp >= ago(lookback)
+    | where ActionType == "DnsQueryResponse"
+    | extend AF = todynamic(AdditionalFields)
+    | extend
+        QueryName  = tostring(coalesce(AF.DnsQueryString, AF.query)),
+        AnswerText = tostring(coalesce(AF.DnsQueryResult, AF.answers, AF.DnsQueryResults))
+    | project
+        Timestamp, DeviceId, DeviceName,
+        InitiatingProcessFileName, InitiatingProcessCommandLine,
+        InitiatingProcessAccountName, InitiatingProcessFolderPath,
+        QueryName, AnswerText,
+        TelemetrySource = "DeviceEvents/DnsQueryResponse";
+// ============================================================
+// SOURCE 2: DeviceNetworkEvents / DnsConnectionInspected.
+//
+// Network Protection's Zeek-derived DNS inspection. Keys follow
+// Zeek's dns.log naming (query, answers, rcode_name). This
+// branch requires Network Protection in block or audit mode; if
+// you do not run it, this half returns nothing and Source 1
+// carries the detection on its own.
+// ============================================================
+let DnsFromNetworkEvents =
+    DeviceNetworkEvents
+    | where Timestamp >= ago(lookback)
+    | where ActionType == "DnsConnectionInspected"
+    | extend AF = todynamic(AdditionalFields)
+    | extend
+        QueryName  = tostring(AF.query),
+        AnswerText = tostring(AF.answers)
+    | project
+        Timestamp, DeviceId, DeviceName,
+        InitiatingProcessFileName, InitiatingProcessCommandLine,
+        InitiatingProcessAccountName, InitiatingProcessFolderPath,
+        QueryName, AnswerText,
+        TelemetrySource = "DeviceNetworkEvents/DnsConnectionInspected";
+// ============================================================
+// STEP 1: UNION AND EXTRACT ANSWERS.
+//
+// The answer set arrives as a JSON array in some sensor
+// versions and a delimited string in others. Rather than branch
+// on the shape, stringify it and pull every dotted quad out
+// with a regex. Shape-agnostic, and CNAME answers fall out
+// naturally because they aren't dotted quads.
+// ============================================================
+union DnsFromDeviceEvents, DnsFromNetworkEvents
+| where isnotempty(QueryName)
+| extend AnswerList = extract_all(
+    @"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", AnswerText)
+// trim_end() strips a trailing root-label dot before the suffix
+// check. DNS telemetry can carry the FQDN form of a name, and
+// "169-254-169-254.nip.io." does not endswith ".nip.io" — the
+// exact same two-representations-one-meaning problem this whole
+// article is about, just one character wide.
+| extend QueryNameLower = trim_end(@"\.$", tolower(QueryName))
+// has_any() is term-based, not suffix-aware: KQL tokenizes on
+// punctuation like ".", so has_any(["nip.io"]) does not reliably
+// ask "does this name end in nip.io?" There is no array-based
+// endswith in KQL, so the suffix list above (WildcardDnsSuffixes)
+// stays as the source of truth for what to add here, and each
+// suffix gets an explicit endswith. ProviderMetadataNames are
+// exact hostnames, not suffixes, so in~() is the correct operator
+// there — it's built for exact match against a dynamic array.
+| extend UsesWildcardDns = QueryNameLower endswith ".nip.io"
+    or QueryNameLower endswith ".sslip.io"
+    or QueryNameLower endswith ".1u.ms"
+    or QueryNameLower endswith ".traefik.me"
+    or QueryNameLower endswith ".localtest.me"
+    or QueryNameLower endswith ".vcap.me"
+    or QueryNameLower endswith ".xip.io"
+    or QueryNameLower endswith ".lvh.me"
+| extend UsesProviderName = QueryNameLower in~ (ProviderMetadataNames)
+// Keep resolutions with no A record only if the NAME itself is
+// interesting; otherwise expand the answers.
+| extend AnswerList = iff(array_length(AnswerList) == 0,
+                          dynamic([""]), AnswerList)
+| mv-expand Answer = AnswerList to typeof(string)
+// ============================================================
+// STEP 2: THE TEST — on the ANSWER, not the QUERY.
+//
+// 169.254.0.0/16 rather than a single host: 169.254.170.2 is
+// the ECS task metadata endpoint, and any other link-local
+// address arriving as a DNS answer is equally abnormal.
+// 192.0.0.192 is Oracle Cloud's legacy metadata endpoint.
+// 100.100.100.200 is Alibaba Cloud's.
+// ============================================================
+| extend AnswerIsIPv4 = isnotnull(parse_ipv4(Answer))
+| extend IsMetadataAnswer = AnswerIsIPv4 and (
+       ipv4_is_in_range(Answer, "169.254.0.0/16")
+    or ipv4_is_in_range(Answer, "192.0.0.192/32")
+    or ipv4_is_in_range(Answer, "100.100.100.200/32")
+  )
+| where IsMetadataAnswer or UsesWildcardDns or UsesProviderName
+// ============================================================
+// STEP 3: CLASSIFY.
+//
+// Three distinct findings with three different urgencies, and
+// the analyst should not have to reconstruct which is which
+// from the raw columns.
+// ============================================================
+| extend Verdict = case(
+      IsMetadataAnswer and UsesWildcardDns,  "MetadataViaWildcardDns",
+      IsMetadataAnswer and UsesProviderName, "ProviderMetadataName",
+      IsMetadataAnswer,                      "MetadataResolution",
+      UsesWildcardDns,                       "WildcardDnsNoMetadataAnswer",
+                                             "ProviderNameNoAnswer"
+  )
+// Does the requested NAME carry an encoded address? This is
+// enrichment for triage, never a filter — the whole point of
+// this query is that it works when the name is unreadable.
+| extend NameEmbedsAddress = QueryNameLower matches regex
+    @"(\d{1,3}[-.]){3}\d{1,3}|0x[0-9a-f]{8}|\b\d{8,10}\b"
+| summarize
+    Resolutions     = count(),
+    MetadataAnswers = countif(IsMetadataAnswer),
+    AnswerSet       = make_set(Answer, 10),
+    QueryNames      = make_set(QueryName, 10),
+    Processes       = make_set(InitiatingProcessFileName, 10),
+    ProcessPaths    = make_set(InitiatingProcessFolderPath, 5),
+    SampleCmd       = take_any(InitiatingProcessCommandLine),
+    Accounts        = make_set(InitiatingProcessAccountName, 5),
+    Sources         = make_set(TelemetrySource, 2),
+    FirstSeen       = min(Timestamp),
+    LastSeen        = max(Timestamp)
+    by DeviceName, DeviceId, Verdict, NameEmbedsAddress
+| order by MetadataAnswers desc, Resolutions desc

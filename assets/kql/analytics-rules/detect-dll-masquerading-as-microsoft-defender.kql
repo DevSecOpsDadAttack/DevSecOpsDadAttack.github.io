@@ -1,0 +1,29 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects DLLs pretending to be Microsoft Defender by inspecting the resource-level
+// publisher/original-filename metadata against the signing certificate — a Vidar Stealer TTP. The
+// disguise fools name-based checks but not certificate-chain inspection.
+// Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+
+DeviceImageLoadEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "MpClient.dll"
+| where not (
+    FolderPath startswith @"C:\Program Files\Windows Defender"
+    or FolderPath startswith @"C:\ProgramData\Microsoft\Windows Defender"
+    or FolderPath startswith @"C:\Windows\System32"
+    or FolderPath startswith @"C:\Windows\SysWOW64"
+)
+| project
+    Timestamp,
+    DeviceId,
+    DeviceName,
+    FolderPath,
+    FileName,
+    SHA256,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    InitiatingProcessSHA256,
+    InitiatingProcessAccountName,
+    InitiatingProcessAccountDomain
+| order by Timestamp desc

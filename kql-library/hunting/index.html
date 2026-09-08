@@ -13,6 +13,142 @@ permalink: /kql-library/hunting/
 
 <p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
 
+<h3 class="kql-lib-subcat-heading">Standalone</h3>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-azure-diagnostic-setting-deletions/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Azure Diagnostic Setting Deletions</span>
+      <code class="kql-lib-query-file">hunt-azure-diagnostic-setting-deletions.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Deletions of Azure diagnostic settings — the moment an attacker turns off logging (T1562.008). Step 1 of a two-step sequence.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-blockchain-rpc-c2-dead-drop/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Blockchain Rpc C2 Dead Drop</span>
+      <code class="kql-lib-query-file">hunt-blockchain-rpc-c2-dead-drop.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">C2 traffic hidden inside blockchain-RPC calls to public utilities (QuickNode, Alchemy) — 'the dead drop is a public utility.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-c2-beacon-by-connection-window-rhythm/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt C2 Beacon By Connection Window Rhythm</span>
+      <code class="kql-lib-query-file">hunt-c2-beacon-by-connection-window-rhythm.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cav3rn-endpoint-local-log-file-artifact/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Cav3rn Endpoint Local Log File Artifact</span>
+      <code class="kql-lib-query-file">hunt-cav3rn-endpoint-local-log-file-artifact.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Endpoint-side hunt for Project CAV3RN's local file artifact (`logAzure.txt` and family) — config persistence written by the module.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+      <code class="kql-lib-query-file">hunt-cloud-metadata-ssrf-normalized-forms.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-storage-bucket-lookalike-references/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Cloud Storage Bucket Lookalike References</span>
+      <code class="kql-lib-query-file">hunt-cloud-storage-bucket-lookalike-references.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+      <code class="kql-lib-query-file">hunt-credential-compromise-signin-audit-alert-three-table.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-distributed-ssh-brute-force-per-target/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Distributed Ssh Brute Force Per Target</span>
+      <code class="kql-lib-query-file">hunt-distributed-ssh-brute-force-per-target.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">SSH brute-force hunt that pivots on the target host, not the source IP — catches distributed attacks that stay under per-source thresholds by using thousands of IPs.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-dns-aaaa-record-covert-recovery-channel/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt DNS Aaaa Record Covert Recovery Channel</span>
+      <code class="kql-lib-query-file">hunt-dns-aaaa-record-covert-recovery-channel.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Project CAV3RN's DNS AAAA-record recovery channel — IPv6 addresses returned in AAAA queries that decode as ASCII or structured config.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-encoded-command-usage-across-fleet-time-baseline/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Encoded Command Usage Across Fleet Time Baseline</span>
+      <code class="kql-lib-query-file">hunt-encoded-command-usage-across-fleet-time-baseline.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-first-time-admin-operation-user-baseline/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt First Time Admin Operation User Baseline</span>
+      <code class="kql-lib-query-file">hunt-first-time-admin-operation-user-baseline.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-inflated-file-payload-evading-size-based-av-scan/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Inflated File Payload Evading Size Based Av Scan</span>
+      <code class="kql-lib-query-file">hunt-inflated-file-payload-evading-size-based-av-scan.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-linux-process-argv0-vs-executable-mismatch/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Linux Process Argv0 Vs Executable Mismatch</span>
+      <code class="kql-lib-query-file">hunt-linux-process-argv0-vs-executable-mismatch.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Linux processes where argv[0] doesn't match the actual binary that was executed — a process wearing another process's name tag.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+      <code class="kql-lib-query-file">hunt-metadata-ip-any-encoded-form-inspecting-dns-answer.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-config-modification-no-user-context/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Config Modification No User Context</span>
+      <code class="kql-lib-query-file">hunt-npm-postinstall-config-modification-no-user-context.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — AsyncAPI-shaped supply-chain compromise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+      <code class="kql-lib-query-file">hunt-npm-postinstall-grandchild-network-payload.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-outlook-calendar-c2-far-future-standing-meeting/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Outlook Calendar C2 Far Future Standing Meeting</span>
+      <code class="kql-lib-query-file">hunt-outlook-calendar-c2-far-future-standing-meeting.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Project CAV3RN's Outlook calendar C2 — standing meetings scheduled decades in the future in fixed low-attention windows, carrying operator-agent traffic in the event body.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-suspicious-user-consented-oauth-app-grants/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Suspicious User Consented Oauth App Grants</span>
+      <code class="kql-lib-query-file">hunt-suspicious-user-consented-oauth-app-grants.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">'The backdoor you approved yourself' — OAuth application consents granting broad Graph permissions to unfamiliar apps. Focuses on CONSENT events, not the logins that follow.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-teams-phishing-then-suspicious-login-correlation/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Teams Phishing Then Suspicious Login Correlation</span>
+      <code class="kql-lib-query-file">hunt-teams-phishing-then-suspicious-login-correlation.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
+  </li>
+</ul>
 <h3 class="kql-lib-subcat-heading">Eventid Forensics</h3>
 <p class="kql-lib-subcat-intro">Investigative queries organized around a specific Windows Event ID — the "who, where, when, how often" set. Replace the sample `EventID` value in each query with the one you're chasing.</p>
 <ul class="kql-lib-query-list list-unstyled" role="list">
@@ -60,14 +196,21 @@ permalink: /kql-library/hunting/
   </li>
 </ul>
 <h3 class="kql-lib-subcat-heading">File Activity</h3>
-<p class="kql-lib-subcat-intro">File-level activity queries — the "prove to an auditor we can track this" set.</p>
+<p class="kql-lib-subcat-intro">File-level activity queries — the "prove to an auditor we can track this" set, plus artifact-based detections that read files as evidence of network events.</p>
 <ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
+      <span class="kql-lib-query-title">Detect Spring Boot Heapdump Artifact On Disk</span>
+      <code class="kql-lib-query-file">detect-spring-boot-heapdump-artifact-on-disk.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
+  </li>
   <li class="kql-lib-query-item">
     <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
       <span class="kql-lib-query-title">File Activity Audit</span>
       <code class="kql-lib-query-file">file-activity-audit.kql</code>
     </a>
-    <p class="kql-lib-query-desc">Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor.</p>
+    <p class="kql-lib-query-desc">Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor.</p>
   </li>
 </ul>
 <h3 class="kql-lib-subcat-heading">User Activity</h3>
@@ -93,5 +236,23 @@ permalink: /kql-library/hunting/
       <code class="kql-lib-query-file">whos-logging-in-and-when.kql</code>
     </a>
     <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">Web Tier</h3>
+<p class="kql-lib-subcat-intro">Hunts against web session / HTTP telemetry — ASIM Web Session (`_Im_WebSession`) and its `CommonSecurityLog` fallback for non-ASIM workspaces.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+      <code class="kql-lib-query-file">hunt-spring-boot-heapdump-exfiltration-asim.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+      <code class="kql-lib-query-file">hunt-spring-boot-heapdump-exfiltration-commonsecuritylog.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
   </li>
 </ul>

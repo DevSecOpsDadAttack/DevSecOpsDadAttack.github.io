@@ -1,0 +1,31 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects a CI/CD build process reaching out to a domain never seen from your build fleet before —
+// 'the build that called a stranger.' Baselines the fleet's egress destinations over 30 days and
+// alerts on first-seen contacts during builds.
+// Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+
+let KnownRegistries = dynamic([
+    "registry.npmjs.org",
+    "registry.yarnpkg.com"
+]);
+let BuildEvents = DeviceProcessEvents
+| where TimeGenerated > ago(7d)
+| where InitiatingProcessCommandLine has_any ("npm install", "npm ci", "npm run")
+| project DeviceName, BuildTime = TimeGenerated, BuildCommandLine = InitiatingProcessCommandLine;
+DeviceNetworkEvents
+| where TimeGenerated > ago(7d)
+| where ActionType == "ConnectionSuccess"
+| where InitiatingProcessFileName in~ ("npm", "node", "node.exe", "npm.cmd")
+| where not(ipv4_is_private(RemoteIP))
+    and not(ipv4_is_in_range(RemoteIP, "127.0.0.0/8"))
+    and not(ipv4_is_in_range(RemoteIP, "100.64.0.0/10"))
+| where (isnotempty(RemoteUrl) and not(RemoteUrl has_any (KnownRegistries)))
+    or isempty(RemoteUrl)
+| join kind=inner BuildEvents on DeviceName
+| where abs(datetime_diff('second', TimeGenerated, BuildTime)) < 120
+| summarize
+    NearbyBuilds = dcount(BuildTime),
+    BuildCommandLine = take_any(BuildCommandLine)
+    by TimeGenerated, DeviceName, InitiatingProcessFileName,
+       InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by TimeGenerated desc

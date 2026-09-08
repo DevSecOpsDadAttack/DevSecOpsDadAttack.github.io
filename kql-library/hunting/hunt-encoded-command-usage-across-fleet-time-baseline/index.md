@@ -1,0 +1,143 @@
+---
+layout: page
+title: Hunt Encoded Command Usage Across Fleet Time Baseline
+subtitle: "Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId."
+permalink: /kql-library/hunting/hunt-encoded-command-usage-across-fleet-time-baseline/
+js:
+  - "/assets/js/kql-library.js"
+---
+
+<p class="kql-lib-crumbs">
+  <a href="{{ '/kql-library/' | relative_url }}">KQL Library</a>
+  &nbsp;/&nbsp;
+  <a href="{{ '/kql-library/hunting/' | relative_url }}">Hunting</a>
+</p>
+
+<div class="kql-lib-query-header">
+  <span class="attack-badge attack-badge-lib"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>&nbsp;Hunting</span>
+  <code class="kql-lib-query-file">hunt-encoded-command-usage-across-fleet-time-baseline.kql</code>
+</div>
+
+<p class="kql-lib-query-longdesc">Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId.</p>
+
+<div class="kql-lib-query-actions">
+  <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-encoded-command-usage-across-fleet-time-baseline">
+    <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
+  </button>
+  <a class="kql-lib-download-btn" href="{{ '/assets/kql/hunting/hunt-encoded-command-usage-across-fleet-time-baseline.kql' | relative_url }}" download="hunt-encoded-command-usage-across-fleet-time-baseline.kql">
+    <i class="fas fa-download" aria-hidden="true"></i>&nbsp;Download .kql
+  </a>
+</div>
+
+<div id="kql-code-hunt-encoded-command-usage-across-fleet-time-baseline" markdown="1">
+
+```kusto
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Correlates encoded-command executions across the fleet against a rolling per-host time baseline.
+// Uses TimeBucket alone as the join key (deliberately no DeviceId, no user) to detect
+// campaign-level shape: many hosts running similar encoded commands within the same window.
+// Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+
+let lookback = 1d;
+let Bare = (s:string) {
+    trim_end(@"\.(exe|cmd|bat|com|ps1)", tolower(extract(@"([^\\/]+)$", 1, tostring(s))))
+};
+let SuspiciousChildren = dynamic([
+    "cmd","powershell","pwsh","cscript","wscript","mshta",
+    "certutil","bitsadmin","rundll32","regsvr32","whoami",
+    "nltest","net","net1"
+]);
+// High-privilege SharePoint operations that matter for CVE-2026-55040.
+// These are the ones the auth bypass enables: the attacker is acting as
+// a site admin they never authenticated as.
+let PrivilegedOps = dynamic([
+    "SiteCollectionAdminAdded","PermissionLevelAdded","PermissionLevelModified",
+    "AddedToGroup","SiteAdminChangeRequest","SiteCollectionCreated"
+]);
+// STEP 1: Host-side signal. w3wp.exe child process, scoped to SharePoint
+// by application pool.
+let HostSignal = DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| extend AppPool = extract(@'-ap\s+"([^"]+)"', 1, tostring(InitiatingProcessCommandLine))
+| where AppPool contains "SharePoint" or AppPool contains "SecurityTokenService"
+| extend Self = Bare(FileName)
+| where Self in (SuspiciousChildren) or Self has_any (SuspiciousChildren)
+| project
+    ProcTimestamp = Timestamp,
+    DeviceId, DeviceName,
+    AppPool,
+    // The service account is NOT the join key — see Step 3. It stays in the
+    // output because the analyst needs it: if the account running w3wp.exe
+    // is not the expected SharePoint service identity, that is a separate
+    // finding worth investigating.
+    ServiceAccount = tolower(tostring(InitiatingProcessAccountName)),
+    ChildProcess = Self,
+    ProcessCommandLine,
+    InitiatingProcessCommandLine;
+// STEP 2: Application-layer signal. Privileged SharePoint operations.
+// UserId is the ACTOR — the identity performing the operation. After the
+// CVE-2026-55040 JWT auth bypass, this is the impersonated user (e.g.
+// alice@contoso.com), NOT the SharePoint service account. This distinction
+// is the reason you cannot join on ServiceAccount == UserId: the auth
+// bypass makes them different identities by design, and that join would
+// return nothing for exactly the attack scenario the detection is meant
+// to catch.
+let AppSignal = OfficeActivity
+| where TimeGenerated > ago(lookback)
+| where OfficeWorkload == "SharePoint"
+| where Operation in (PrivilegedOps)
+| where ResultStatus == "Succeeded"
+| project
+    OpTimestamp = TimeGenerated,
+    Actor = tolower(UserId),
+    ClientIP,
+    Operation,
+    SiteUrl,
+    ResultStatus;
+// STEP 3: Correlate on TIME within SharePoint-scoped events.
+//
+// CONSTRAINT: OfficeActivity and DeviceProcessEvents share no natural
+// device-level join key. OfficeActivity carries ClientIP (the user's
+// source address) and UserId (the impersonated identity). DeviceProcess-
+// Events carries DeviceName (the server hostname) and the service account
+// running w3wp.exe. No column present in both tables means "the same
+// server." This is a telemetry-boundary problem, not a query problem —
+// the tables were not designed to be joined.
+//
+// What makes this correlation viable despite the missing anchor: both
+// sides are already scoped to SharePoint. AppPool on the host side limits
+// to SharePoint worker processes. OfficeWorkload + PrivilegedOps on the
+// app side limits to high-privilege SharePoint audit events. The cross-
+// product is bounded: SharePoint process events × SharePoint audit events
+// in a narrow time window.
+//
+// In a single-farm environment this becomes a bounded hunting correlation
+// — one farm's audit events correlating with one farm's process events,
+// both filtered to SharePoint-only. In a multi-farm environment it cross-
+// products across farms. If you operate multiple SharePoint farms, you
+// need reverse-proxy, WAF, or IIS request logs that carry both the client
+// source IP and the backend server identity — those provide the actual
+// bridge. OfficeActivity.ClientIP is the user's source address (or a
+// proxy), not the SharePoint server's, so resolving DeviceName to a
+// server IP does not help.
+HostSignal
+| extend _sp = 1
+| join kind=inner (AppSignal | extend _sp = 1) on _sp
+| project-away _sp, _sp1
+// Temporal filter: the privileged operation precedes the process spawn.
+// The attack chain is auth bypass → privileged op → RCE → child process,
+// so the app-layer event comes first. 10-minute lookback with a 2-minute
+// forward margin for ingestion clock skew between OfficeActivity's
+// TimeGenerated and the device-local Timestamp.
+| where OpTimestamp between ((ProcTimestamp - 10m) .. (ProcTimestamp + 2m))
+| project
+    ProcTimestamp, OpTimestamp,
+    DeviceName, AppPool, ServiceAccount,
+    ChildProcess, ProcessCommandLine,
+    Actor, Operation, SiteUrl, ClientIP,
+    ResultStatus
+| order by ProcTimestamp desc
+```
+
+</div>

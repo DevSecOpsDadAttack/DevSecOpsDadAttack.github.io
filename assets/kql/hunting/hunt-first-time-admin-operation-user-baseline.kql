@@ -1,0 +1,56 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Baselines which identities have ever executed admin operations, then alerts when an account
+// outside that set successfully performs one — 'the admin who has never administered.' First-seen
+// baseline structurally similar to first-country-seen for OAuth tokens.
+// Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+
+let baseline_window = 60d;
+let detection_window = 1d;
+let admin_ops = dynamic([
+    "SiteCollectionAdminAdded","PermissionLevelAdded","PermissionLevelModified",
+    "AddedToGroup","SiteAdminChangeRequest","SiteCollectionCreated"
+]);
+// Baseline: who has performed admin operations in the past, and how often?
+// Frequency matters: an account that did it once in 60 days is not the same
+// risk profile as one that does it daily.
+let AdminBaseline = OfficeActivity
+| where TimeGenerated between (ago(baseline_window) .. ago(detection_window))
+| where OfficeWorkload == "SharePoint"
+| where Operation in (admin_ops)
+| where ResultStatus == "Succeeded"
+| summarize
+    BaselineOps   = count(),
+    BaselineDays  = dcount(bin(TimeGenerated, 1d)),
+    LastBaseline   = max(TimeGenerated),
+    BaselineOpsSet = make_set(Operation, 10)
+    by UserId;
+// Detection window: privileged operations from accounts not in the baseline.
+let RecentOps = OfficeActivity
+| where TimeGenerated > ago(detection_window)
+| where OfficeWorkload == "SharePoint"
+| where Operation in (admin_ops)
+| where ResultStatus == "Succeeded"
+| project TimeGenerated, UserId, ClientIP, Operation, SiteUrl, ResultStatus;
+// NEW admins: accounts with zero baseline history.
+let NewAdmins = RecentOps
+| join kind=leftanti AdminBaseline on UserId
+| extend AdminType = "NeverSeenBefore";
+// RARE admins: accounts IN the baseline but with very low frequency.
+// A "known admin" who performed one operation 58 days ago is not the same
+// as a daily operator, and the leftanti would have let them through.
+let RareAdmins = RecentOps
+| join kind=inner AdminBaseline on UserId
+| where BaselineOps <= 2 and BaselineDays <= 1
+| extend AdminType = "RarelySeenBefore";
+// Union both. NeverSeenBefore is a stronger signal; RarelySeenBefore is
+// a hunt. Both appear in the output, ranked.
+union NewAdmins, RareAdmins
+| summarize
+    Ops             = count(),
+    Operations      = make_set(Operation, 10),
+    SourceIPs       = make_set(ClientIP, 10),
+    SiteUrls        = make_set(SiteUrl, 10),
+    FirstSeen       = min(TimeGenerated),
+    LastSeen        = max(TimeGenerated)
+    by UserId, AdminType
+| order by AdminType asc, Ops desc

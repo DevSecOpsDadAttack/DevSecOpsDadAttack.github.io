@@ -1,0 +1,77 @@
+---
+layout: page
+title: Hunt Inflated File Payload Evading Size Based Av Scan
+subtitle: "File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling."
+permalink: /kql-library/hunting/hunt-inflated-file-payload-evading-size-based-av-scan/
+js:
+  - "/assets/js/kql-library.js"
+---
+
+<p class="kql-lib-crumbs">
+  <a href="{{ '/kql-library/' | relative_url }}">KQL Library</a>
+  &nbsp;/&nbsp;
+  <a href="{{ '/kql-library/hunting/' | relative_url }}">Hunting</a>
+</p>
+
+<div class="kql-lib-query-header">
+  <span class="attack-badge attack-badge-lib"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>&nbsp;Hunting</span>
+  <code class="kql-lib-query-file">hunt-inflated-file-payload-evading-size-based-av-scan.kql</code>
+</div>
+
+<p class="kql-lib-query-longdesc">File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling.</p>
+
+<div class="kql-lib-query-actions">
+  <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-inflated-file-payload-evading-size-based-av-scan">
+    <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
+  </button>
+  <a class="kql-lib-download-btn" href="{{ '/assets/kql/hunting/hunt-inflated-file-payload-evading-size-based-av-scan.kql' | relative_url }}" download="hunt-inflated-file-payload-evading-size-based-av-scan.kql">
+    <i class="fas fa-download" aria-hidden="true"></i>&nbsp;Download .kql
+  </a>
+</div>
+
+<div id="kql-code-hunt-inflated-file-payload-evading-size-based-av-scan" markdown="1">
+
+```kusto
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Hunts for file downloads that are anomalously large for their kind — Vidar's second costume
+// where the payload is padded with null bytes to slip past AV scanners that skip files above a
+// size ceiling. Ranks downloads whose size:entropy ratio suggests inflation.
+// Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated", "FileModified")
+| where FileName endswith ".exe" or FileName endswith ".dll"
+| where isnotnull(FileSize) and FileSize > 52428800
+| where not (
+    InitiatingProcessFileName has_any (
+        "msiexec.exe", "setup.exe", "install.exe", "winget.exe",
+        "MicrosoftEdgeUpdate.exe", "WindowsUpdateBox.exe",
+        "wuauclt.exe", "TiWorker.exe", "TrustedInstaller.exe"
+    )
+)
+| where not (
+    FolderPath startswith @"C:\Windows\"
+    or FolderPath startswith @"C:\Program Files\"
+    or FolderPath startswith @"C:\Program Files (x86)\"
+)
+| extend HighRiskPath = (
+    FolderPath has_any ("AppData", "Temp", "Downloads", "Desktop", "Public")
+)
+| project
+    Timestamp,
+    DeviceName,
+    DeviceId,
+    FileName,
+    FolderPath,
+    FileSize,
+    SHA256,
+    InitiatingProcessFileName,
+    InitiatingProcessFolderPath,
+    InitiatingProcessCommandLine,
+    InitiatingProcessSHA256,
+    HighRiskPath
+| order by FileSize desc
+```
+
+</div>

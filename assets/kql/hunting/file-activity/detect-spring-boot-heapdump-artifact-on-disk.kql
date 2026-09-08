@@ -1,0 +1,120 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request:
+// heapdump<yyyy-MM-dd-HH-mm>[-live]<digits>.hprof in the JVM's temp dir. The filename is proof an HTTP
+// request hit the endpoint even when the web tier didn't log the URL. Classifies web-endpoint vs OOM
+// vs operator origins, and lists nearby operator diagnostic runs as a triage lane — not an exclusion.
+// Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+
+let lookback = 30d;
+// Spring's HeapDumpWebEndpoint: createTempFile("heapdump" + yyyy-MM-dd-HH-mm
+// + optional "-live", ".hprof"). The trailing digits are createTempFile's uniqueness.
+let ActuatorDumpRegex = @"^heapdump\d{4}-\d{2}-\d{2}-\d{2}-\d{2}(-live)?\d+\.hprof$";
+// -XX:+HeapDumpOnOutOfMemoryError writes java_pid<pid>.hprof to the working directory.
+let OomDumpRegex      = @"^java_pid\d+\.hprof$";
+// Kept for reference in triage output, NOT used as a filter -- see the note below.
+let DumpTools         = dynamic(["jmap","jcmd","jattach","jhsdb"]);
+let DumpEvents = DeviceFileEvents
+| where Timestamp > ago(lookback)
+// endswith on the extension is the only safe prefilter. `FileName has "heapdump"`
+// does NOT match heapdump2026-08-03-14-49123.hprof -- see the note below.
+| where FileName endswith ".hprof" or FileName endswith ".phd"
+| extend NameLower = tolower(FileName)
+| extend DumpOrigin = case(
+      NameLower matches regex ActuatorDumpRegex, "ActuatorWebEndpoint",
+      NameLower matches regex OomDumpRegex,      "JvmOutOfMemory",
+                                                 "OperatorOrUnknown")
+// The minute in the filename is the request arrival time in the JVM's LOCAL zone.
+// Extracted as a string on purpose: comparing it to TimeGenerated tells you the
+// host's UTC offset, which you need before you join it to anything.
+| extend FilenameStamp = extract(@"^heapdump(\d{4}-\d{2}-\d{2}-\d{2}-\d{2})", 1, NameLower)
+| extend LiveOnly = NameLower matches regex @"^heapdump[\d\-]+-live\d+\.hprof$"
+| project
+    Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath,
+    FileSize = column_ifexists("FileSize", long(null)),
+    DumpOrigin, FilenameStamp, LiveOnly,
+    Process     = InitiatingProcessFileName,
+    ProcessPath = InitiatingProcessFolderPath,
+    ProcessId   = InitiatingProcessId,
+    Account     = InitiatingProcessAccountName,
+    CommandLine = InitiatingProcessCommandLine;
+// Lane 2 -- the BENIGN corroborator. Not an exclusion. An operator-run jcmd on the
+// same host in the same window makes a dump explainable; its ABSENCE makes one
+// unexplained. Excluding these outright would delete the evidence that a dump was fine.
+// `contains`, not `has_any`. "GC.heap_dump", "-dump:" and ".hprof" are MULTI-TOKEN
+// needles -- the dot, underscore and colon are separators, not content, so a term test
+// on them leans on adjacency behaviour Microsoft doesn't document. Substring matching
+// is slower and unambiguous, and this lane is tiny. Same argument as the Act I
+// prefilter, applied to a needle instead of a haystack.
+let DiagnosticRuns = DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where ProcessCommandLine contains "heap_dump"
+     or ProcessCommandLine contains "heapdump"
+     or ProcessCommandLine contains "dumpHeap"
+     or ProcessCommandLine contains "-dump:"
+     or ProcessCommandLine contains ".hprof"
+| summarize
+    DiagRuns     = count(),
+    // The TIMELINE, not its endpoints. Collapsing thirty days to min/max and then
+    // asking a temporal question of the aggregate is the bug this list exists to
+    // prevent -- see the note below.
+    DiagTimes    = make_list(Timestamp, 2000),
+    DiagCommands = make_set(ProcessCommandLine, 5),
+    DiagTools    = make_set(FileName, 5),
+    DiagAccounts = make_set(AccountName, 5)
+    by DeviceId;
+DumpEvents
+// Entity = (device, file). One file produces multiple rows: createTempFile creates it,
+// Spring deletes the placeholder, the JVM writes it, the response streams, Spring
+// deletes it again. Four to five events, one artifact, one finding.
+| summarize
+    Actions       = make_set(ActionType),
+    EventCount    = count(),
+    FirstEvent    = min(Timestamp),
+    LastEvent     = max(Timestamp),
+    MaxFileSize   = max(FileSize),
+    Folders       = make_set(FolderPath, 3),
+    Processes     = make_set(Process, 5),
+    ProcessPaths  = make_set(ProcessPath, 5),
+    Accounts      = make_set(Account, 5),
+    CommandLines  = make_set(CommandLine, 3),
+    DeviceNames   = make_set(DeviceName, 3),
+    Origins       = make_set(DumpOrigin, 3),
+    Stamps        = make_set_if(FilenameStamp, isnotempty(FilenameStamp), 3),
+    LiveRequested = countif(LiveOnly) > 0
+    by DeviceId, FileName
+| extend
+    Created      = set_has_element(Actions, "FileCreated"),
+    Deleted      = set_has_element(Actions, "FileDeleted"),
+    // DumpOrigin is a pure function of FileName and FileName is in the by clause,
+    // so this set is always a singleton. Indexing it is safe here and nowhere else.
+    Origin       = tostring(Origins[0]),
+    LifetimeSec  = tolong(datetime_diff('second', LastEvent, FirstEvent)),
+    SizeReadable = format_bytes(coalesce(MaxFileSize, long(0)))
+// Create AND delete, with the actuator naming, is the complete protocol signature.
+| extend WebEndpointConfirmed = Origin == "ActuatorWebEndpoint" and Created and Deleted
+| join kind=leftouter DiagnosticRuns on DeviceId
+| project-away DeviceId1
+// mv-apply over an empty or absent array DROPS the row -- which would delete exactly
+// the hosts with NO diagnostic activity, i.e. every finding that matters. Seed one
+// null element so those rows survive the expansion and score zero.
+| extend DiagTimes = iff(isnull(DiagTimes) or array_length(DiagTimes) == 0,
+                         dynamic([null]), DiagTimes)
+| mv-apply DiagTime = DiagTimes to typeof(datetime) on (
+    summarize NearbyDiagRuns =
+        countif(DiagTime between ((FirstEvent - 15m) .. (LastEvent + 15m)))
+  )
+| extend NearbyDiagRuns = coalesce(NearbyDiagRuns, 0)
+| extend
+    DiagnosticNearby = NearbyDiagRuns > 0,
+    RenamedInWindow  = array_length(DeviceNames) > 1
+// An actuator-named dump with NO operator diagnostic activity anywhere near it is the
+// finding. With one, it's probably a human being doing their job -- still worth a look,
+// because "an operator ran jcmd" and "an attacker called the endpoint while an operator
+// happened to be working" look identical from here.
+| extend Verdict = case(
+      WebEndpointConfirmed and not(DiagnosticNearby), "WebEndpoint-Unexplained",
+      WebEndpointConfirmed,                           "WebEndpoint-OperatorNearby",
+      Origin == "JvmOutOfMemory",                     "OutOfMemory",
+                                                      "Operator-Or-Unknown")
+| order by WebEndpointConfirmed desc, NearbyDiagRuns asc, LiveRequested desc,
+           MaxFileSize desc, LastEvent desc

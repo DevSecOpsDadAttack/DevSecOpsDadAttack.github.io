@@ -1,0 +1,39 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in
+// (dcount(bin(Timestamp, 1h))) rather than raw connection volume. Catches implants that beacon
+// spread-over-time and hide under any volume threshold. Filters to user-writable paths
+// (Downloads/Temp/AppData) with an allowlist for legit beacons (Slack, VS Code, Teams, etc.).
+// Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+
+let lookback = 24h;
+let beaconCandidates = DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where (RemoteIPType == "Public") or (isempty(RemoteIPType) and not(ipv4_is_private(RemoteIP)))
+| where isnotempty(InitiatingProcessFolderPath)
+| where InitiatingProcessFolderPath has_any ("\\Downloads\\", "\\Temp\\", "\\AppData\\Local\\Temp\\", "\\AppData\\Roaming\\")
+| where not (InitiatingProcessFileName in~ (
+    "chrome.exe", "msedge.exe", "firefox.exe", "iexplore.exe",
+    "MicrosoftEdge.exe", "OneDrive.exe", "Teams.exe",
+    "Slack.exe", "Code.exe", "Discord.exe", "Spotify.exe",
+    "Update.exe", "squirrel.exe"
+))
+| summarize
+    ConnectionWindows = dcount(bin(Timestamp, 1h)),
+    TotalConnections = count(),
+    RemoteIPs = make_set(RemoteIP, 10),
+    RemotePorts = make_set(RemotePort, 10)
+    by DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where ConnectionWindows >= 4 and TotalConnections >= 8;
+let procContext = DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where FolderPath has_any ("\\Downloads\\", "\\Temp\\", "\\AppData\\Local\\Temp\\", "\\AppData\\Roaming\\")
+| summarize ProcessCommandLine = arg_max(Timestamp, ProcessCommandLine) by DeviceId, FileName, FolderPath
+| project DeviceId, FileName, FolderPath, ProcessCommandLine;
+beaconCandidates
+| join kind=leftouter procContext on DeviceId
+| where FileName =~ InitiatingProcessFileName
+| project
+    DeviceId, DeviceName, AccountName,
+    InitiatingProcessFileName, InitiatingProcessFolderPath, ProcessCommandLine,
+    ConnectionWindows, TotalConnections, RemoteIPs, RemotePorts
+| order by ConnectionWindows desc
