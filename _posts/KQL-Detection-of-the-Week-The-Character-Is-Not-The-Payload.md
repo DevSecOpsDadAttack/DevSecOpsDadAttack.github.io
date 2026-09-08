@@ -566,7 +566,7 @@ On older sensor versions where `ProcessUniqueId` isn't populated, the fallback i
 
 <br/>
 
-## 🎁 Bonus Round: `make_list()` Does Not Preserve Input Order, and Your Decoder Depends on Order
+## 🥊 Bonus Round: `make_list()` Does Not Preserve Input Order, and Your Decoder Depends on Order
 
 ![Bonus Round](/assets/img/TheCharacterIsNotThePayload/6.png)
 
