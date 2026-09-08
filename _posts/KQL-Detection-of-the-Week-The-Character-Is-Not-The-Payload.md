@@ -78,7 +78,7 @@ Three days, three shapes, and it is worth being precise about how each one fails
 
 **Sunday's query gave up the tag block on a premise that doesn't hold.** The brief gives its reason for stopping at BMP escapes — "KQL regex does not support `\x{E0000}` syntax for Unicode supplementary plane characters" — but Kusto's own regex syntax reference lists `\x{10FFFF}` (and the equivalent `\u{...}` and `\U{...}` forms) as supported hex-character-code escapes for any Unicode codepoint, tag block included, inside a `matches regex` pattern. That's a different escaping layer than the plain string literal Saturday's query ran into — regex escapes are interpreted by the regex engine, not the KQL string parser — and it does support the full range. The BMP-only restriction wasn't a real limitation to design around; it was an assumption that turned out to be false, and it's the specific reason this query — like the other two — ends up with no tag block coverage. Independent of that, the resulting character class also overlaps only partly with Friday's, missing U+180E, U+2028/U+2029, and the variation selectors. Three days, three lists, four different invisible-character populations, and the plane the source article is actually about is present in exactly zero of them.
 
-All three also look at `Subject` because that is the field OfficeActivity exposes, while the Microsoft reporting names the payload as an *email body* obfuscation. Subject-level smuggling exists — attackers do it to bypass keyword rules on subjects — but the body is where the technique lives, and the correct source for body content is `EmailEvents` in Defender XDR, not OfficeActivity. That is a telemetry-scope issue rather than a KQL error, and it means the three subject queries would need to be paired with a body query before any of them meaningfully covers the campaign.
+All three also look at `Subject` because that is the field OfficeActivity exposes, while the Microsoft reporting names the payload as an *email body* obfuscation. Subject-level smuggling exists — attackers do it to bypass keyword rules on subjects — but the body is where the technique lives, and neither table gets you there. `EmailEvents` in Defender XDR is a better source than `OfficeActivity` for email metadata generally, but its schema doesn't expose body text either — `Subject`, sender/recipient, delivery action/location, and threat classification are there; the raw body isn't, by design (advanced hunting doesn't surface full message content). That's a harder telemetry gap than "wrong table" — there isn't a KQL-queryable source for retroactively hunting body content in native Defender/Sentinel. Closing it means either a mail-flow/transport rule with a regex condition evaluated at delivery time (which flags matches going forward but isn't something you can hunt against historically the way OfficeActivity or EmailEvents can) or a third-party DLP/content-inspection layer that actually retains body text. That is a telemetry-scope issue rather than a KQL error, and it means the three subject queries are working with the only layer that's reachable at all through advanced hunting — which is worth stating plainly rather than implying a body-level KQL fix is one CTE swap away.
 
 The fix for this act is not a longer list. A regex character-class range like `[\x{E0000}-\x{E007F}]` could flag that a tag-block character is present without needing 128 individual literals — so detection alone was reachable even within Sunday's chosen approach, if the brief hadn't worked from the wrong premise about what the syntax supports. But presence isn't the interesting output here; a triage analyst needs to know what the smuggled bytes say, and a regex match can't give you that. The correct move is the one Kusto has an operator for and that none of the three briefs used: **decompose the string to its integer codepoints, filter by arithmetic range, and — for the tag block — decode the smuggled bytes back to their ASCII.**
 
@@ -109,10 +109,14 @@ let TagBlockHigh = tolong(0xE007F);
 // STEP 1: BASE SET.
 //
 // OfficeActivity Subject is the layer this article's fixes
-// address. Body-level detection needs EmailEvents in Defender
-// XDR — see VALIDATION 2 at the end of this act. Keeping the
-// subject query self-contained here so it can ship without
-// waiting on the body query.
+// address, and — see VALIDATION below — it's also the only
+// layer reachable through advanced hunting at all. Neither
+// OfficeActivity nor EmailEvents exposes body text in the
+// advanced hunting schema, so there's no CTE swap that gets
+// this fold running against the body the campaign actually
+// uses. Keeping the subject query self-contained here so it
+// can ship on its own merits rather than waiting on a body
+// layer that isn't queryable this way.
 // ============================================================
 let SubjectRows =
     OfficeActivity
@@ -254,16 +258,19 @@ Notice also what the verdict logic *doesn't* do. It does not use a fixed `Invisi
 
 ### Validate before you deploy
 
-One query, thirty seconds. It answers the question all three briefs ask and none of them resolve: does the Act I detection have anywhere to run, and is the tenant reachable for the body-level layer that the reporting actually names?
+One query, thirty seconds. It answers a narrower but more honest question than all three briefs asked: does the Act I detection have anywhere to run, and — separately — is there any tenant configuration where the body-level layer the reporting actually names is reachable through advanced hunting at all?
 
 ```kql
 // Does OfficeActivity carry Subject for inbound messages in your
 // tenant, and is EmailEvents (Defender for Office 365 P2) present
-// for body-level detection? Subject is a partial layer; the
-// campaign in the source article lives in the body, and if
-// EmailEvents returns rows the Act I codepoint fold reruns against
-// it unchanged (swap the SubjectRows CTE for an EmailEvents base
-// and carry Body forward alongside Subject).
+// as a richer subject/metadata source? Both are subject-level or
+// better; neither exposes body text — advanced hunting doesn't
+// surface full message content in either table's schema, so this
+// check can confirm subject-layer coverage but can't establish a
+// path to body-layer detection. If you need that, look outside
+// advanced hunting: a mail-flow rule condition evaluated at
+// delivery time, or a DLP/content-inspection product that retains
+// body text.
 union
   (OfficeActivity
    | where TimeGenerated >= ago(7d)
@@ -280,7 +287,7 @@ union
 | order by Rows desc
 ```
 
-Subject-based detection is a real layer — attackers do smuggle payload into subjects to bypass keyword rules — but if `EmailEvents` is present in your tenant, that is where the primary detection belongs, and the codepoint fold from Act I works against it unchanged. Swap the `SubjectRows` CTE for an `EmailEvents` base, carry `Body` forward, and the rest of the pipeline is the same.
+Subject-based detection is a real layer — attackers do smuggle payload into subjects to bypass keyword rules — and if `EmailEvents` is present in your tenant, it's a better source of subject and delivery metadata than `OfficeActivity`, so the codepoint fold from Act I is worth re-running against it (swap the `SubjectRows` CTE for an `EmailEvents` base). But that swap gets you a better subject-layer detection, not a body-layer one — there's no `Body` column to carry forward, in either table. Say so explicitly in whatever this ships as, rather than letting "check `EmailEvents`" imply a body fix that native advanced hunting can't deliver.
 
 <br/>
 
@@ -322,7 +329,9 @@ The port isn't the protocol. Port 1883 is the IANA-registered port for MQTT and 
 
 The exclusion list is the mirror of the same problem. Four MQTT client binary names are named, and an attacker who reads any of them — or who ships their implant with `mqttx.exe` embedded in its file description resource — passes the filter cleanly. `!in~` matches on the *file name* the sensor recorded, which the attacker chose. This is a common shape of allowlist in detection engineering: fragile against renaming, opaque to introspection ("why is my rule not firing?" answered only by walking the exclusion list character by character), and expanding every time a new legitimate MQTT tool appears in the estate.
 
-There is a real detection here — MQTT C2 traffic has a distinctive behavioural profile — but the query does not describe it. MQTT keep-alives are periodic (`PINGREQ`/`PINGRESP` every 60 seconds by default), the connection is long-lived (hours to weeks), and the bidirectional traffic volume is low and steady. That is a *behaviour*, and it is detectable against any port, from any process name, on any endpoint. The port and process filters can stay as noise reducers, but they are not the signal — the signal is the cadence.
+There is a real detection underneath this, but it needs a more honest description than "MQTT keep-alive cadence" — because `DeviceNetworkEvents` can't actually see that. `ConnectionSuccess` fires once, when a TCP connection is established; it's reported at the TCP layer, not from anything that parses what happens inside the connection afterward. A well-behaved MQTT client that opens one persistent socket and keeps it alive with in-band `PINGREQ`/`PINGRESP` for days would generate exactly **one** `ConnectionSuccess` row for that entire session — not a cadence of anything. There's no `MqttConnectionInspected` action type the way there's `HttpConnectionInspected` or `FtpConnectionInspected`; MDE doesn't parse MQTT at the protocol level, so its keep-alive traffic is invisible to this table by construction.
+
+What the telemetry *can* see, and what the query below actually measures, is periodic **re-connection** — a client that repeatedly tears down and re-establishes a TCP connection to the same destination at a regular interval. That's a legitimate and useful signal in its own right (it's how a lot of unsophisticated beaconing behaves, and some MQTT clients under network instability or aggressive reconnect logic will produce it too), but it is a different claim than "this measures MQTT's keep-alive mechanism," and genuine MQTT C2 that holds one persistent session open — the well-behaved, harder-to-catch case — will not trip this query at all. Seeing the actual `PINGREQ`/`PINGRESP` cadence inside an open connection needs telemetry that parses the connection's contents: a network sensor with protocol awareness (Zeek, Suricata, a commercial NDR product), a proxy or firewall log, or the broker's own connection log — none of which `DeviceNetworkEvents` provides. The port and process filters in the source query can still stay as noise reducers for whatever this ends up as, but they were never the interesting part, and neither, it turns out, is "keep-alive."
 
 <br/>
 
@@ -331,10 +340,15 @@ There is a real detection here — MQTT C2 traffic has a distinctive behavioural
 ```kql
 let lookback = 7d;
 // ============================================================
-// The MQTT keep-alive interval is 60 seconds by default; the
-// spec allows 0–65,535 and clients commonly use 30, 60, or
-// 120. Cadence bins around those values catch the common
-// cases without being tied to any specific broker.
+// This measures RECONNECTION cadence, not MQTT's own keep-alive
+// mechanism — DeviceNetworkEvents logs TCP connection
+// establishment (ConnectionSuccess), not packets inside an
+// already-open connection, so a persistent MQTT session with
+// in-band PINGREQ/PINGRESP is invisible here by construction.
+// The bins below (30/60/120s) are chosen because they're
+// MQTT's common keep-alive intervals and therefore a plausible
+// reconnect period for a client enforcing one, not because this
+// query can see the keep-alive packets themselves.
 // ============================================================
 let MinConnectionsPerHour = 10;
 let MaxCadenceStdDev      = 5.0;   // seconds
@@ -368,12 +382,14 @@ DeviceNetworkEvents
 | where DurationHours >= 1
     and Connections >= MinConnectionsPerHour
 // ============================================================
-// CADENCE — the actual signal.
+// CADENCE — the actual signal, properly named.
 //
 // Sort timestamps, compute pairwise deltas in seconds, then
-// take the mean and stddev. A stable interval (low stddev)
-// around a plausible keep-alive value (30/60/120s) is the
-// MQTT C2 signature. A messy stddev is normal noise.
+// take the mean and stddev. A stable interval (low stddev) is
+// a periodic-reconnection signature — it does not confirm MQTT
+// or any other specific protocol, only that this device is
+// re-establishing a connection to this destination on a
+// regular clock. A messy stddev is normal, ad hoc traffic.
 // ============================================================
 | mv-apply ConnectionTimes on (
     order by todatetime(ConnectionTimes) asc
@@ -392,7 +408,7 @@ DeviceNetworkEvents
                                         "Other")
 | extend Verdict = case(
       CadenceBucket != "Other" and StdDevDeltaSec <= MaxCadenceStdDev,
-          "KeepAlivePattern",
+          "PeriodicReconnect",
       StdDevDeltaSec <= MaxCadenceStdDev and DurationHours >= 4,
           "StableLongLived",
                                             "IrregularOrShort")
@@ -408,10 +424,11 @@ DeviceNetworkEvents
 
 ### Keeping it honest
 
-- **This is a behavioural detection, and behavioural detections have thresholds you must baseline.** The five-second standard-deviation cap is a starting position informed by MQTT PINGREQ regularity; it may need loosening on noisier networks or tightening on quieter ones. Baseline against a week of your own network telemetry before scheduling this as a rule. The `mv-apply` fold over `ConnectionTimes` is the expensive step, and the `Connections >= MinConnectionsPerHour` + `DurationHours >= 1` filters ahead of it are performance gates, not detection logic — raise them if you need to.
+- **This query cannot see MQTT's own keep-alive traffic, and won't fire on the hardest case.** `DeviceNetworkEvents` logs connection establishment, not what happens inside an established connection — so genuine MQTT C2 that opens one persistent session and never reconnects is invisible to this approach regardless of how the threshold below is tuned. What this catches is periodic reconnection, which is a real but different pattern. If you need to validate actual MQTT keep-alive cadence, that requires telemetry with protocol awareness — an NDR sensor, Zeek/Suricata, a proxy log, or the broker's own connection log.
+- **This is a behavioural detection, and behavioural detections have thresholds you must baseline.** The five-second standard-deviation cap is a starting position — MQTT's common keep-alive values (30/60/120s) are used here only as plausible reconnect-interval anchors, not because this query observes PINGREQ traffic itself. It may need loosening on noisier networks or tightening on quieter ones. Baseline against a week of your own network telemetry before scheduling this as a rule. The `mv-apply` fold over `ConnectionTimes` is the expensive step, and the `Connections >= MinConnectionsPerHour` + `DurationHours >= 1` filters ahead of it are performance gates, not detection logic — raise them if you need to.
 - **The port hint is intentionally not a filter.** `PortHints` in the output tells you whether the finding is on a default MQTT port, on 443 (the interesting case), or something else. Sort by that column during triage; do not put it back into the `where` clause.
-- **MQTT-over-WebSockets tunnelled through a proxy is not covered.** The RemoteIP in that case is your proxy, and the cadence signature is preserved from source-to-proxy but often reshaped from proxy-to-broker. You need proxy logs joined to this to see through it.
-- **A stable-cadence long-lived connection is not automatically C2.** Legitimate telemetry agents (Azure IoT SDK, monitoring beacons, CrashPad heartbeat, Windows Update ping) all produce keep-alive-ish patterns. Triage separates them by process name and destination reputation, not by cadence — the point of the detection is to give the analyst a small set of interesting connections rather than every 1883/8883 open port on the estate.
+- **MQTT-over-WebSockets tunnelled through a proxy is not covered.** The RemoteIP in that case is your proxy, and the reconnect cadence is preserved from source-to-proxy but often reshaped from proxy-to-broker. You need proxy logs joined to this to see through it.
+- **A stable-cadence long-lived connection is not automatically C2.** Legitimate telemetry agents (Azure IoT SDK, monitoring beacons, CrashPad heartbeat, Windows Update ping) all produce reconnect patterns that look similar from this angle. Triage separates them by process name and destination reputation, not by cadence alone — the point of the detection is to give the analyst a small set of interesting connections rather than every 1883/8883 open port on the estate.
 
 <br/>
 
@@ -449,7 +466,7 @@ The shape is right: a Node.js process started by a remote-access tool, followed 
 
 **The join is on `DeviceName` alone.** The brief's caveat section notes this openly: `InitiatingProcessId` in `DeviceNetworkEvents` is a string in some MDE schema versions, and the earlier draft's `tolong()` cast could silently null out; the fix that shipped was to drop the cast and join on device only, which trades a casting bug for a coarser join. It's the same pattern last week's article named on the TerminalFix DLL sideloading query — correlating any load with any process on the same box within a time window, with no causal link asserted. On a developer workstation running VS Code, Copilot, the language server, and a live-reload dev server, there are commonly five to twenty node.exe instances in flight at any moment. This query correlates every process launch under a remote-access tool with every network connection from any of them, and reports the result as a five-minute causal chain. On developer machines that's likely to produce a spray of matches an analyst would tune out or disable.
 
-The correct move is not to drop the process-instance link but to make it robust. `InitiatingProcessId` is a long in the current MDE schema; the tolong pattern from the earlier draft was correct, and the safety net for the older-string-schema case is a coalesce that tries both shapes. Join the process instance, not the device.
+The correct move is not to drop the process-instance link but to make it robust — and there's a cleaner fix available than the PID-casting workaround the brief was wrestling with. Both `DeviceProcessEvents` and `DeviceNetworkEvents` carry a `ProcessUniqueId` / `InitiatingProcessUniqueId` column (equal to the Windows Process Start Key), which identifies a specific process instance directly and sidesteps the PID-recycling and cross-schema type problem entirely — Microsoft's own advanced-hunting guidance recommends it for exactly this join. Use that instead of reconstructing process identity from a PID that means something different depending on which table and schema version you're reading it from.
 
 **`InitiatingProcessFileName has_any (remoteAccessParents)`** is the second problem, and it is the same operator error the previous week's article named in Sunday's fake-CAPTCHA detection. `has_any` on `"quickassist.exe"` is term-based — it matches file names that *contain* those tokens as terms, not file names that *equal* them. A binary named `not-quickassist.exe` matches; a `quickassist.exe.old` renamed from an install directory matches; anything an attacker names creatively enough matches. The intended operator is `in~`, which is exact case-insensitive membership in a dynamic array.
 
@@ -472,19 +489,24 @@ let RemoteAccessParents = dynamic([
 // the operator error the source query inherited from Sunday
 // last week. Same fix, one act later.
 //
-// ProcessId retained as the join key. In the current MDE
-// schema it is a long on both tables; the coalesce in step 2
-// covers the older-schema string case flagged in the brief.
+// ProcessUniqueId is the join key — a stable per-instance
+// identifier (the Windows Process Start Key), not a PID that
+// gets recycled and whose type varies by table/schema version.
+// Filtering it non-empty here drops the rare rows where an
+// older sensor version hasn't populated it; see the fallback
+// note below for those.
 // ============================================================
 let NodeStarts =
     DeviceProcessEvents
     | where Timestamp >= ago(lookback)
     | where FileName =~ "node.exe"
     | where InitiatingProcessFileName in~ (RemoteAccessParents)
+    | where isnotempty(ProcessUniqueId)
     | project
         NodeStartTime          = Timestamp,
         DeviceId, DeviceName, AccountName,
         NodeProcessId          = ProcessId,
+        NodeProcessUniqueId    = ProcessUniqueId,
         NodeCommandLine        = ProcessCommandLine,
         NodeFolderPath         = FolderPath,
         NodeSHA256             = SHA256,
@@ -493,33 +515,32 @@ let NodeStarts =
 // ============================================================
 // STEP 2: OUTBOUND CONNECTIONS FROM THAT SAME NODE INSTANCE.
 //
-// THE FIX: join on DeviceId AND the process instance, not on
-// DeviceName alone. Matching NodeProcessId asserts THIS
-// node.exe made the connection, not SOME node.exe within a
-// five-minute window. column_ifexists covers the older
-// schema where InitiatingProcessId was a string.
+// THE FIX: join on DeviceId AND ProcessUniqueId, not on
+// DeviceName alone and not on a recast PID. Matching
+// InitiatingProcessUniqueId asserts THIS node.exe made the
+// connection, not SOME node.exe within a five-minute window —
+// and it does so without the tolong()/coalesce dance the
+// source query needed to paper over PID type differences.
 // ============================================================
 let NodeConnections =
     DeviceNetworkEvents
     | where Timestamp >= ago(lookback)
     | where ActionType == "ConnectionSuccess"
     | where InitiatingProcessFileName =~ "node.exe"
+    | where isnotempty(InitiatingProcessUniqueId)
     | where not(ipv4_is_private(RemoteIP)) and isnotempty(RemoteIP)
-    | extend NodeProcessIdLong = coalesce(
-        tolong(InitiatingProcessId),
-        tolong(column_ifexists("InitiatingProcessIdString", "0")))
     | project
         ConnTime = Timestamp,
         DeviceId, RemoteIP, RemoteUrl, RemotePort,
-        NodeProcessId = NodeProcessIdLong;
+        NodeProcessUniqueId = InitiatingProcessUniqueId;
 NodeStarts
-| join kind=inner NodeConnections on DeviceId, NodeProcessId
+| join kind=inner NodeConnections on DeviceId, NodeProcessUniqueId
 | where ConnTime between (NodeStartTime .. (NodeStartTime + networkWindow))
 // ============================================================
 // STEP 3: AGGREGATE BY THE PROCESS INSTANCE. One row per
-// (Device, NodeProcessId, NodeStartTime) — this specific
-// node.exe started by a remote-access tool and its first
-// five minutes of outbound connections.
+// (Device, NodeProcessUniqueId) — this specific node.exe
+// started by a remote-access tool and its first five minutes
+// of outbound connections.
 // ============================================================
 | summarize
     FirstConnTime  = min(ConnTime),
@@ -529,13 +550,15 @@ NodeStarts
     RemoteUrls     = make_set(RemoteUrl, 20),
     RemotePorts    = make_set(RemotePort, 20)
   by NodeStartTime, DeviceId, DeviceName, AccountName,
-     NodeProcessId, NodeCommandLine, NodeFolderPath, NodeSHA256,
-     RemoteAccessParent, RemoteAccessParentPid
+     NodeProcessId, NodeProcessUniqueId, NodeCommandLine,
+     NodeFolderPath, NodeSHA256, RemoteAccessParent, RemoteAccessParentPid
 | extend TimeToFirstConn = FirstConnTime - NodeStartTime
 | order by NodeStartTime desc
 ```
 
-Two changes, both small in the file and structurally large in what the query means. The join is on `DeviceId + NodeProcessId` instead of `DeviceName`, so a row now says "this specific node.exe made these connections" instead of "some node.exe made these connections around the same time some other node.exe started." And the parent-process filter is `in~` instead of `has_any`, so the exclusion is by exact name, not by term match. Everything else — the remote-access parents list, the five-minute window, the non-private-IP filter — is unchanged from the source query, because those parts were right.
+Two changes, both small in the file and structurally large in what the query means. The join is on `DeviceId + ProcessUniqueId` instead of `DeviceName`, so a row now says "this specific node.exe made these connections" instead of "some node.exe made these connections around the same time some other node.exe started" — and it does that with a stable per-instance identifier instead of a PID whose type and recycling behavior varies by table and schema version. And the parent-process filter is `in~` instead of `has_any`, so the exclusion is by exact name, not by term match. Everything else — the remote-access parents list, the five-minute window, the non-private-IP filter — is unchanged from the source query, because those parts were right.
+
+On older sensor versions where `ProcessUniqueId` isn't populated, the fallback is the pre-`ProcessUniqueId` version of the same idea: join on `DeviceId`, `ProcessId`/`InitiatingProcessId`, and creation time (`Timestamp` from the process-start event should equal `InitiatingProcessCreationTime` on the matching connection event) instead of PID alone. It's more verbose than the `ProcessUniqueId` join, but it's the same principle — pin down the specific process instance, not just the number that happens to identify it this week.
 
 <br/>
 
@@ -583,7 +606,7 @@ Classified
 
 The same mechanic bites Act II if you approach it the wrong way. Summarizing `ConnectionTimes = make_list(Timestamp)` and then computing inter-connection deltas from that array outside the summarize means computing deltas on an unordered list. The `mv-apply` pattern with `order by todatetime(ConnectionTimes) asc` inside is exactly the Shape 2 fix applied to timestamps: sort within the per-group apply, then take the differences. Any time you are aggregating values whose *sequence* matters — a decoder, a delta computation, a state machine — the ordering has to be handled explicitly.
 
-The general rule: `make_list` gives you a bag, not a sequence. Treat everything it returns as unordered until you have done something to make it ordered.
+The general rule: treat `make_list()` as unordered unless you've explicitly established ordering before the aggregation runs — Kusto's own docs put it plainly: order is undefined on unsorted input, and only tracks the input when that input was sorted first. Same lesson, tighter statement.
 
 <br/>
 
@@ -605,7 +628,7 @@ The failure mode this week is worth naming precisely, because it is worse than l
 
 The bonus round is the shape of the mistake in miniature. `make_list()` does not preserve input order; assuming that it does returns the right characters in the wrong sequence, and the wrong sequence reads as noise instead of a payload. That is the failure mode of the article as a whole — a query that *looks* correct, *runs* without error, *returns* a plausible number of rows, and *means* something different from what its author intended. The mechanic is a KQL detail; the pattern is the whole point of the piece.
 
-The most useful thing in this week's briefs is not any of the four queries. It is the tenant-fitness check in Act I — whether `EmailEvents` is available for body-level detection, and whether Exchange normalizes tag characters before they reach the audit log. Both briefs raised the question. Neither answered it. Subject is a partial layer, and the pipeline shipped three variations of it without ever measuring whether the body layer was reachable.
+The most useful thing in this week's briefs is not any of the four queries. It is the tenant-fitness question in Act I, and it turns out to have a more definitive answer than either brief gave it: whether Exchange normalizes tag characters before they reach the audit log is worth testing per-tenant, but whether body-level content is reachable through advanced hunting at all is not tenant-dependent — it isn't, in `OfficeActivity` or `EmailEvents`. Both briefs raised the tenant-fitness question and left it open. Subject is a partial layer, and it's also the ceiling of what native KQL hunting can see here — which the pipeline never established, and which is worth knowing before promising coverage of a body-level campaign.
 
 Every one of these came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, deployment gates, triage runbooks, false-positive notes, and an honest readiness call. Twenty-five this week across six days, and the ones worth writing about were the ones that still needed a human between the automation and the analyst — which is exactly what this weekly review is for.
 
@@ -677,7 +700,7 @@ ATT&CK Coverage in This Article:
 
 **Discussed as a correction:**
 - **`has_any` in place of `in~` for the parent-process list.** The source Node.js query used `InitiatingProcessFileName has_any (remoteAccessParents)`, which is term-based and matches any file name containing those tokens as terms. The intended semantics is exact case-insensitive membership, which is `in~`. This is the same operator mix-up the previous week's article called out in the fake-CAPTCHA detection — worth flagging again since it's a quick, durable fix once it's named.
-- **DeviceName-only joins across DeviceProcessEvents and DeviceNetworkEvents.** The Node.js query joined on `DeviceName` alone and correlated any node.exe launch with any node.exe network connection on the same host within a five-minute window. Same failure mode as last week's TerminalFix DLL sideloading detection; the fix in both cases is to join on `DeviceId + InitiatingProcessId` so the correlation asserts a causal link rather than a coincidence.
+- **DeviceName-only joins across DeviceProcessEvents and DeviceNetworkEvents.** The Node.js query joined on `DeviceName` alone and correlated any node.exe launch with any node.exe network connection on the same host within a five-minute window. Same failure mode as last week's TerminalFix DLL sideloading detection; the fix in both cases is to join on `DeviceId + ProcessUniqueId` (the Windows Process Start Key) so the correlation asserts a causal link to a specific process instance rather than a coincidence tied to a PID that gets recycled.
 
 External Sources:
 - Microsoft Security Blog. *ASCII smuggling crosses over from AI prompt injection to phishing evasion.* <https://www.microsoft.com/en-us/security/blog/2026/09/03/ascii-smuggling-crosses-over-from-ai-prompt-injection-to-phishing-evasion/>
