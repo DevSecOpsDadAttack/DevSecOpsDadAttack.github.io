@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![The Character Is Not The Payload](/assets/img/TheCharacterIsNotThePayload/intro.png)
+![The Character Is Not The Payload](/assets/img/TheCharacterIsNotThePayload/1.png)
 
 Last week the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) ([run on a Raspberry Pi](https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/)) matched the representation of an indicator instead of its meaning, and the fix was a range check where a string comparison used to be. This week the pipeline made the same error, one layer down: it enumerated the *characters* it thought were relevant when the actual signal is a *codepoint range* the query cannot type as a literal. **Three consecutive days, three different Unicode lists, and the block of characters the source reporting explicitly names is missing from all three.** The failure this time is neither zero rows nor every row — it is a query that appears to run correctly, returns a plausible number of hits, and misses the whole point of the campaign that produced it.
 
@@ -23,7 +23,7 @@ Act I is the ASCII smuggling cluster and the operator none of the three queries 
 
 ## 🥇 Act I: Three Days of Invisible-Character Detections, and the Codepoint Range They All Missed
 
-![Act I](/assets/img/TheCharacterIsNotThePayload/1.png)
+![Act I](/assets/img/TheCharacterIsNotThePayload/2.png)
 
 The [Microsoft Security Blog on ASCII smuggling](https://www.microsoft.com/en-us/security/blog/2026/09/03/ascii-smuggling-crosses-over-from-ai-prompt-injection-to-phishing-evasion/) landed on Wednesday and the pipeline responded across [Friday](https://devsecopsdadattack.com/2026-09-04-detection-engineering-brief-friday-september-4-2026/), [Saturday](https://devsecopsdadattack.com/2026-09-05-detection-engineering-brief-saturday-september-5-2026/), and [Sunday](https://devsecopsdadattack.com/2026-09-06-detection-engineering-brief-sunday-september-6-2026/) with three detections that all target the same technique in the same table on the same field — and each one uses a different set of characters, none of which include the block the reporting is actually about.
 
@@ -225,7 +225,7 @@ Classified
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/TheCharacterIsNotThePayload/2.png)
+![DevSecOpsDadAttack!](/assets/img/TheCharacterIsNotThePayload/3.png)
 
 <br/>
 
@@ -299,7 +299,7 @@ Subject-based detection is a real layer — attackers do smuggle payload into su
 
 ## 🥈 Act II: The Port Is Not the Protocol
 
-![Act II](/assets/img/TheCharacterIsNotThePayload/3.png)
+![Act II](/assets/img/TheCharacterIsNotThePayload/4.png)
 
 [Friday's Detection 4](https://devsecopsdadattack.com/2026-09-04-detection-engineering-brief-friday-september-4-2026/) was written against the Toy Ghouls reporting on HiveMQ MQTT abuse as a command-and-control channel. The detection shape is a good instinct — MQTT is unusual outbound traffic from a typical enterprise workstation and worth surfacing — and the query is short enough to reason about in one glance:
 
@@ -420,7 +420,7 @@ DeviceNetworkEvents
 
 ## 🎖 Honorable Mention: The Node.js Implant That Was Every Node Process on the Box
 
-![Honorable Mention](/assets/img/TheCharacterIsNotThePayload/4.png)
+![Honorable Mention](/assets/img/TheCharacterIsNotThePayload/5.png)
 
 Microsoft's [IT-support-impersonation reporting](https://www.microsoft.com/en-us/security/blog/2026/09/02/impersonating-it-support-threat-actors-turn-remote-session-into-enterprise-wide-access/) drove a Node.js implant detection across [Thursday](https://devsecopsdadattack.com/2026-09-03-detection-engineering-brief-thursday-september-3-2026/), [Friday](https://devsecopsdadattack.com/2026-09-04-detection-engineering-brief-friday-september-4-2026/), [Saturday](https://devsecopsdadattack.com/2026-09-05-detection-engineering-brief-saturday-september-5-2026/), and [Sunday](https://devsecopsdadattack.com/2026-09-06-detection-engineering-brief-sunday-september-6-2026/). The Thursday version was shipped as a production candidate — highest confidence in the week — so it is the one worth taking apart:
 
@@ -544,7 +544,7 @@ Two changes, both small in the file and structurally large in what the query mea
 
 ## 🎁 Bonus Round: `make_list()` Does Not Preserve Input Order, and Your Decoder Depends on Order
 
-![Bonus Round](/assets/img/TheCharacterIsNotThePayload/5.png)
+![Bonus Round](/assets/img/TheCharacterIsNotThePayload/6.png)
 
 I want to name explicitly the KQL mechanic that made me put `serialize | order by` above the summarize in Act I, because it is the sort of thing that reads like a stylistic tic and is actually load-bearing. If you missed it, your `DecodedTagAscii` field decodes tag characters in whatever order the engine happened to hand them to `make_list_if`, which is not necessarily the order they appeared in the subject. A payload that read `RESET ALL` in the source can come back out of the decoder as `L RALTEES`.
 
@@ -592,7 +592,7 @@ The general rule: `make_list` gives you a bag, not a sequence. Treat everything 
 
 ## The Common Thread
 
-![Common-Thread](/assets/img/TheCharacterIsNotThePayload/6.png)
+![Common-Thread](/assets/img/TheCharacterIsNotThePayload/7.png)
 
 Last week the pattern was string comparison where a semantic operator existed. This week it is character enumeration where a range check existed. In both cases the two lines look almost identical when you read them, and different by orders of magnitude once they run.
 
@@ -612,7 +612,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheCharacterIsNotThePayload/7.png)
+![Outro](/assets/img/TheCharacterIsNotThePayload/8.png)
 
 <br/>
 
