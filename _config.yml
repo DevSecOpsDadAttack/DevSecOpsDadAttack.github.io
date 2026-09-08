@@ -24,6 +24,7 @@ navbar-links:
   Threat Intelligence: "/threatintel/"
   Detection Engineering: "/detectionengineering/"
   KQL Detection of the Week: "/kqldetectionoftheweek/"
+  KQL Library: "/kql-library/"
   Tags: "/tags/"
   DevSecOpsDad:
     - About Me: "aboutme"
