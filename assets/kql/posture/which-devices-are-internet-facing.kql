@@ -1,0 +1,190 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// -------------------------------------------
+// 1) Decide what “public” actually means (IPv4 and IPv6)
+// -------------------------------------------
+// Define private IP ranges for IPv4
+let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
+// Define private IP ranges for IPv6
+let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';
+// Lookback period
+let LookbackDays = 30d;
+// -------------------------------------------
+// 2) Devices that show up with public IPs in ConnectedNetworks
+// -------------------------------------------
+let PublicIPDevices = DeviceNetworkInfo
+    | where Timestamp > ago(LookbackDays)
+    | where isnotempty(ConnectedNetworks)
+    | mv-expand ConnectedNetwork = parse_json(ConnectedNetworks)
+    | extend PublicIP = tostring(ConnectedNetwork.PublicIP)
+    | where isnotempty(PublicIP) 
+    | extend IsIPv6 = PublicIP contains ":"
+    | where (IsIPv6 and not(PublicIP matches regex PrivateIPv6Regex)) or 
+            (not(IsIPv6) and not(PublicIP matches regex PrivateIPRegex))
+    | summarize 
+        PublicIPv4s = make_set_if(PublicIP, not(IsIPv6)),
+        PublicIPv6s = make_set_if(PublicIP, IsIPv6)
+        by DeviceId, DeviceName
+    | extend DetectionMethod = "PublicIP";
+// -------------------------------------------
+// 3) Devices whose local IP address is actually public
+// -------------------------------------------
+let PublicLocalIP = DeviceNetworkInfo
+    | where Timestamp > ago(LookbackDays)
+    | where isnotempty(IPAddresses)
+    | mv-expand IPAddress = parse_json(IPAddresses)
+    | extend LocalIP = tostring(IPAddress.IPAddress)
+    | where isnotempty(LocalIP)
+    | extend IsIPv6 = LocalIP contains ":"
+    | where (IsIPv6 and not(LocalIP matches regex PrivateIPv6Regex)) or 
+            (not(IsIPv6) and not(LocalIP matches regex PrivateIPRegex))
+    | summarize 
+        LocalIPv4s = make_set_if(LocalIP, not(IsIPv6)),
+        LocalIPv6s = make_set_if(LocalIP, IsIPv6)
+        by DeviceId, DeviceName
+    | extend DetectionMethod = "PublicLocalIP";
+// -------------------------------------------
+// 4) Devices that are actually taking inbound hits from the internet
+// -------------------------------------------
+let InboundConnections = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "InboundConnectionAccepted"
+    | extend IsIPv6 = RemoteIP contains ":"
+    | where (IsIPv6 and not(RemoteIP matches regex PrivateIPv6Regex)) or 
+            (not(IsIPv6) and not(RemoteIP matches regex PrivateIPRegex))
+    | where RemoteIP !in ("169.254.0.0/16", "224.0.0.0/4", "255.255.255.255")
+    | summarize 
+        InboundCount = count(), 
+        UniqueRemoteIPs = dcount(RemoteIP), 
+        RemotePorts = make_set(RemotePort), 
+        SampleRemoteIPv4s = make_set_if(RemoteIP, not(RemoteIP contains ":"), 5),
+        SampleRemoteIPv6s = make_set_if(RemoteIP, RemoteIP contains ":", 5)
+        by DeviceId, DeviceName
+    | where InboundCount > 5
+    | extend DetectionMethod = "InboundConnections";
+// -------------------------------------------
+// 5) Devices listening on classic “remote access” ports from the internet
+// -------------------------------------------
+let RemoteAccessServices = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where LocalPort in (22, 3389, 443, 80, 21, 23, 5900, 5985, 5986)
+    | where ActionType == "InboundConnectionAccepted"
+    | extend IsIPv6 = RemoteIP contains ":"
+    | where (IsIPv6 and not(RemoteIP matches regex PrivateIPv6Regex)) or 
+            (not(IsIPv6) and not(RemoteIP matches regex PrivateIPRegex))
+    | summarize 
+        ServicePorts = make_set(LocalPort),
+        ConnectionCount = count() 
+        by DeviceId, DeviceName
+    | extend DetectionMethod = "RemoteAccessPorts";
+// -------------------------------------------
+// 6) Devices Defender already thinks are internet-facing
+// -------------------------------------------
+let IsInternetFacingDevices = DeviceInfo
+    | where Timestamp > ago(LookbackDays)
+    | where IsInternetFacing == true
+    | distinct DeviceId, DeviceName
+    | extend DetectionMethod = "IsInternetFacing";
+// -------------------------------------------
+// 7) Merge all the signals into one “internet-exposed device” view
+// -------------------------------------------
+PublicIPDevices
+| join kind=fullouter (PublicLocalIP) on DeviceId, DeviceName
+| join kind=fullouter (InboundConnections) on DeviceId, DeviceName
+| join kind=fullouter (RemoteAccessServices) on DeviceId, DeviceName
+| join kind=fullouter (IsInternetFacingDevices) on DeviceId, DeviceName
+// Coalesce DeviceId and DeviceName from all joins
+| extend DeviceId = coalesce(DeviceId, DeviceId1, DeviceId2, DeviceId3, DeviceId4)
+| extend DeviceName = coalesce(DeviceName, DeviceName1, DeviceName2, DeviceName3, DeviceName4)
+// Merge IPv4 addresses from all sources
+| extend AllPublicIPv4s = array_concat(
+    coalesce(PublicIPv4s, dynamic([])), 
+    coalesce(LocalIPv4s, dynamic([]))
+)
+// Merge IPv6 addresses from all sources
+| extend AllPublicIPv6s = array_concat(
+    coalesce(PublicIPv6s, dynamic([])), 
+    coalesce(LocalIPv6s, dynamic([]))
+)
+// Clean up DetectionMethods - remove nulls and empties
+| extend DetectionMethodsArray = array_concat(
+    pack_array(DetectionMethod),
+    pack_array(DetectionMethod1),
+    pack_array(DetectionMethod2),
+    pack_array(DetectionMethod3),
+    pack_array(DetectionMethod4)
+)
+| mv-expand DetectionMethodExpanded = DetectionMethodsArray
+| where isnotempty(DetectionMethodExpanded)
+| summarize 
+    DetectionMethods = strcat_array(make_set(DetectionMethodExpanded), ", "),
+    AllPublicIPv4s = any(AllPublicIPv4s),
+    AllPublicIPv6s = any(AllPublicIPv6s),
+    InboundCount = any(InboundCount),
+    UniqueRemoteIPs = any(UniqueRemoteIPs),
+    RemotePorts = any(RemotePorts),
+    ServicePorts = any(ServicePorts),
+    SampleRemoteIPv4s = any(SampleRemoteIPv4s),
+    SampleRemoteIPv6s = any(SampleRemoteIPv6s)
+    by DeviceId, DeviceName
+// Calculate Risk Score
+| extend RiskScore = 
+    case(
+        ServicePorts has "3389" or ServicePorts has "22", 10,      // RDP/SSH = Critical
+        ServicePorts has "23" or ServicePorts has "21", 9,          // Telnet/FTP = High
+        InboundCount > 100, 8,                                      // Very high traffic
+        InboundCount > 50, 7,                                       // High traffic
+        isnotempty(AllPublicIPv4s) or isnotempty(AllPublicIPv6s), 6, // Has public IP
+        DetectionMethods has "IsInternetFacing", 5,                 // Flagged by Defender
+        3                                                           // Default
+    )
+// -------------------------------------------
+// 8) Assign a simple risk score and emoji risk level
+// -------------------------------------------
+// Add Risk Level labels with emoji indicators
+| extend RiskLevel = case(
+    RiskScore >= 9, "🔴 Critical",
+    RiskScore >= 7, "🟠 High",
+    RiskScore >= 5, "🟡 Medium",
+    "🟢 Low"
+)
+// -------------------------------------------
+// 9) Pretty it up for humans and sort by “what should I look at first?”
+// -------------------------------------------
+// Add human-readable service names
+| extend ExposedServices = case(
+    ServicePorts has "3389", "RDP",
+    ServicePorts has "22", "SSH",
+    ServicePorts has "443", "HTTPS",
+    ServicePorts has "80", "HTTP",
+    ServicePorts has "21", "FTP",
+    ServicePorts has "23", "Telnet",
+    ServicePorts has "5900", "VNC",
+    ServicePorts has "5985" or ServicePorts has "5986", "WinRM",
+    isnotempty(ServicePorts), "Other",
+    ""
+)
+// Convert arrays to strings for display
+| extend IPv4List = tostring(AllPublicIPv4s)
+| extend IPv6List = tostring(AllPublicIPv6s)
+| extend RemotePortsStr = tostring(RemotePorts)
+| extend ServicePortsStr = tostring(ServicePorts)
+| extend SampleRemoteIPv4Str = tostring(SampleRemoteIPv4s)
+| extend SampleRemoteIPv6Str = tostring(SampleRemoteIPv6s)
+// Final output with prioritized columns
+| project 
+    RiskLevel,
+    RiskScore,
+    DeviceName,
+    DeviceId,
+    ExposedServices,
+    DetectionMethods,
+    IPv4List, 
+    IPv6List,
+    InboundCount, 
+    UniqueRemoteIPs, 
+    ServicePortsStr,
+    RemotePortsStr,
+    SampleRemoteIPv4Str,
+    SampleRemoteIPv6Str
+// Sort by risk, then by inbound traffic
+| sort by RiskScore desc, InboundCount desc

@@ -1,0 +1,24 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+
+// A timestamped feed of RDP logon (EventID 4624 with LogonType 10), logoff (4634), and
+// session reconnect/disconnect (4778/4779) events over the last 30 days. Use for
+// baselining "who's on this box and when" or as the starting point for investigating
+// suspicious on-prem RDP activity.
+// Machine accounts and SYSTEM/computer-account entries are filtered out. For a per-user
+// daily-login-count chart based on the same underlying data (better for spotting your
+// heaviest hitters), see rdp-logins-per-day-per-user.kql in this same folder.
+
+SecurityEvent
+| where TimeGenerated > ago(30d)
+| where EventID in (4624, 4634, 4778, 4779)
+// Early filtering before parsing
+| where AccountType != "Machine"  // More efficient than string matching
+| where Account !has "SYSTEM" and Account !endswith "$"
+// Filter to RDP only for logons, keep all logoff/reconnect/disconnect
+| where EventID != 4624 or LogonType == 10
+| project
+    TimeGenerated,
+    DomainController = Computer,
+    Activity,
+    User = coalesce(TargetUserName, Account)
+| order by TimeGenerated desc

@@ -1,0 +1,6 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Identify the top 10 most queried domains
+
+PiHole
+| summarize Count = count() by Domain  // Aggregate counts by domain
+| top 10 by Count  // Select the top 10 domains by count

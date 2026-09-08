@@ -1,0 +1,28 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Top 10 most expensive log sources by DataType over the last 30 days, with an emoji cost-tier
+// indicator and a formatted '$X.XX' cost column. Best for tables and human-readable dashboards.
+// For a numeric CostUSD variant that plays nicely with charts and downstream aggregation,
+// see top-10-log-sources-with-cost.kql.
+
+Usage
+| where TimeGenerated > ago(30d)
+| where IsBillable == true
+| summarize GiB= round(sum(Quantity) / 1024, 2) by DataType
+| extend Cost=round(GiB * 5.16, 2)   // <-- Replace 5.16 with your region's actual Sentinel price per GB
+| sort by Cost desc
+| extend CostLevel = case(
+                         Cost >= 1000,
+                         '🤑🤑🤑🤑🤑',  // Most Expensive
+                         Cost >= 750,
+                         '💰💰💰💰',
+                         Cost >= 500,
+                         '💰💰💰',
+                         Cost >= 250,
+                         '💰💰',
+                         Cost >= 100,
+                         '💰',           // Least Expensive
+                         '💸'            // Fallback
+                     )
+| extend Cost=strcat('$', Cost, ' ', CostLevel)
+| project DataType, GiB, Cost
+| take 10

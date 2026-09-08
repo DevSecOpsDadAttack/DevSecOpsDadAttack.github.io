@@ -1,0 +1,7 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Ever wonder how many times each account in your environment throws a specific EventID per day?
+
+SecurityEvent                     // <--Define the table to query
+| where EventID == "4662"         // <--Declare which EventID you're looking for
+| summarize count() by Account    // <--Show how many times that EventID was thrown per account
+| render columnchart              // <--Optional, but helps quickly visualize potential outliers

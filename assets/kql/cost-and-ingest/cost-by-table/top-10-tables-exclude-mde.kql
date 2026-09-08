@@ -1,0 +1,18 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Top 10 most expensive log sources (excluding MDE) in the last 90 days, using the Usage table.
+// Much faster than the `search *` variant because it reads pre-aggregated ingest metrics
+// instead of scanning every row in every table. Use this by default; only fall back to the
+// `search *` variant (top-10-tables-exclude-mde-search-star.kql) if you need per-table event
+// counts alongside billable volume.
+
+let CostPerGB = 4.30;   // <-- Set to Effective Cost per GB for your region: https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/
+Usage
+| where TimeGenerated > ago(90d)
+| where IsBillable == true
+| summarize GB = round(sum(Quantity)/1000, 2) by DataType
+| extend dollar = round(GB * CostPerGB, 2)
+| extend TotalCost = strcat('$', dollar)
+| sort by dollar desc
+| where DataType !contains 'device'   // <-- Exclude Defender tables
+| limit 10
+| project DataType, GB, TotalCost

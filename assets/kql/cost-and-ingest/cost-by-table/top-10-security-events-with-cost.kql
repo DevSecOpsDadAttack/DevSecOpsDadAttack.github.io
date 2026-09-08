@@ -1,0 +1,16 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Top 10 most expensive SecurityEvent EventIDs (with Activity) over the last 30 days, with
+// numeric CostUSD. Includes Activity in the grouping so you can tell 4624 (An account was
+// successfully logged on) apart from 4625 etc. at a glance.
+// For a display-friendly variant with cost-tier emojis (and simpler EventID-only grouping),
+// see top-10-security-events-with-cost-enhanced.kql.
+
+let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
+SecurityEvent
+| where TimeGenerated > ago(30d)
+| where _IsBillable == true
+| summarize TotalGiB = round(sum(_BilledSize) / 1024.0 / 1024.0 / 1024.0, 2)
+          by EventID, Activity
+| extend CostUSD = round(TotalGiB * PricePerGB, 2)
+| top 10 by CostUSD desc
+| order by CostUSD desc

@@ -1,0 +1,9 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Billable GB per day for the past 90 days, broken out by Solution and rendered as a column chart.
+// Great for spotting which solution is driving your ingest curve over the quarter.
+
+Usage                                                                                   // <--Query the Usage table
+| where TimeGenerated > ago(90d)                                                        // <--Query the last 90 days
+| where IsBillable == true                                                              // <--Only include 'billable' data
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution    // <--Chop it up into GB / Day
+| render columnchart                                                                    // <--Graph the results

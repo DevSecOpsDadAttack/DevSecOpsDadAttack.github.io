@@ -1,0 +1,14 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Top 10 most expensive log sources by DataType over the last 30 days, with a numeric CostUSD column.
+// Use this variant when you want the raw numbers — CostUSD stays a float so it plays nicely with
+// dashboards and downstream aggregation. For a display-friendly variant with cost-tier emojis,
+// see top-10-log-sources-with-cost-enhanced.kql.
+
+let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
+Usage
+| where TimeGenerated > ago(30d)
+| where IsBillable == true
+| summarize TotalGiB = round(sum(Quantity) / 1024.0, 2) by DataType
+| extend CostUSD = round(TotalGiB * PricePerGB, 2)
+| top 10 by CostUSD desc
+| order by CostUSD desc

@@ -1,0 +1,26 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Top 10 CommonSecurityLog reasons by event count over the last 90 days, grouped by Reason and
+// LogSeverity, with total GB, event count, and an emoji cost-tier indicator.
+// Ranked by event volume (which is often more actionable than raw dollar cost when Reason values
+// contain common noise like "N/A" — those are filtered out here).
+// For a DeviceVendor/DeviceProduct-focused variant with numeric cost, see
+// top-10-common-security-logs-by-severity-with-cost.kql.
+
+CommonSecurityLog
+| where TimeGenerated > ago(90d)
+| where isnotempty(Reason) and Reason != "N/A"
+| summarize TotalEvents = count(),
+            TotalBytes = sum(_BilledSize)
+            by Reason, LogSeverity
+| extend TotalGB = round(TotalBytes / (1024.0 * 1024.0 * 1024.0), 4)
+| extend RawCost = round(TotalGB * 5.16, 2)   // <-- Replace 5.16 with your region's actual Sentinel price per GB
+| extend CostLevel = case(
+                         RawCost >= 1000, '🤑🤑🤑🤑🤑',
+                         RawCost >= 750, '💰💰💰💰',
+                         RawCost >= 500, '💰💰💰',
+                         RawCost >= 250, '💰💰',
+                         RawCost >= 100, '💰',
+                         '💸')
+| extend IngestCost = strcat('$', tostring(RawCost), ' ', CostLevel)
+| project Reason, LogSeverity, TotalEvents, TotalGB, IngestCost
+| top 10 by TotalEvents desc

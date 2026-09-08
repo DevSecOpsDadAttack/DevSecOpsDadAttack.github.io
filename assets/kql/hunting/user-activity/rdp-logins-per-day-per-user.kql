@@ -1,0 +1,20 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+
+// RDP logins per user per day, rendered as a timechart. Great for identifying your
+// heaviest RDP users and establishing a baseline of "normal" login volume before
+// hunting for anomalies. Successful RDP logons only (EventID 4624, LogonType 10);
+// machine accounts filtered out. For the underlying event-by-event feed including
+// logoff/reconnect/disconnect, see whos-logging-in-and-when.kql in this same folder.
+
+SecurityEvent
+| where TimeGenerated > ago(30d)
+| where EventID == 4624  // Focus on successful logons only
+| where AccountType != "Machine"
+| where Account !has "SYSTEM" and Account !endswith "$"
+| where LogonType == 10  // RDP only
+| extend User = coalesce(TargetUserName, Account)
+| summarize LoginCount = count() by
+    Day = bin(TimeGenerated, 1d),
+    User
+| order by Day desc, LoginCount desc
+| render timechart

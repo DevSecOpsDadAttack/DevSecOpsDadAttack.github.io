@@ -1,0 +1,11 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Daily billable GB and cost for the past 90 days, with CostUSD as a numeric column.
+// Use this variant when you want to graph cost over time — CostUSD stays a float,
+// which the chart renderers can plot directly. For a display-friendly '$X.XX / Day'
+// string version, see 90-day-billable-cost-per-day-formatted.kql.
+
+Usage                                                                                             // <--Query the Usage table
+| where TimeGenerated > ago(90d)                                                                  // <--Query the last 90 days
+| where IsBillable == true                                                                        // <--Only include 'billable' data
+| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by (TimeGenerated, 1d)                 // <--Group data into 1-day buckets and convert total ingested quantity into GB
+| extend CostUSD = round(TotalVolumeGB * 4.30, 2)                                                 // <--Calculate daily cost by multiplying GB/day by your region’s $/GB rate and rounding to 2 decimals

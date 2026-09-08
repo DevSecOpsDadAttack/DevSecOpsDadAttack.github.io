@@ -1,0 +1,34 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// GitHub: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+
+// Which Event IDs have recently spiked, AND which Computer/Account combinations are behind
+// the spike? Same baseline-vs-recent deviation approach as
+// which-eventids-are-suddenly-acting-weird.kql, but joins in per-actor context to help
+// answer "which host or account is driving this?" in one shot.
+// Uses a 30-day recent window (vs 7 days in the basic variant) to reduce noise from the
+// join. Tune BaselineWindow, RecentWindow, and ThresholdMultiplier for your environment.
+
+let BaselineWindow = 90d;
+let RecentWindow = 30d;
+let ThresholdMultiplier = 2.0;
+let Baseline =
+    SecurityEvent
+    | where TimeGenerated > ago(BaselineWindow)
+    | summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)
+    | summarize AvgDailyCount = round(avg(DailyCount),2) by EventID;
+let Recent =
+    SecurityEvent
+    | where TimeGenerated > ago(RecentWindow)
+    | summarize RecentCount = count() by EventID;
+Baseline
+| join kind=inner Recent on EventID
+| extend DeviationRatio = round(RecentCount / AvgDailyCount, 2)
+| where DeviationRatio >= ThresholdMultiplier
+| project EventID, AvgDailyCount, RecentCount, DeviationRatio
+| join (
+    SecurityEvent
+    | where TimeGenerated > ago(RecentWindow)
+    | summarize count() by EventID, Account, Computer
+) on EventID
+| take 10
+| sort by DeviationRatio desc

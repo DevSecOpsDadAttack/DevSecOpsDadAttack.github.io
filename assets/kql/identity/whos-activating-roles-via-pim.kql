@@ -1,0 +1,11 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Great for tracking PIM activations
+
+AuditLogs
+| where Category == "RoleManagement"
+| where ActivityDisplayName == "Add member to role completed (PIM activation)"
+| extend Actor = tostring(parse_json(InitiatedBy).user.displayName)
+| extend IP = tostring(parse_json(InitiatedBy).user.ipAddress)
+| extend Role = tostring(parse_json(TargetResources)[0].displayName)
+| extend ActivationTime = TimeGenerated
+| project Actor, Role, ActivationTime, IP

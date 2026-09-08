@@ -1,0 +1,32 @@
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// GitHub: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+
+// Which Event IDs have recently spiked well beyond their 90-day historical baseline?
+// Returns EventID, baseline avg daily count, recent avg daily count, and the deviation
+// ratio — sorted by biggest deviation first. Use this to spot noisy/unexpected changes
+// in your SecurityEvent telemetry. For a variant that also tells you which
+// Computer/Account combinations are behind the spike, see the -with-context file
+// in this same folder.
+// If you spot unexpected deviations and need help determining whether it’s signal,
+// noise, or misconfiguration, check out the KQL Detective series at hanley.cloud.
+
+let BaselineWindow = 90d;
+let RecentWindow = 7d;
+let ThresholdMultiplier = 2.0;
+let Baseline =
+SecurityEvent
+| where TimeGenerated > ago(BaselineWindow)
+| summarize DailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)
+| summarize BaselineAvgDaily=round(avg(DailyCount),2) by EventID;
+let Recent =
+SecurityEvent
+| where TimeGenerated > ago(RecentWindow)
+| summarize RecentDailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)
+| summarize RecentAvgDaily=round(avg(RecentDailyCount),2) by EventID;
+Baseline
+| join kind=inner Recent on EventID
+| extend DeviationRatio=round(RecentAvgDaily / BaselineAvgDaily, 2)
+| where DeviationRatio >= ThresholdMultiplier
+| project EventID, BaselineAvgDaily, RecentAvgDaily, DeviationRatio
+| sort by DeviationRatio desc
+| take 10
