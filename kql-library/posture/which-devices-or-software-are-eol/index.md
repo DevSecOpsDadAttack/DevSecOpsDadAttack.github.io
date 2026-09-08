@@ -1,0 +1,55 @@
+---
+layout: page
+title: Which Devices Or Software Are EOL
+subtitle: "Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`."
+permalink: /kql-library/posture/which-devices-or-software-are-eol/
+js:
+  - "/assets/js/kql-library.js"
+---
+
+<p class="kql-lib-crumbs">
+  <a href="{{ '/kql-library/' | relative_url }}">KQL Library</a>
+  &nbsp;/&nbsp;
+  <a href="{{ '/kql-library/posture/' | relative_url }}">Posture</a>
+</p>
+
+<div class="kql-lib-query-header">
+  <span class="attack-badge attack-badge-lib"><i class="fas fa-server" aria-hidden="true"></i>&nbsp;Posture</span>
+  <code class="kql-lib-query-file">which-devices-or-software-are-eol.kql</code>
+</div>
+
+<p class="kql-lib-query-longdesc">Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`.</p>
+
+<div class="kql-lib-query-actions">
+  <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-devices-or-software-are-eol">
+    <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
+  </button>
+  <a class="kql-lib-download-btn" href="{{ '/assets/kql/posture/which-devices-or-software-are-eol.kql' | relative_url }}" download="which-devices-or-software-are-eol.kql">
+    <i class="fas fa-download" aria-hidden="true"></i>&nbsp;Download .kql
+  </a>
+</div>
+
+<div id="kql-code-which-devices-or-software-are-eol" markdown="1">
+
+```kusto
+// Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Devices that have at least one end-of-support (EOL/EOS) title or version
+
+DeviceTvmSoftwareInventory
+| where isnotempty(DeviceName)
+| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+| project DeviceName, SoftwareName, SoftwareVersion, SoftwareVendor, EndOfSupportDate
+| order by DeviceName asc, SoftwareName asc
+
+DeviceTvmSoftwareInventory
+| where isnotempty(DeviceName)
+| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+| summarize 
+    EOLSoftwareCount = count(),
+    EOLSoftwareList = make_set(SoftwareName, 100),
+    OldestEOLDate = min(EndOfSupportDate)
+  by DeviceName
+| order by EOLSoftwareCount desc
+```
+
+</div>

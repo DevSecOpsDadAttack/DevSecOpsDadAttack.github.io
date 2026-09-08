@@ -1,0 +1,97 @@
+---
+layout: page
+title: Hunting
+subtitle: "Ad-hoc investigative queries. These aren't packaged as Sentinel Analytics Rules — they're the 'let me pull on this thread' queries you reach for during triage, incident response, or when a stakeholder asks a specific question."
+permalink: /kql-library/hunting/
+---
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>&nbsp;KQL Library / Hunting</p>
+  <h2>Hunting</h2>
+  <p>Ad-hoc investigative queries. These aren't packaged as Sentinel Analytics Rules — they're the "let me pull on this thread" queries you reach for during triage, incident response, or when a stakeholder asks a specific question.</p>
+</section>
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<h3 class="kql-lib-subcat-heading">Eventid Forensics</h3>
+<p class="kql-lib-subcat-intro">Investigative queries organized around a specific Windows Event ID — the "who, where, when, how often" set. Replace the sample `EventID` value in each query with the one you're chasing.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="kql-lib-query-title">How Many Times Does This Eventid Fire From This Machine</span>
+      <code class="kql-lib-query-file">how-many-times-does-this-eventid-fire-from-this-machine.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Accounts Are Throwing This Eventid</span>
+      <code class="kql-lib-query-file">which-accounts-are-throwing-this-eventid.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Devices Are Throwing This Eventid</span>
+      <code class="kql-lib-query-file">which-devices-are-throwing-this-eventid.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Eventid Fires The Most In A Month</span>
+      <code class="kql-lib-query-file">which-eventid-fires-the-most-in-a-month.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+      <code class="kql-lib-query-file">which-eventids-are-suddenly-acting-weird-with-context.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird</span>
+      <code class="kql-lib-query-file">which-eventids-are-suddenly-acting-weird.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">File Activity</h3>
+<p class="kql-lib-subcat-intro">File-level activity queries — the "prove to an auditor we can track this" set.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
+      <span class="kql-lib-query-title">File Activity Audit</span>
+      <code class="kql-lib-query-file">file-activity-audit.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor.</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">User Activity</h3>
+<p class="kql-lib-subcat-intro">"What has this user been doing?" queries. Powerful enough to be worth handling carefully — some of these return browsing history and file access details, so mind your GDPR/privacy obligations before running them in prod.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
+      <span class="kql-lib-query-title">RDP Logins Per Day Per User</span>
+      <code class="kql-lib-query-file">rdp-logins-per-day-per-user.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whats-this-user-doing/' | relative_url }}">
+      <span class="kql-lib-query-title">Whats This User Doing</span>
+      <code class="kql-lib-query-file">whats-this-user-doing.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="kql-lib-query-title">Whos Logging In And When</span>
+      <code class="kql-lib-query-file">whos-logging-in-and-when.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+</ul>

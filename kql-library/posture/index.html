@@ -1,0 +1,31 @@
+---
+layout: page
+title: Posture
+subtitle: "Attack-surface and asset-posture queries against Defender for Endpoint's TVM tables."
+permalink: /kql-library/posture/
+---
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow"><i class="fas fa-server" aria-hidden="true"></i>&nbsp;KQL Library / Posture</p>
+  <h2>Posture</h2>
+  <p>Attack-surface and asset-posture queries against Defender for Endpoint's TVM tables.</p>
+</section>
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/which-devices-are-internet-facing/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Devices Are Internet Facing</span>
+      <code class="kql-lib-query-file">which-devices-are-internet-facing.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Identify internet-facing devices — walks through what "public" actually means for both IPv4 and IPv6 before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/which-devices-or-software-are-eol/' | relative_url }}">
+      <span class="kql-lib-query-title">Which Devices Or Software Are EOL</span>
+      <code class="kql-lib-query-file">which-devices-or-software-are-eol.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`.</p>
+  </li>
+</ul>

@@ -1,0 +1,59 @@
+---
+layout: page
+title: Email & Phishing
+subtitle: "Defender for Office 365 queries against `EmailEvents` — phishing volume, malware, and external-account abuse patterns."
+permalink: /kql-library/email-and-phishing/
+---
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow"><i class="fas fa-envelope-open-text" aria-hidden="true"></i>&nbsp;KQL Library / Email &amp; Phishing</p>
+  <h2>Email &amp; Phishing</h2>
+  <p>Defender for Office 365 queries against `EmailEvents` — phishing volume, malware, and external-account abuse patterns.</p>
+</section>
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/external-email-accounts-synced-to-outlook-sending-attachments/' | relative_url }}">
+      <span class="kql-lib-query-title">External Email Accounts Synced To Outlook Sending Attachments</span>
+      <code class="kql-lib-query-file">external-email-accounts-synced-to-outlook-sending-attachments.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Employees using Outlook on corporate machines to send email via third-party SMTP servers, with attachments — a common data-exfiltration pattern.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-blocked-malware-email-events/' | relative_url }}">
+      <span class="kql-lib-query-title">Top Blocked Malware Email Events</span>
+      <code class="kql-lib-query-file">top-blocked-malware-email-events.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top blocked malware email events. Does what it says on the tin.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-domains/' | relative_url }}">
+      <span class="kql-lib-query-title">Top Phishing Domains</span>
+      <code class="kql-lib-query-file">top-phishing-domains.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top phishing *sender domains* with severity categorized by volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-sender-recipient-pairs/' | relative_url }}">
+      <span class="kql-lib-query-title">Top Phishing Sender Recipient Pairs</span>
+      <code class="kql-lib-query-file">top-phishing-sender-recipient-pairs.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-targets/' | relative_url }}">
+      <span class="kql-lib-query-title">Top Phishing Targets</span>
+      <code class="kql-lib-query-file">top-phishing-targets.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top *recipients* of phishing emails (targeted individuals) with severity by volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/whos-clicking-on-junk-mail/' | relative_url }}">
+      <span class="kql-lib-query-title">Whos Clicking On Junk Mail</span>
+      <code class="kql-lib-query-file">whos-clicking-on-junk-mail.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Users who clicked links in messages that landed in the Junk folder — a strong "who needs training" signal.</p>
+  </li>
+</ul>

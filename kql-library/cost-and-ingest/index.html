@@ -1,0 +1,213 @@
+---
+layout: page
+title: Cost & Ingest
+subtitle: "The FinOps side of Sentinel and Log Analytics — how much you're ingesting, where it's coming from, and what it's costing you. Everything here targets the `Usage` table, `_BilledSize`, or specific noisy sources."
+permalink: /kql-library/cost-and-ingest/
+---
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow"><i class="fas fa-coins" aria-hidden="true"></i>&nbsp;KQL Library / Cost &amp; Ingest</p>
+  <h2>Cost &amp; Ingest</h2>
+  <p>The FinOps side of Sentinel and Log Analytics — how much you're ingesting, where it's coming from, and what it's costing you. Everything here targets the `Usage` table, `_BilledSize`, or specific noisy sources.</p>
+</section>
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<h3 class="kql-lib-subcat-heading">Billable Volume</h3>
+<p class="kql-lib-subcat-intro">Raw billable-volume queries — how many GB per day, per table, per solution — plus the "efficiency exercise" that walks through why some formulations of these questions are much cheaper to run than others.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day-formatted/' | relative_url }}">
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day Formatted</span>
+      <code class="kql-lib-query-file">90-day-billable-cost-per-day-formatted.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days, formatted as human-readable strings (`$X.XX / Day`, `XGB / Day`). Table-friendly, not chart-friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day/' | relative_url }}">
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day</span>
+      <code class="kql-lib-query-file">90-day-billable-cost-per-day.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days with numeric `CostUSD`. The default cost-over-time view — plottable and aggregatable.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-volume-by-solution/' | relative_url }}">
+      <span class="kql-lib-query-title">90 Day Billable Volume By Solution</span>
+      <code class="kql-lib-query-file">90-day-billable-volume-by-solution.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Billable GB per day for the past 90 days, sliced by Solution, rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/efficiency-exercise/' | relative_url }}">
+      <span class="kql-lib-query-title">Efficiency Exercise</span>
+      <code class="kql-lib-query-file">efficiency-exercise.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Teaching walkthrough of the "average daily ingest" question written four ways, from a slow `search *` to an efficient `Usage`-scoped version with cost. Read this before writing your own daily-average query.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/gb-per-table/' | relative_url }}">
+      <span class="kql-lib-query-title">GB Per Table</span>
+      <code class="kql-lib-query-file">gb-per-table.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Ingest volume in GB for a single table (defaults to `SecurityEvent`, swap as needed).</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">Cost By Eventid</h3>
+<p class="kql-lib-subcat-intro">Cost broken down at the Event ID or Syslog-severity level — for when you need to justify filtering a specific noisy event out at the DCR.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid-by-computer/' | relative_url }}">
+      <span class="kql-lib-query-title">Cost Of Eventid By Computer</span>
+      <code class="kql-lib-query-file">cost-of-eventid-by-computer.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Breaks the cost of a specific Event ID out by originating computer (defaults to `EventID == 4672`).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid/' | relative_url }}">
+      <span class="kql-lib-query-title">Cost Of Eventid</span>
+      <code class="kql-lib-query-file">cost-of-eventid.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-syslog-events-by-severity/' | relative_url }}">
+      <span class="kql-lib-query-title">Cost Of Syslog Events By Severity</span>
+      <code class="kql-lib-query-file">cost-of-syslog-events-by-severity.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Cost of Syslog events grouped by severity level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/eventid-by-billedsize/' | relative_url }}">
+      <span class="kql-lib-query-title">Eventid By Billedsize</span>
+      <code class="kql-lib-query-file">eventid-by-billedsize.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Ingest volume in GB per Event ID from the `SecurityEvent` table.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-eventids-windows-securityevents/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Eventids Windows Securityevents</span>
+      <code class="kql-lib-query-file">top-10-eventids-windows-securityevents.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Event IDs from the `SecurityEvent` table over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-windowsevent-eventids/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Windowsevent Eventids</span>
+      <code class="kql-lib-query-file">top-10-windowsevent-eventids.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Event IDs from the `WindowsEvent` table (AMA-shipped) over the last 90 days.</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">Cost By Table</h3>
+<p class="kql-lib-subcat-intro">Cost broken down by table or log source. Most of these use a manually-set `rate` variable that you should set to your region's effective per-GB price ([Sentinel pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/)).</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-a-table/' | relative_url }}">
+      <span class="kql-lib-query-title">Cost Of A Table</span>
+      <code class="kql-lib-query-file">cost-of-a-table.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Estimated dollar cost of a single table over a chosen window, given your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-workstations-logging-direct-to-sentinel/' | relative_url }}">
+      <span class="kql-lib-query-title">Cost Of Workstations Logging Direct To Sentinel</span>
+      <code class="kql-lib-query-file">cost-of-workstations-logging-direct-to-sentinel.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/how-loud-is-a-table/' | relative_url }}">
+      <span class="kql-lib-query-title">How Loud Is A Table</span>
+      <code class="kql-lib-query-file">how-loud-is-a-table.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Row-count-per-day graph for a given table (defaults to `Syslog`) — a quick "is this table getting louder?" check.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-billable-mde-tables/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Billable MDE Tables</span>
+      <code class="kql-lib-query-file">top-10-billable-mde-tables.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Microsoft Defender for Endpoint tables over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-reason-with-cost-enhanced/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Reason With Cost Enhanced</span>
+      <code class="kql-lib-query-file">top-10-common-security-logs-by-reason-with-cost-enhanced.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` rows by `Reason` and `LogSeverity` (90d), ranked by event count, with an emoji cost-tier column. Filters out empty/`N/A` reasons.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-severity-with-cost/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Severity With Cost</span>
+      <code class="kql-lib-query-file">top-10-common-security-logs-by-severity-with-cost.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost-enhanced/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost Enhanced</span>
+      <code class="kql-lib-query-file">top-10-log-sources-with-cost-enhanced.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost</span>
+      <code class="kql-lib-query-file">top-10-log-sources-with-cost.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost-enhanced/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost Enhanced</span>
+      <code class="kql-lib-query-file">top-10-security-events-with-cost-enhanced.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost</span>
+      <code class="kql-lib-query-file">top-10-security-events-with-cost.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-tables-exclude-mde/' | relative_url }}">
+      <span class="kql-lib-query-title">Top 10 Tables Exclude MDE</span>
+      <code class="kql-lib-query-file">top-10-tables-exclude-mde.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive log sources over 90 days, excluding MDE, via the fast `Usage` table.</p>
+  </li>
+</ul>
+<h3 class="kql-lib-subcat-heading">Ingest Trends</h3>
+<p class="kql-lib-subcat-intro">Queries that compare ingest volume across time windows to spot upward drift, new noisy sources, or budget-eating trends.</p>
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-common-security-log-ingest-trends/' | relative_url }}">
+      <span class="kql-lib-query-title">30 60 90 Day Common Security Log Ingest Trends</span>
+      <code class="kql-lib-query-file">30-60-90-day-common-security-log-ingest-trends.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Compare `CommonSecurityLog` volume by `DeviceAction` across 30-, 60-, and 90-day periods to spot which actions are driving growth.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-ingest-trends/' | relative_url }}">
+      <span class="kql-lib-query-title">30 60 90 Day Ingest Trends</span>
+      <code class="kql-lib-query-file">30-60-90-day-ingest-trends.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Same three-window comparison against the `Usage` table for a workspace-wide view.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/day-by-day-change/' | relative_url }}">
+      <span class="kql-lib-query-title">Day By Day Change</span>
+      <code class="kql-lib-query-file">day-by-day-change.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Percent change in daily ingest volume vs the previous day over the last 31 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/log-sources-with-greatest-delta/' | relative_url }}">
+      <span class="kql-lib-query-title">Log Sources With Greatest Delta</span>
+      <code class="kql-lib-query-file">log-sources-with-greatest-delta.kql</code>
+    </a>
+    <p class="kql-lib-query-desc">Which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query.</p>
+  </li>
+</ul>

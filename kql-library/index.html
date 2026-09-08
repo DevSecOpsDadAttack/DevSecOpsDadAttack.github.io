@@ -1,0 +1,621 @@
+---
+layout: page
+title: KQL Library
+subtitle: A browsable catalog of KQL queries for Microsoft Sentinel, Defender XDR, and Log Analytics.
+permalink: /kql-library/
+full-width: true
+js:
+  - "/assets/js/kql-library.js"
+---
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">A running library of deceptively simple KQL.</p>
+
+  <img
+    src="{{ '/assets/img/DevSecOpsDadAttack.png' | relative_url }}"
+    alt="DevSecOpsDad">
+
+  <h2>The KQL Library.</h2>
+
+  <p>The queries I keep coming back to whenever a complicated problem shows up in
+  Microsoft Sentinel, Defender XDR, or Log Analytics. Grouped by what they answer,
+  each one shipped with the description of when to reach for it.</p>
+</section>
+
+<hr class="attack-separator">
+
+<div class="kql-lib-toolbar">
+  <input
+    type="search"
+    id="kql-lib-search"
+    class="tag-filter-input kql-lib-search"
+    placeholder="Search 67 queries by title, description, or category…"
+    aria-label="Search KQL queries">
+  <p class="kql-lib-hint" id="kql-lib-hint">
+    Type to search all queries, or pick a category below.
+  </p>
+</div>
+
+<div class="kql-lib-categories" id="kql-lib-categories">
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/analytics-rules/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Analytics Rules</span>
+    <span class="kql-lib-cat-count">3 queries</span>
+    <span class="kql-lib-cat-desc">Queries designed (or used) as the body of a Sentinel Analytics Rule — they're written to produce discrete detection events on a schedule rather than to be run interactively.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/cost-and-ingest/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-coins" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Cost &amp; Ingest</span>
+    <span class="kql-lib-cat-count">26 queries</span>
+    <span class="kql-lib-cat-desc">The FinOps side of Sentinel and Log Analytics — how much you're ingesting, where it's coming from, and what it's costing you. Everything here targets the `Usage` table, `_BilledSize`, or specific noisy sources.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/email-and-phishing/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Email &amp; Phishing</span>
+    <span class="kql-lib-cat-count">6 queries</span>
+    <span class="kql-lib-cat-desc">Defender for Office 365 queries against `EmailEvents` — phishing volume, malware, and external-account abuse patterns.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/health-checks/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-heart-pulse" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Health Checks</span>
+    <span class="kql-lib-cat-count">2 queries</span>
+    <span class="kql-lib-cat-desc">Meta-queries about the workspace itself — is your detection stack actually working, and what's it firing on?</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/hunting/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Hunting</span>
+    <span class="kql-lib-cat-count">10 queries</span>
+    <span class="kql-lib-cat-desc">Ad-hoc investigative queries. These aren't packaged as Sentinel Analytics Rules — they're the "let me pull on this thread" queries you reach for during triage, incident response, or when a stakeholder asks a specific question.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/identity/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-user-shield" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Identity</span>
+    <span class="kql-lib-cat-count">3 queries</span>
+    <span class="kql-lib-cat-desc">Entra ID, Active Directory, and PIM activity queries — who did what to whom, when.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/mitre-attack/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-crosshairs" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">MITRE ATT&amp;CK</span>
+    <span class="kql-lib-cat-count">2 queries</span>
+    <span class="kql-lib-cat-desc">Queries that summarize what's been observed in the environment against the MITRE ATT&amp;CK matrix.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/pihole/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-network-wired" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Pi-hole</span>
+    <span class="kql-lib-cat-count">9 queries</span>
+    <span class="kql-lib-cat-desc">Queries against Pi-hole DNS data ingested into a Log Analytics workspace (as a custom `PiHole` / `pihole_CL` table). Useful for home-lab telemetry, DNS-based hunting practice, and workshop material.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/posture/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-server" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Posture</span>
+    <span class="kql-lib-cat-count">2 queries</span>
+    <span class="kql-lib-cat-desc">Attack-surface and asset-posture queries against Defender for Endpoint's TVM tables.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/reference/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-book" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Reference</span>
+    <span class="kql-lib-cat-count">1 query</span>
+    <span class="kql-lib-cat-desc">Teaching examples — queries kept because they illustrate a KQL concept rather than solve a specific operational problem.</span>
+  </a>
+  <a class="kql-lib-cat-card" href="{{ '/kql-library/reporting/' | relative_url }}">
+    <span class="kql-lib-cat-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></span>
+    <span class="kql-lib-cat-title">Reporting</span>
+    <span class="kql-lib-cat-count">3 queries</span>
+    <span class="kql-lib-cat-desc">Periodic-summary queries for stakeholder reporting — weekly, monthly, or quarterly. The "here's what happened this period and what changed" view.</span>
+  </a>
+
+</div>
+
+<ul class="kql-lib-results list-unstyled" id="kql-lib-results" role="list" hidden>
+  <li class="kql-lib-result" data-title="failed login attempts" data-desc="3+ failed sign-ins (`resulttype == 50126` — invalid username or password) for the same upn within a 2-minute window. written for a demo that pairs with a logic app to auto-disable or lock the account." data-cat="analytics rules failed logins" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/failed-login-attempts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="attack-badge attack-badge-sub">Failed Logins</span>
+      <span class="kql-lib-result-title">Failed Login Attempts</span>
+    </a>
+    <p class="kql-lib-result-desc">3+ failed sign-ins (`ResultType == 50126` — invalid username or password) for the same UPN within a 2-minute window. Written for a demo that pairs with a Logic App to auto-disable or lock the account.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect low and slow password spray" data-desc="low-and-slow spray pattern (storm-0940-shaped): many unique users from the *same* ip in a day, with roughly one failed attempt per user; includes optional legacy-user-agent hints." data-cat="analytics rules password spray" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-low-and-slow-password-spray/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="attack-badge attack-badge-sub">Password Spray</span>
+      <span class="kql-lib-result-title">Detect Low And Slow Password Spray</span>
+    </a>
+    <p class="kql-lib-result-desc">Low-and-slow spray pattern (Storm-0940-shaped): many unique users from the *same* IP in a day, with roughly one failed attempt per user; includes optional legacy-user-agent hints.</p>
+  </li>
+  <li class="kql-lib-result" data-title="detect wide low volume password sprays" data-desc="wide, low-volume spray: from a single ip, exactly one failed attempt per user in a day, but against many different users." data-cat="analytics rules password spray" data-catslug="analytics-rules">
+    <a href="{{ '/kql-library/analytics-rules/detect-wide-low-volume-password-sprays/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="attack-badge attack-badge-sub">Password Spray</span>
+      <span class="kql-lib-result-title">Detect Wide Low Volume Password Sprays</span>
+    </a>
+    <p class="kql-lib-result-desc">Wide, low-volume spray: from a single IP, exactly one failed attempt per user in a day, but against many different users.</p>
+  </li>
+  <li class="kql-lib-result" data-title="90 day billable cost per day formatted" data-desc="daily billable gb and cost over 90 days, formatted as human-readable strings (`$x.xx / day`, `xgb / day`). table-friendly, not chart-friendly." data-cat="cost &amp; ingest billable volume" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day-formatted/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Billable Volume</span>
+      <span class="kql-lib-result-title">90 Day Billable Cost Per Day Formatted</span>
+    </a>
+    <p class="kql-lib-result-desc">Daily billable GB and cost over 90 days, formatted as human-readable strings (`$X.XX / Day`, `XGB / Day`). Table-friendly, not chart-friendly.</p>
+  </li>
+  <li class="kql-lib-result" data-title="90 day billable cost per day" data-desc="daily billable gb and cost over 90 days with numeric `costusd`. the default cost-over-time view — plottable and aggregatable." data-cat="cost &amp; ingest billable volume" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Billable Volume</span>
+      <span class="kql-lib-result-title">90 Day Billable Cost Per Day</span>
+    </a>
+    <p class="kql-lib-result-desc">Daily billable GB and cost over 90 days with numeric `CostUSD`. The default cost-over-time view — plottable and aggregatable.</p>
+  </li>
+  <li class="kql-lib-result" data-title="90 day billable volume by solution" data-desc="billable gb per day for the past 90 days, sliced by solution, rendered as a column chart." data-cat="cost &amp; ingest billable volume" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-volume-by-solution/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Billable Volume</span>
+      <span class="kql-lib-result-title">90 Day Billable Volume By Solution</span>
+    </a>
+    <p class="kql-lib-result-desc">Billable GB per day for the past 90 days, sliced by Solution, rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-result" data-title="efficiency exercise" data-desc="teaching walkthrough of the "average daily ingest" question written four ways, from a slow `search *` to an efficient `usage`-scoped version with cost. read this before writing your own daily-average query." data-cat="cost &amp; ingest billable volume" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/efficiency-exercise/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Billable Volume</span>
+      <span class="kql-lib-result-title">Efficiency Exercise</span>
+    </a>
+    <p class="kql-lib-result-desc">Teaching walkthrough of the "average daily ingest" question written four ways, from a slow `search *` to an efficient `Usage`-scoped version with cost. Read this before writing your own daily-average query.</p>
+  </li>
+  <li class="kql-lib-result" data-title="gb per table" data-desc="ingest volume in gb for a single table (defaults to `securityevent`, swap as needed)." data-cat="cost &amp; ingest billable volume" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/gb-per-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Billable Volume</span>
+      <span class="kql-lib-result-title">GB Per Table</span>
+    </a>
+    <p class="kql-lib-result-desc">Ingest volume in GB for a single table (defaults to `SecurityEvent`, swap as needed).</p>
+  </li>
+  <li class="kql-lib-result" data-title="cost of eventid by computer" data-desc="breaks the cost of a specific event id out by originating computer (defaults to `eventid == 4672`)." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid-by-computer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Cost Of Eventid By Computer</span>
+    </a>
+    <p class="kql-lib-result-desc">Breaks the cost of a specific Event ID out by originating computer (defaults to `EventID == 4672`).</p>
+  </li>
+  <li class="kql-lib-result" data-title="cost of eventid" data-desc="estimated cost of a single event id over a time window, using your effective per-gb rate." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Cost Of Eventid</span>
+    </a>
+    <p class="kql-lib-result-desc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-result" data-title="cost of syslog events by severity" data-desc="cost of syslog events grouped by severity level." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-syslog-events-by-severity/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Cost Of Syslog Events By Severity</span>
+    </a>
+    <p class="kql-lib-result-desc">Cost of Syslog events grouped by severity level.</p>
+  </li>
+  <li class="kql-lib-result" data-title="eventid by billedsize" data-desc="ingest volume in gb per event id from the `securityevent` table." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/eventid-by-billedsize/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Eventid By Billedsize</span>
+    </a>
+    <p class="kql-lib-result-desc">Ingest volume in GB per Event ID from the `SecurityEvent` table.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 eventids windows securityevents" data-desc="top 10 most expensive event ids from the `securityevent` table over the last 90 days." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-eventids-windows-securityevents/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Top 10 Eventids Windows Securityevents</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 most expensive Event IDs from the `SecurityEvent` table over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 windowsevent eventids" data-desc="top 10 most expensive event ids from the `windowsevent` table (ama-shipped) over the last 90 days." data-cat="cost &amp; ingest cost by eventid" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-windowsevent-eventids/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Eventid</span>
+      <span class="kql-lib-result-title">Top 10 Windowsevent Eventids</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 most expensive Event IDs from the `WindowsEvent` table (AMA-shipped) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="cost of a table" data-desc="estimated dollar cost of a single table over a chosen window, given your effective per-gb rate." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Cost Of A Table</span>
+    </a>
+    <p class="kql-lib-result-desc">Estimated dollar cost of a single table over a chosen window, given your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-result" data-title="cost of workstations logging direct to sentinel" data-desc="find workstations shipping logs directly to sentinel and estimate what it's costing you." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-workstations-logging-direct-to-sentinel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Cost Of Workstations Logging Direct To Sentinel</span>
+    </a>
+    <p class="kql-lib-result-desc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
+  </li>
+  <li class="kql-lib-result" data-title="how loud is a table" data-desc="row-count-per-day graph for a given table (defaults to `syslog`) — a quick "is this table getting louder?" check." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/how-loud-is-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">How Loud Is A Table</span>
+    </a>
+    <p class="kql-lib-result-desc">Row-count-per-day graph for a given table (defaults to `Syslog`) — a quick "is this table getting louder?" check.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 billable mde tables" data-desc="top 10 most expensive microsoft defender for endpoint tables over the last 90 days." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-billable-mde-tables/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Billable MDE Tables</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 most expensive Microsoft Defender for Endpoint tables over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 common security logs by reason with cost enhanced" data-desc="top `commonsecuritylog` rows by `reason` and `logseverity` (90d), ranked by event count, with an emoji cost-tier column. filters out empty/`n/a` reasons." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-reason-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Common Security Logs By Reason With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-result-desc">Top `CommonSecurityLog` rows by `Reason` and `LogSeverity` (90d), ranked by event count, with an emoji cost-tier column. Filters out empty/`N/A` reasons.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 common security logs by severity with cost" data-desc="top `commonsecuritylog` groupings by `devicevendor`, `deviceproduct`, and `logseverity` (30d), with numeric `costusd`." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-severity-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Common Security Logs By Severity With Cost</span>
+    </a>
+    <p class="kql-lib-result-desc">Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 log sources with cost enhanced" data-desc="top log sources by `datatype` (30d) with an emoji cost-tier and formatted `$x.xx` string — table/dashboard friendly." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Log Sources With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-result-desc">Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 log sources with cost" data-desc="top log sources by `datatype` (30d) with numeric `costusd`. the chart-friendly default." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Log Sources With Cost</span>
+    </a>
+    <p class="kql-lib-result-desc">Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 security events with cost enhanced" data-desc="top `securityevent` `eventid`s (30d) with gib, emoji cost-tier, and formatted `$x.xx` string." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Security Events With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-result-desc">Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 security events with cost" data-desc="top `securityevent` `eventid`s with `activity` (30d) and numeric `costusd`." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Security Events With Cost</span>
+    </a>
+    <p class="kql-lib-result-desc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 tables exclude mde" data-desc="top 10 most expensive log sources over 90 days, excluding mde, via the fast `usage` table." data-cat="cost &amp; ingest cost by table" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-tables-exclude-mde/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Cost By Table</span>
+      <span class="kql-lib-result-title">Top 10 Tables Exclude MDE</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 most expensive log sources over 90 days, excluding MDE, via the fast `Usage` table.</p>
+  </li>
+  <li class="kql-lib-result" data-title="30 60 90 day common security log ingest trends" data-desc="compare `commonsecuritylog` volume by `deviceaction` across 30-, 60-, and 90-day periods to spot which actions are driving growth." data-cat="cost &amp; ingest ingest trends" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-common-security-log-ingest-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Ingest Trends</span>
+      <span class="kql-lib-result-title">30 60 90 Day Common Security Log Ingest Trends</span>
+    </a>
+    <p class="kql-lib-result-desc">Compare `CommonSecurityLog` volume by `DeviceAction` across 30-, 60-, and 90-day periods to spot which actions are driving growth.</p>
+  </li>
+  <li class="kql-lib-result" data-title="30 60 90 day ingest trends" data-desc="same three-window comparison against the `usage` table for a workspace-wide view." data-cat="cost &amp; ingest ingest trends" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-ingest-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Ingest Trends</span>
+      <span class="kql-lib-result-title">30 60 90 Day Ingest Trends</span>
+    </a>
+    <p class="kql-lib-result-desc">Same three-window comparison against the `Usage` table for a workspace-wide view.</p>
+  </li>
+  <li class="kql-lib-result" data-title="day by day change" data-desc="percent change in daily ingest volume vs the previous day over the last 31 days." data-cat="cost &amp; ingest ingest trends" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/day-by-day-change/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Ingest Trends</span>
+      <span class="kql-lib-result-title">Day By Day Change</span>
+    </a>
+    <p class="kql-lib-result-desc">Percent change in daily ingest volume vs the previous day over the last 31 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="log sources with greatest delta" data-desc="which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query." data-cat="cost &amp; ingest ingest trends" data-catslug="cost-and-ingest">
+    <a href="{{ '/kql-library/cost-and-ingest/log-sources-with-greatest-delta/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest</span>
+      <span class="attack-badge attack-badge-sub">Ingest Trends</span>
+      <span class="kql-lib-result-title">Log Sources With Greatest Delta</span>
+    </a>
+    <p class="kql-lib-result-desc">Which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query.</p>
+  </li>
+  <li class="kql-lib-result" data-title="external email accounts synced to outlook sending attachments" data-desc="employees using outlook on corporate machines to send email via third-party smtp servers, with attachments — a common data-exfiltration pattern." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/external-email-accounts-synced-to-outlook-sending-attachments/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">External Email Accounts Synced To Outlook Sending Attachments</span>
+    </a>
+    <p class="kql-lib-result-desc">Employees using Outlook on corporate machines to send email via third-party SMTP servers, with attachments — a common data-exfiltration pattern.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top blocked malware email events" data-desc="top blocked malware email events. does what it says on the tin." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/top-blocked-malware-email-events/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">Top Blocked Malware Email Events</span>
+    </a>
+    <p class="kql-lib-result-desc">Top blocked malware email events. Does what it says on the tin.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top phishing domains" data-desc="top phishing *sender domains* with severity categorized by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">Top Phishing Domains</span>
+    </a>
+    <p class="kql-lib-result-desc">Top phishing *sender domains* with severity categorized by volume.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top phishing sender recipient pairs" data-desc="top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-sender-recipient-pairs/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">Top Phishing Sender Recipient Pairs</span>
+    </a>
+    <p class="kql-lib-result-desc">Top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top phishing targets" data-desc="top *recipients* of phishing emails (targeted individuals) with severity by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-targets/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">Top Phishing Targets</span>
+    </a>
+    <p class="kql-lib-result-desc">Top *recipients* of phishing emails (targeted individuals) with severity by volume.</p>
+  </li>
+  <li class="kql-lib-result" data-title="whos clicking on junk mail" data-desc="users who clicked links in messages that landed in the junk folder — a strong "who needs training" signal." data-cat="email &amp; phishing" data-catslug="email-and-phishing">
+    <a href="{{ '/kql-library/email-and-phishing/whos-clicking-on-junk-mail/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-result-title">Whos Clicking On Junk Mail</span>
+    </a>
+    <p class="kql-lib-result-desc">Users who clicked links in messages that landed in the Junk folder — a strong "who needs training" signal.</p>
+  </li>
+  <li class="kql-lib-result" data-title="analytics rule health" data-desc="analytics rules that ran successfully in the last 90 days but never produced an alert — candidates for review or tuning." data-cat="health checks" data-catslug="health-checks">
+    <a href="{{ '/kql-library/health-checks/analytics-rule-health/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Health Checks</span>
+      <span class="kql-lib-result-title">Analytics Rule Health</span>
+    </a>
+    <p class="kql-lib-result-desc">Analytics Rules that ran successfully in the last 90 days but never produced an alert — candidates for review or tuning.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top 10 alerts" data-desc="top 10 alert names over 90 days with percentage of total and color-coded impact level (high / moderate / low)." data-cat="health checks" data-catslug="health-checks">
+    <a href="{{ '/kql-library/health-checks/top-10-alerts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Health Checks</span>
+      <span class="kql-lib-result-title">Top 10 Alerts</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 alert names over 90 days with percentage of total and color-coded impact level (High / Moderate / Low).</p>
+  </li>
+  <li class="kql-lib-result" data-title="how many times does this eventid fire from this machine" data-desc="count of a specific event id from a specific machine, bucketed daily and rendered as a column chart." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">How Many Times Does This Eventid Fire From This Machine</span>
+    </a>
+    <p class="kql-lib-result-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which accounts are throwing this eventid" data-desc="which accounts fire a specific event id and how often, per day." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">Which Accounts Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-result-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which devices are throwing this eventid" data-desc="which computers fire a specific event id and how often, per day." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">Which Devices Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-result-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which eventid fires the most in a month" data-desc="noisiest event ids across the last month — good for spotting new noise sources." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">Which Eventid Fires The Most In A Month</span>
+    </a>
+    <p class="kql-lib-result-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which eventids are suddenly acting weird with context" data-desc="same deviation analysis as the basic variant, joined with `computer` and `account` so you can see which host or user is driving the spike in one shot. uses a 30-day recent window to reduce join noise." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+    </a>
+    <p class="kql-lib-result-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which eventids are suddenly acting weird" data-desc="which event ids have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. basic variant — just eventid + counts." data-cat="hunting eventid forensics" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">Eventid Forensics</span>
+      <span class="kql-lib-result-title">Which Eventids Are Suddenly Acting Weird</span>
+    </a>
+    <p class="kql-lib-result-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+  <li class="kql-lib-result" data-title="file activity audit" data-desc="timestamped file activity (open, read, modify, delete, create) by user and device, joining `deviceevents`, `devicenetworkevents`, and `devicefileevents`. written for a client that needed to demonstrate this capability to an auditor." data-cat="hunting file activity" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">File Activity</span>
+      <span class="kql-lib-result-title">File Activity Audit</span>
+    </a>
+    <p class="kql-lib-result-desc">Timestamped file activity (open, read, modify, delete, create) by user and device, joining `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents`. Written for a client that needed to demonstrate this capability to an auditor.</p>
+  </li>
+  <li class="kql-lib-result" data-title="rdp logins per day per user" data-desc="rdp logins per user per day (30d) rendered as a timechart. use for baselining "normal" login volume before hunting for anomalies." data-cat="hunting user activity" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">User Activity</span>
+      <span class="kql-lib-result-title">RDP Logins Per Day Per User</span>
+    </a>
+    <p class="kql-lib-result-desc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
+  </li>
+  <li class="kql-lib-result" data-title="whats this user doing" data-desc="unions `deviceevents`, `devicenetworkevents`, and `devicefileevents` to give a timestamped activity trace for a single user, including urls touched. swiss-army knife for user investigations — includes a facebook-usage example." data-cat="hunting user activity" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/whats-this-user-doing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">User Activity</span>
+      <span class="kql-lib-result-title">Whats This User Doing</span>
+    </a>
+    <p class="kql-lib-result-desc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
+  </li>
+  <li class="kql-lib-result" data-title="whos logging in and when" data-desc="timestamped feed of rdp logon (4624/logontype 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days." data-cat="hunting user activity" data-catslug="hunting">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="attack-badge attack-badge-sub">User Activity</span>
+      <span class="kql-lib-result-title">Whos Logging In And When</span>
+    </a>
+    <p class="kql-lib-result-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="who deleted an ad user" data-desc="who deleted an ad user (`securityevent` eventid `4726`) over the last 90 days." data-cat="identity" data-catslug="identity">
+    <a href="{{ '/kql-library/identity/who-deleted-an-ad-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-result-title">Who Deleted An AD User</span>
+    </a>
+    <p class="kql-lib-result-desc">Who deleted an AD user (`SecurityEvent` EventID `4726`) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="who removed a user from group chat" data-desc="teams-related removal actions performed by a specific user in the last 7 days, from `officeactivity` / unified audit log." data-cat="identity" data-catslug="identity">
+    <a href="{{ '/kql-library/identity/who-removed-a-user-from-group-chat/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-result-title">Who Removed A User From Group Chat</span>
+    </a>
+    <p class="kql-lib-result-desc">Teams-related removal actions performed by a specific user in the last 7 days, from `OfficeActivity` / Unified Audit Log.</p>
+  </li>
+  <li class="kql-lib-result" data-title="whos activating roles via pim" data-desc="pim role activations from `auditlogs` — useful for tracking privileged-role usage." data-cat="identity" data-catslug="identity">
+    <a href="{{ '/kql-library/identity/whos-activating-roles-via-pim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-result-title">Whos Activating Roles Via PIM</span>
+    </a>
+    <p class="kql-lib-result-desc">PIM role activations from `AuditLogs` — useful for tracking privileged-role usage.</p>
+  </li>
+  <li class="kql-lib-result" data-title="mitre attack tactics observed" data-desc="events mapped against mitre att&amp;ck tactics that have been observed in the environment, with percentage of total." data-cat="mitre att&amp;ck" data-catslug="mitre-attack">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-tactics-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-result-title">Mitre Attack Tactics Observed</span>
+    </a>
+    <p class="kql-lib-result-desc">Events mapped against MITRE ATT&amp;CK Tactics that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-result" data-title="mitre attack techniques observed" data-desc="events mapped against mitre att&amp;ck techniques that have been observed in the environment, with percentage of total." data-cat="mitre att&amp;ck" data-catslug="mitre-attack">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-techniques-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-result-title">Mitre Attack Techniques Observed</span>
+    </a>
+    <p class="kql-lib-result-desc">Events mapped against MITRE ATT&amp;CK Techniques that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-result" data-title="blocked queries over time" data-desc="count of blocked dns queries bucketed over time." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/blocked-queries-over-time/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Blocked Queries Over Time</span>
+    </a>
+    <p class="kql-lib-result-desc">Count of blocked DNS queries bucketed over time.</p>
+  </li>
+  <li class="kql-lib-result" data-title="dns query volume" data-desc="total dns query volume over time — the baseline "how loud is dns" view." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/dns-query-volume/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">DNS Query Volume</span>
+    </a>
+    <p class="kql-lib-result-desc">Total DNS query volume over time — the baseline "how loud is DNS" view.</p>
+  </li>
+  <li class="kql-lib-result" data-title="most queried domains" data-desc="top 10 most-queried domains." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/most-queried-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Most Queried Domains</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 most-queried domains.</p>
+  </li>
+  <li class="kql-lib-result" data-title="new or rarely seen domains" data-desc="domains seen in the last 24h that haven't been seen recently — a classic new-domain-observed hunt." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/new-or-rarely-seen-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">New Or Rarely Seen Domains</span>
+    </a>
+    <p class="kql-lib-result-desc">Domains seen in the last 24h that haven't been seen recently — a classic new-domain-observed hunt.</p>
+  </li>
+  <li class="kql-lib-result" data-title="pihole usage" data-desc="billable ingest volume for the pi-hole custom log over the last 90 days." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/pihole-usage/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Pihole Usage</span>
+    </a>
+    <p class="kql-lib-result-desc">Billable ingest volume for the Pi-hole custom log over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-result" data-title="query type distribution" data-desc="distribution of dns query types (a, aaaa, txt, etc.)." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/query-type-distribution/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Query Type Distribution</span>
+    </a>
+    <p class="kql-lib-result-desc">Distribution of DNS query types (A, AAAA, TXT, etc.).</p>
+  </li>
+  <li class="kql-lib-result" data-title="success vs failure" data-desc="successful vs failed dns query counts." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/success-vs-failure/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Success Vs Failure</span>
+    </a>
+    <p class="kql-lib-result-desc">Successful vs failed DNS query counts.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top blocked domains" data-desc="top 10 blocked domains." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/top-blocked-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Top Blocked Domains</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 blocked domains.</p>
+  </li>
+  <li class="kql-lib-result" data-title="top clients" data-desc="top 10 clients by dns query count." data-cat="pi-hole" data-catslug="pihole">
+    <a href="{{ '/kql-library/pihole/top-clients/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-result-title">Top Clients</span>
+    </a>
+    <p class="kql-lib-result-desc">Top 10 clients by DNS query count.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which devices are internet facing" data-desc="identify internet-facing devices — walks through what "public" actually means for both ipv4 and ipv6 before matching." data-cat="posture" data-catslug="posture">
+    <a href="{{ '/kql-library/posture/which-devices-are-internet-facing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-result-title">Which Devices Are Internet Facing</span>
+    </a>
+    <p class="kql-lib-result-desc">Identify internet-facing devices — walks through what "public" actually means for both IPv4 and IPv6 before matching.</p>
+  </li>
+  <li class="kql-lib-result" data-title="which devices or software are eol" data-desc="devices running at least one end-of-support / end-of-life software title or version, from `devicetvmsoftwareinventory`." data-cat="posture" data-catslug="posture">
+    <a href="{{ '/kql-library/posture/which-devices-or-software-are-eol/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-result-title">Which Devices Or Software Are EOL</span>
+    </a>
+    <p class="kql-lib-result-desc">Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`.</p>
+  </li>
+  <li class="kql-lib-result" data-title="sort function result comparison" data-desc="side-by-side of `sort by` vs `top` on a cost-per-eventid query, showing that both produce identical results in this case — a small worked example for anyone learning kql sort semantics." data-cat="reference" data-catslug="reference">
+    <a href="{{ '/kql-library/reference/sort-function-result-comparison/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reference</span>
+      <span class="kql-lib-result-title">Sort Function Result Comparison</span>
+    </a>
+    <p class="kql-lib-result-desc">Side-by-side of `sort by` vs `top` on a cost-per-EventID query, showing that both produce identical results in this case — a small worked example for anyone learning KQL sort semantics.</p>
+  </li>
+  <li class="kql-lib-result" data-title="alert trends" data-desc="alerts with significant increases vs the previous 90-day period, with severity categorized." data-cat="reporting" data-catslug="reporting">
+    <a href="{{ '/kql-library/reporting/alert-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reporting</span>
+      <span class="kql-lib-result-title">Alert Trends</span>
+    </a>
+    <p class="kql-lib-result-desc">Alerts with significant increases vs the previous 90-day period, with severity categorized.</p>
+  </li>
+  <li class="kql-lib-result" data-title="data sources with biggest delta in log volume" data-desc="data sources with the biggest log-volume delta between comparison periods — configurable tunables at the top of the query." data-cat="reporting" data-catslug="reporting">
+    <a href="{{ '/kql-library/reporting/data-sources-with-biggest-delta-in-log-volume/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reporting</span>
+      <span class="kql-lib-result-title">Data Sources With Biggest Delta In Log Volume</span>
+    </a>
+    <p class="kql-lib-result-desc">Data sources with the biggest log-volume delta between comparison periods — configurable tunables at the top of the query.</p>
+  </li>
+  <li class="kql-lib-result" data-title="report queries" data-desc="grab-bag of reporting queries starting with mttr against `securityincident`." data-cat="reporting" data-catslug="reporting">
+    <a href="{{ '/kql-library/reporting/report-queries/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reporting</span>
+      <span class="kql-lib-result-title">Report Queries</span>
+    </a>
+    <p class="kql-lib-result-desc">Grab-bag of reporting queries starting with MTTR against `SecurityIncident`.</p>
+  </li>
+
+</ul>
+
+<p class="kql-lib-empty" id="kql-lib-empty" hidden>No queries match that search.</p>
