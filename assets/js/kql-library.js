@@ -50,10 +50,14 @@
       var visibleCount = 0;
 
       items.forEach(function (li) {
+        // data-tags is a space-separated list of slugs — e.g. "defense-evasion
+        // t1562-008 vidar-stealer windows deviceimageloadevents". Include it in
+        // the haystack so searching "t1562" or "vidar" surfaces the query.
         var hay = (
           (li.getAttribute('data-title') || '') + ' ' +
           (li.getAttribute('data-desc') || '') + ' ' +
-          (li.getAttribute('data-cat') || '')
+          (li.getAttribute('data-cat') || '') + ' ' +
+          (li.getAttribute('data-tags') || '')
         );
         var match = terms.every(function (t) { return hay.indexOf(t) !== -1; });
         li.hidden = !match;

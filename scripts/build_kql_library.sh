@@ -6,6 +6,12 @@
 # can run it with no setup step. Called by
 # .github/workflows/regenerate-kql-library.yml.
 #
+# Now tag-aware: reads `// Tactics:` / `// Techniques:` / `// Actors:` /
+# `// Platforms:` / `// Data:` comment lines from each .kql, renders pill
+# HTML on each query and category page, generates a /kql-library/tag/<slug>/
+# index page per tag, and folds tag slugs + raw labels into the landing
+# page search index.
+#
 # Usage: bash scripts/build_kql_library.sh <attack-pack checkout> <site root>
 # Bash port of scripts/build_kql_library.py — same output layout.
 set -euo pipefail
@@ -117,10 +123,146 @@ html_esc() {
   echo "$s"
 }
 
+# ---- tag helpers -----------------------------------------------------------
+
+# MITRE Tactic name -> TA number, for external links from a tactic tag page.
+declare -A TACTIC_TA
+TACTIC_TA["Reconnaissance"]="TA0043"
+TACTIC_TA["Resource Development"]="TA0042"
+TACTIC_TA["Initial Access"]="TA0001"
+TACTIC_TA["Execution"]="TA0002"
+TACTIC_TA["Persistence"]="TA0003"
+TACTIC_TA["Privilege Escalation"]="TA0004"
+TACTIC_TA["Defense Evasion"]="TA0005"
+TACTIC_TA["Credential Access"]="TA0006"
+TACTIC_TA["Discovery"]="TA0007"
+TACTIC_TA["Lateral Movement"]="TA0008"
+TACTIC_TA["Collection"]="TA0009"
+TACTIC_TA["Exfiltration"]="TA0010"
+TACTIC_TA["Command and Control"]="TA0011"
+TACTIC_TA["Impact"]="TA0040"
+
+# Slugify a tag label into a URL-safe form. Preserves technique-id shape by
+# keeping the T-prefix but turning the "." into "-".
+tag_slug() {
+  local s="$1"
+  s="${s,,}"
+  s="$(echo "$s" | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
+  echo "$s"
+}
+
+# Build the MITRE ATT&CK URL for a technique id like "T1036.005".
+# Returns empty string for non-technique tags.
+mitre_technique_url() {
+  local id="$1"
+  if [[ "$id" =~ ^T([0-9]{4})\.([0-9]{3})$ ]]; then
+    echo "https://attack.mitre.org/techniques/T${BASH_REMATCH[1]}/${BASH_REMATCH[2]}/"
+  elif [[ "$id" =~ ^T([0-9]{4})$ ]]; then
+    echo "https://attack.mitre.org/techniques/T${BASH_REMATCH[1]}/"
+  fi
+}
+
+# Read all 5 tag fields (Tactics / Techniques / Actors / Platforms / Data)
+# from a .kql file's header in ONE awk pass. Emits 5 lines to stdout in that
+# fixed order; empty lines mean "field not present." Callers slurp with
+# mapfile -t. One gawk process per query instead of five — several-x speedup
+# on Git Bash / Windows where fork is expensive.
+read_all_tag_fields() {
+  local file="$1"
+  gawk '
+    BEGIN { tac=""; tech=""; act=""; plat=""; data="" }
+    /^\/\// {
+      line = $0
+      sub(/^\/\/[[:space:]]*/, "", line)
+      if      (line ~ /^Tactics[[:space:]]*:/)    { sub(/^Tactics[[:space:]]*:[[:space:]]*/,    "", line); sub(/[[:space:]]+$/, "", line); tac=line;  next }
+      else if (line ~ /^Techniques[[:space:]]*:/) { sub(/^Techniques[[:space:]]*:[[:space:]]*/, "", line); sub(/[[:space:]]+$/, "", line); tech=line; next }
+      else if (line ~ /^Actors[[:space:]]*:/)     { sub(/^Actors[[:space:]]*:[[:space:]]*/,     "", line); sub(/[[:space:]]+$/, "", line); act=line;  next }
+      else if (line ~ /^Platforms[[:space:]]*:/)  { sub(/^Platforms[[:space:]]*:[[:space:]]*/,  "", line); sub(/[[:space:]]+$/, "", line); plat=line; next }
+      else if (line ~ /^Data[[:space:]]*:/)       { sub(/^Data[[:space:]]*:[[:space:]]*/,       "", line); sub(/[[:space:]]+$/, "", line); data=line; next }
+      next
+    }
+    { exit }
+    END { print tac; print tech; print act; print plat; print data }
+  ' "$file"
+}
+
+# Split a comma-separated tag string into an array (one value per line).
+split_tags() {
+  local raw="$1"
+  [[ -z "$raw" ]] && return 0
+  echo "$raw" | tr ',' '\n' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//' | awk 'NF'
+}
+
 # ---- reset outputs ----
 rm -rf "$OUT/kql-library" "$OUT/assets/kql"
 rm -f  "$OUT/_data/kql_library.yml"
 mkdir -p "$OUT/_data" "$OUT/kql-library" "$OUT/assets/kql"
+
+# Per-tag scratch dir: one file per tag slug that we append query-<li>s to as
+# we walk. After the main loop we turn each into /kql-library/tag/<slug>/index.html.
+TAG_DIR="$(mktemp -d)"
+trap "rm -rf '$TAG_DIR'" EXIT
+# Manifest: slug<TAB>type<TAB>label — sorted / deduped at the end.
+: > "$TAG_DIR/_manifest"
+
+# Emit the tag-pill block for a query to a Jekyll page file and, at the same
+# time, record a per-tag <li> so we can build /kql-library/tag/<slug>/ pages.
+# Sets LAST_TAG_LIST (space-separated slugs) for the caller's landing-page
+# data-attribute.
+LAST_TAG_LIST=""
+emit_pills_to_file() {
+  local out_file="$1" kql="$2" qurl="$3" qtitle="$4" qdesc="$5" qcat="$6"
+  LAST_TAG_LIST=""
+
+  local tactics techniques actors platforms data
+  local -a _tag_fields
+  mapfile -t _tag_fields < <(read_all_tag_fields "$kql")
+  tactics="${_tag_fields[0]:-}"
+  techniques="${_tag_fields[1]:-}"
+  actors="${_tag_fields[2]:-}"
+  platforms="${_tag_fields[3]:-}"
+  data="${_tag_fields[4]:-}"
+
+  if [[ -z "$tactics$techniques$actors$platforms$data" ]]; then
+    return
+  fi
+
+  {
+    echo '<div class="kql-lib-tags-block">'
+    local pair label rest ttype values v slug
+    for pair in "Tactics|tactic|$tactics" \
+                "Techniques|technique|$techniques" \
+                "Actors|actor|$actors" \
+                "Platforms|platform|$platforms" \
+                "Data|data|$data"; do
+      label="${pair%%|*}"; rest="${pair#*|}"
+      ttype="${rest%%|*}"; values="${rest#*|}"
+      [[ -z "$values" ]] && continue
+      echo "  <div class=\"kql-lib-tag-row\">"
+      echo "    <span class=\"kql-lib-tag-label\">$label</span>"
+      while IFS= read -r v; do
+        [[ -z "$v" ]] && continue
+        slug="$(tag_slug "$v")"
+        echo "    <a class=\"kql-lib-tag kql-lib-tag-$ttype\" href=\"{{ '/kql-library/tag/$slug/' | relative_url }}\">$(html_esc "$v")</a>"
+        printf '%s\t%s\t%s\n' "$slug" "$ttype" "$v" >> "$TAG_DIR/_manifest"
+        {
+          echo "  <li class=\"kql-lib-query-item\">"
+          echo "    <a href=\"{{ '$qurl' | relative_url }}\">"
+          echo "      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$qcat")</span>"
+          echo "      <span class=\"kql-lib-query-title\">$(html_esc "$qtitle")</span>"
+          echo "    </a>"
+          [[ -n "$qdesc" ]] && echo "    <p class=\"kql-lib-query-desc\">$(html_esc "$qdesc")</p>"
+          echo "  </li>"
+        } >> "$TAG_DIR/$slug.entries"
+        # Store both the slug ("t1562-008") and the raw label lowercased
+        # ("t1562.008") so the landing search matches either spelling.
+        LAST_TAG_LIST+="$slug $(echo "$v" | tr '[:upper:]' '[:lower:]') "
+      done < <(split_tags "$values")
+      echo "  </div>"
+    done
+    echo '</div>'
+  } >> "$out_file"
+}
 
 # Discover categories in stable order (11 known, plus any others)
 CATS=()
@@ -259,6 +401,11 @@ for cat in "${CATS[@]}"; do
         echo "</div>"
         echo ""
         [[ -n "$desc" ]] && echo "<p class=\"kql-lib-query-longdesc\">$(html_esc "$desc")</p>" && echo ""
+      } > "$QD"
+      # Tag pills (also records per-tag <li>s in $TAG_DIR/<slug>.entries)
+      emit_pills_to_file "$QD" "$kq" "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title"
+      TAGS_FOR_LANDING="$LAST_TAG_LIST"
+      {
         echo "<div class=\"kql-lib-query-actions\">"
         echo "  <button type=\"button\" class=\"kql-lib-copy-btn\" data-copy-target=\"kql-code-$slug\">"
         echo "    <i class=\"far fa-copy\" aria-hidden=\"true\"></i>&nbsp;Copy query"
@@ -275,12 +422,12 @@ for cat in "${CATS[@]}"; do
         echo '```'
         echo ""
         echo "</div>"
-      } > "$QD"
+      } >> "$QD"
       # search-result <li> for landing
       dtitle="$(echo "$title" | tr '[:upper:]' '[:lower:]')"
       ddesc="$(echo "$desc"   | tr '[:upper:]' '[:lower:]')"
       dcat="$(echo "$cat_title" | tr '[:upper:]' '[:lower:]')"
-      LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\">"$'\n'
+      LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\">"$'\n'
       LANDING_RESULTS+="    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"$'\n'
       LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$cat_title")</span>"$'\n'
       LANDING_RESULTS+="      <span class=\"kql-lib-result-title\">$(html_esc "$title")</span>"$'\n'
@@ -380,6 +527,11 @@ for cat in "${CATS[@]}"; do
           echo "</div>"
           echo ""
           [[ -n "$desc" ]] && echo "<p class=\"kql-lib-query-longdesc\">$(html_esc "$desc")</p>" && echo ""
+        } > "$QD"
+        # Tag pills (also records per-tag <li>s in $TAG_DIR/<slug>.entries)
+        emit_pills_to_file "$QD" "$kq" "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title / $sub_title"
+        TAGS_FOR_LANDING="$LAST_TAG_LIST"
+        {
           echo "<div class=\"kql-lib-query-actions\">"
           echo "  <button type=\"button\" class=\"kql-lib-copy-btn\" data-copy-target=\"kql-code-$slug\">"
           echo "    <i class=\"far fa-copy\" aria-hidden=\"true\"></i>&nbsp;Copy query"
@@ -396,12 +548,12 @@ for cat in "${CATS[@]}"; do
           echo '```'
           echo ""
           echo "</div>"
-        } > "$QD"
+        } >> "$QD"
 
         dtitle="$(echo "$title" | tr '[:upper:]' '[:lower:]')"
         ddesc="$(echo "$desc"   | tr '[:upper:]' '[:lower:]')"
         dcat="$(echo "$cat_title $sub_title" | tr '[:upper:]' '[:lower:]')"
-        LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\">"$'\n'
+        LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\">"$'\n'
         LANDING_RESULTS+="    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"$'\n'
         LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$cat_title")</span>"$'\n'
         LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-sub\">$(html_esc "$sub_title")</span>"$'\n'
@@ -419,6 +571,90 @@ for cat in "${CATS[@]}"; do
   echo "    query_count: $cat_query_count" >> "$YAML"
   unset ROOT_DESC
 done
+
+# ---- per-tag pages ----
+# For every distinct tag slug encountered during the walk, emit one
+# /kql-library/tag/<slug>/index.html listing every query with that tag.
+declare -A SEEN_SLUG
+declare -A TAG_TYPE_OF TAG_LABEL_OF TAG_COUNT_OF
+if [[ -s "$TAG_DIR/_manifest" ]]; then
+  sort -u "$TAG_DIR/_manifest" > "$TAG_DIR/_manifest.sorted"
+  while IFS=$'\t' read -r slug ttype label; do
+    # First occurrence wins for the display label / type mapping
+    if [[ -z "${SEEN_SLUG[$slug]:-}" ]]; then
+      SEEN_SLUG[$slug]=1
+      TAG_TYPE_OF[$slug]="$ttype"
+      TAG_LABEL_OF[$slug]="$label"
+    fi
+  done < "$TAG_DIR/_manifest.sorted"
+
+  # Compute per-tag counts (# distinct queries)
+  for slug in "${!SEEN_SLUG[@]}"; do
+    if [[ -f "$TAG_DIR/$slug.entries" ]]; then
+      TAG_COUNT_OF[$slug]=$(grep -c '^  <li class="kql-lib-query-item">' "$TAG_DIR/$slug.entries" || true)
+    else
+      TAG_COUNT_OF[$slug]=0
+    fi
+  done
+
+  # Emit one page per tag
+  for slug in "${!SEEN_SLUG[@]}"; do
+    ttype="${TAG_TYPE_OF[$slug]}"
+    label="${TAG_LABEL_OF[$slug]}"
+    count="${TAG_COUNT_OF[$slug]:-0}"
+    q_word="queries"; [[ "$count" -eq 1 ]] && q_word="query"
+
+    mitre_url=""
+    type_label=""
+    type_noun=""
+    case "$ttype" in
+      tactic)
+        ta="${TACTIC_TA[$label]:-}"
+        [[ -n "$ta" ]] && mitre_url="https://attack.mitre.org/tactics/$ta/"
+        type_label="MITRE ATT&amp;CK Tactic"
+        type_noun="tactic"
+        ;;
+      technique)
+        mitre_url="$(mitre_technique_url "$label")"
+        type_label="MITRE ATT&amp;CK Technique"
+        type_noun="technique"
+        ;;
+      actor)    type_label="Actor / Malware Family"; type_noun="actor";;
+      platform) type_label="Platform"; type_noun="platform";;
+      data)     type_label="Data Source"; type_noun="data source";;
+    esac
+
+    TP="$OUT/kql-library/tag/$slug/index.html"
+    mkdir -p "$(dirname "$TP")"
+    esc_label="$(html_esc "$label")"
+    {
+      echo "---"
+      echo "layout: page"
+      echo "title: \"$esc_label\""
+      echo "subtitle: \"$type_label — $count $q_word\""
+      echo "permalink: /kql-library/tag/$slug/"
+      echo "---"
+      echo ""
+      echo "<p class=\"kql-lib-crumbs\"><a href=\"{{ '/kql-library/' | relative_url }}\">&larr; All KQL categories</a></p>"
+      echo ""
+      echo "<section class=\"attack-home-intro attack-home-intro-lib\">"
+      echo "  <p class=\"attack-eyebrow\">$type_label</p>"
+      echo "  <h2>$esc_label</h2>"
+      echo "  <p>$count $q_word tagged with this $type_noun."
+      if [[ -n "$mitre_url" ]]; then
+        echo "  <br><a href=\"$mitre_url\" target=\"_blank\" rel=\"noopener\">View on MITRE ATT&amp;CK &rarr;</a>"
+      fi
+      echo "  </p>"
+      echo "</section>"
+      echo ""
+      echo "<ul class=\"kql-lib-query-list list-unstyled\" role=\"list\">"
+      if [[ -f "$TAG_DIR/$slug.entries" ]]; then
+        cat "$TAG_DIR/$slug.entries"
+      fi
+      echo "</ul>"
+    } > "$TP"
+  done
+fi
 
 # ---- landing page ----
 LP="$OUT/kql-library/index.html"

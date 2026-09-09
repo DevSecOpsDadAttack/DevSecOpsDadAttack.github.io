@@ -690,3 +690,67 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
   border-color: var(--attack-green);
   background: rgba(34, 197, 94, .14);
 }
+
+/* Tag pills on query and category pages */
+.kql-lib-tags-block {
+  margin: 0 0 1.25rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--attack-border);
+  border-radius: .75rem;
+  background: rgba(15, 23, 42, .55);
+}
+.kql-lib-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem 0;
+  border-bottom: 1px dashed rgba(148, 163, 184, .16);
+}
+.kql-lib-tag-row:last-child { border-bottom: none; }
+.kql-lib-tag-label {
+  display: inline-block;
+  min-width: 6.5rem;
+  color: var(--attack-muted);
+  font-family: var(--header-font, inherit);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.kql-lib-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: .18rem .55rem;
+  border: 1px solid var(--attack-border);
+  border-radius: .3rem;
+  background: rgba(15, 23, 42, .7);
+  color: var(--attack-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.kql-lib-tag:hover,
+.kql-lib-tag:focus {
+  border-color: var(--attack-orange);
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+/* Type-specific accents — subtle left border + tinted background */
+.kql-lib-tag-tactic    { border-left: 3px solid var(--attack-red);    background: rgba(239,  68,  68, .10); color: #fca5a5; }
+.kql-lib-tag-technique { border-left: 3px solid var(--attack-violet); background: rgba(168,  85, 247, .10); color: var(--attack-violet-soft); }
+.kql-lib-tag-actor     { border-left: 3px solid var(--attack-orange); background: rgba(249, 115,  22, .12); color: #fdba74; }
+.kql-lib-tag-platform  { border-left: 3px solid var(--attack-green);  background: rgba( 34, 197,  94, .10); color: #86efac; }
+.kql-lib-tag-data      { border-left: 3px solid var(--attack-blue);   background: rgba( 56, 189, 248, .10); color: #93d9fb; }
+
+@media (max-width: 620px) {
+  .kql-lib-tag-label {
+    min-width: 100%;
+    padding-bottom: .1rem;
+  }
+}
