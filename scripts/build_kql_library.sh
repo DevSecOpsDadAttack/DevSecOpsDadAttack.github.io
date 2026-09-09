@@ -7,7 +7,9 @@
 #
 # Reads structured metadata from each .kql's comment header:
 #   // Tactics: / // Techniques: / // Actors: / // Platforms: / // Data:
-#     -> pills + per-tag index page
+#     -> pills on each query + a per-tag index page. A full grouped Browse
+#        by tag index is emitted at /kql-library/tags/; the landing page
+#        carries only a compact CTA banner that links to it.
 #   // Source: <URL>
 #     -> counts as a Deep Dive. Renders the ⚡ button on the detail page,
 #        adds a "Deep Dive" pill in the tag block, records the query on
@@ -759,6 +761,77 @@ fi
 LP="$OUT/kql-library/index.html"
 mkdir -p "$(dirname "$LP")"
 
+# Build the "Browse by tag" index — grouped by tag type, pills sorted by
+# tag frequency (most-tagged first) then alphabetically. Uses the
+# SEEN_SLUG / TAG_TYPE_OF / TAG_LABEL_OF / TAG_COUNT_OF arrays populated by
+# the tag-page emission block above. Emitted to its own page
+# (/kql-library/tags/) rather than inline on the landing, so the landing
+# stays scannable as the library grows.
+TAG_INDEX_TOTAL=${#SEEN_SLUG[@]}
+if [[ $TAG_INDEX_TOTAL -gt 0 ]]; then
+  TIP="$OUT/kql-library/tags/index.html"
+  mkdir -p "$(dirname "$TIP")"
+
+  # Group counts for the intro copy: "N tactics · M techniques · ..."
+  declare -A TYPE_COUNT=([tactic]=0 [technique]=0 [actor]=0 [platform]=0 [data]=0 [deepdive]=0)
+  for slug in "${!SEEN_SLUG[@]}"; do
+    t="${TAG_TYPE_OF[$slug]}"
+    TYPE_COUNT[$t]=$(( ${TYPE_COUNT[$t]:-0} + 1 ))
+  done
+
+  {
+    echo "---"
+    echo "layout: page"
+    echo "title: Browse by tag"
+    echo "subtitle: \"$TAG_INDEX_TOTAL tags across the KQL Library — MITRE ATT&amp;CK, actors, platforms, data sources.\""
+    echo "permalink: /kql-library/tags/"
+    echo "---"
+    echo ""
+    echo "<p class=\"kql-lib-crumbs\"><a href=\"{{ '/kql-library/' | relative_url }}\">&larr; All KQL categories</a></p>"
+    echo ""
+    echo "<section class=\"kql-lib-tag-index\">"
+    echo "  <p class=\"kql-lib-tag-index-lede\">"
+    echo "    Every query in the library indexed by MITRE ATT&amp;CK tactic and technique,"
+    echo "    by actor / malware family (where the write-up named one), by platform and"
+    echo "    data source, and by whether a KQL Detection of the Week Deep Dive article"
+    echo "    walks through its design. Pills are sorted by how many queries carry them."
+    echo "  </p>"
+
+    for ttype in tactic technique actor platform data deepdive; do
+      case "$ttype" in
+        tactic)    display="MITRE Tactics";;
+        technique) display="MITRE Techniques";;
+        actor)     display="Actors";;
+        platform)  display="Platforms";;
+        data)      display="Data Sources";;
+        deepdive)  display="Deep Dive";;
+      esac
+      tmp="$TAG_DIR/_index_$ttype"
+      : > "$tmp"
+      for slug in "${!SEEN_SLUG[@]}"; do
+        [[ "${TAG_TYPE_OF[$slug]}" == "$ttype" ]] || continue
+        printf '%s|%s|%s\n' "${TAG_COUNT_OF[$slug]:-0}" "${TAG_LABEL_OF[$slug]}" "$slug" >> "$tmp"
+      done
+      [[ -s "$tmp" ]] || continue
+      sort -t'|' -k1,1nr -k2,2 -o "$tmp" "$tmp"
+      grp_count="${TYPE_COUNT[$ttype]:-0}"
+
+      echo "  <div class=\"kql-lib-tag-index-group\" id=\"tags-$ttype\">"
+      echo "    <h3 class=\"kql-lib-tag-index-heading\">$display <span class=\"kql-lib-tag-index-group-count\">$grp_count</span></h3>"
+      echo "    <div class=\"kql-lib-tag-index-pills\">"
+      while IFS='|' read -r _cnt _lbl _slg; do
+        icon=""
+        [[ "$ttype" == "deepdive" ]] && icon="<i class=\"fas fa-bolt\" aria-hidden=\"true\"></i>&nbsp;"
+        echo "      <a class=\"kql-lib-tag kql-lib-tag-$ttype\" href=\"{{ '/kql-library/tag/$_slg/' | relative_url }}\">$icon$(html_esc "$_lbl")<span class=\"kql-lib-tag-count\">$_cnt</span></a>"
+      done < "$tmp"
+      echo "    </div>"
+      echo "  </div>"
+    done
+
+    echo "</section>"
+  } > "$TIP"
+fi
+
 # Build category cards HTML by re-reading the CATS array
 CARDS=""
 for cat in "${CATS[@]}"; do
@@ -845,6 +918,16 @@ FM_TAIL_INTRO
 FM2
   echo "$CARDS"
   cat <<'FM3'
+</div>
+
+<div class="kql-lib-tag-cta" id="kql-lib-tag-cta">
+  <div class="kql-lib-tag-cta-copy">
+    <strong>Browse by tag</strong>
+    <span>MITRE ATT&amp;CK, actors, platforms, data sources, Deep Dive.</span>
+  </div>
+  <a class="kql-lib-tag-cta-link" href="{{ '/kql-library/tags/' | relative_url }}">
+    See all tags&nbsp;<i class="fas fa-arrow-right" aria-hidden="true"></i>
+  </a>
 </div>
 
 <ul class="kql-lib-results list-unstyled" id="kql-lib-results" role="list" hidden>

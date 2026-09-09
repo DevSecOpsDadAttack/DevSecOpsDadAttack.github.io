@@ -752,6 +752,144 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 .kql-lib-tag-deepdive  { border-left: 3px solid var(--attack-violet); background: rgba(168,  85, 247, .10); color: var(--attack-violet-soft); }
 .kql-lib-tag-deepdive .fa-bolt { color: var(--attack-violet-soft); }
 
+/* Compact "Browse by tag" banner on the landing page. Links out to the
+   full /kql-library/tags/ index — the inline version was too heavy once
+   the technique list grew past a few dozen entries. */
+.kql-lib-tag-cta {
+  max-width: 1200px;
+  margin: 1.5rem auto 3rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--attack-border);
+  border-radius: .75rem;
+  background: linear-gradient(140deg, rgba(17, 24, 39, .8), rgba(15, 23, 42, .55));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.kql-lib-tag-cta:hover,
+.kql-lib-tag-cta:focus-within {
+  border-color: var(--attack-violet);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .25);
+}
+.kql-lib-tag-cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+.kql-lib-tag-cta-copy strong {
+  color: #eef6ff;
+  font-family: var(--header-font, inherit);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+.kql-lib-tag-cta-copy span {
+  color: var(--attack-muted);
+  font-size: .9rem;
+}
+.kql-lib-tag-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: .55rem 1rem;
+  border-radius: .5rem;
+  border: 1px solid var(--attack-border);
+  background: rgba(168, 85, 247, .12);
+  color: var(--attack-violet-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.kql-lib-tag-cta-link:hover,
+.kql-lib-tag-cta-link:focus {
+  border-color: var(--attack-violet);
+  color: #fff;
+  background: rgba(168, 85, 247, .22);
+  outline: none;
+  text-decoration: none;
+}
+
+/* Full tag index — the dedicated /kql-library/tags/ page. Pill styling
+   reuses the same classes as the on-page pill block, so tag colors stay
+   consistent with what visitors see on query and category pages. */
+.kql-lib-tag-index {
+  max-width: 1200px;
+  margin: 1rem auto 3rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border: 1px solid var(--attack-border);
+  border-radius: 1rem;
+  background: linear-gradient(160deg, rgba(17, 24, 39, .8), rgba(15, 23, 42, .55));
+}
+.kql-lib-tag-index-title {
+  margin: 0 0 .35rem;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
+  color: #eef6ff;
+  border: none;
+}
+.kql-lib-tag-index-lede {
+  margin: 0 0 1.25rem;
+  color: var(--attack-muted);
+  font-size: .93rem;
+  max-width: 80ch;
+}
+.kql-lib-tag-index-group {
+  margin: 1.1rem 0 0;
+}
+.kql-lib-tag-index-heading {
+  display: flex;
+  align-items: baseline;
+  gap: .5em;
+  margin: 0 0 .55rem;
+  padding-bottom: .25rem;
+  color: var(--attack-muted);
+  font-family: var(--header-font, inherit);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  border-bottom: 1px dashed rgba(148, 163, 184, .16);
+}
+.kql-lib-tag-index-group-count {
+  color: var(--attack-muted);
+  font-weight: 700;
+  font-size: .9em;
+  letter-spacing: 0;
+  padding: 0 .35em;
+  border-radius: .25rem;
+  background: rgba(15, 23, 42, .55);
+  font-variant-numeric: tabular-nums;
+}
+.kql-lib-tag-index-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+.kql-lib-tag-count {
+  margin-left: .4em;
+  padding: 0 .4em;
+  color: var(--attack-muted);
+  background: rgba(2, 6, 23, .5);
+  border-radius: .25rem;
+  font-size: .82em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.kql-lib-tag:hover .kql-lib-tag-count,
+.kql-lib-tag:focus .kql-lib-tag-count {
+  color: #eef6ff;
+}
+@media (max-width: 620px) {
+  .kql-lib-tag-index { padding: 1.25rem; }
+}
+
 /* Deep Dive: same violet family as Copy / Download so the actions row reads
    as one group. Kept as an <a> (real link) so it inherits the same visual
    weight as the others; the ⚡ glyph is the only distinguisher. */

@@ -20,6 +20,10 @@
   function wireLandingSearch() {
     var input = document.getElementById('kql-lib-search');
     var categories = document.getElementById('kql-lib-categories');
+    // Compact "Browse by tag" banner on the landing — hidden while searching
+    // so the results list stands alone. (The full tag index lives on its
+    // own page at /kql-library/tags/.)
+    var tagIndex = document.getElementById('kql-lib-tag-cta');
     var results = document.getElementById('kql-lib-results');
     var empty = document.getElementById('kql-lib-empty');
     var hint = document.getElementById('kql-lib-hint');
@@ -36,6 +40,7 @@
       var q = input.value.trim().toLowerCase();
       if (!q) {
         categories.hidden = false;
+        if (tagIndex) tagIndex.hidden = false;
         results.hidden = true;
         if (empty) empty.hidden = true;
         if (hint) hint.hidden = false;
@@ -43,6 +48,7 @@
       }
 
       categories.hidden = true;
+      if (tagIndex) tagIndex.hidden = true;
       results.hidden = false;
       if (hint) hint.hidden = true;
 
