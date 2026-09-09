@@ -43,8 +43,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicefileevents/' | relative_url }}">DeviceFileEvents</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceprocessevents/' | relative_url }}">DeviceProcessEvents</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-inventory-installed-npm-packages-with-lifecycle-scripts">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>

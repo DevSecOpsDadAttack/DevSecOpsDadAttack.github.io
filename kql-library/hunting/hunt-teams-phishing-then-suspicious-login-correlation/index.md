@@ -41,8 +41,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/officeactivity/' | relative_url }}">OfficeActivity</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-teams-phishing-then-suspicious-login-correlation">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>

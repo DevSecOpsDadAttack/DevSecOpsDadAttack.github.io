@@ -42,8 +42,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/im-websession/' | relative_url }}">_Im_WebSession</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-cloud-metadata-ssrf-normalized-forms">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
