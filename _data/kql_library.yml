@@ -837,12 +837,14 @@ categories:
         file_name: which-devices-are-internet-facing.kql
         asset_path: posture/which-devices-are-internet-facing.kql
         category_slug: posture
+        deep_dive_url: "https://www.hanley.cloud/2025-11-25-Identify-Your-Exposed-Internet-Facing-Devices-Before-They-Identify-You/"
       - slug: which-devices-or-software-are-eol
         title: Which Devices Or Software Are EOL
         description: "Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`."
         file_name: which-devices-or-software-are-eol.kql
         asset_path: posture/which-devices-or-software-are-eol.kql
         category_slug: posture
+        deep_dive_url: "https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/"
     subcategories: []
     query_count: 4
   - slug: reference

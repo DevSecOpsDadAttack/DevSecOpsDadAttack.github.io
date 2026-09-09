@@ -39,8 +39,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceinfo/' | relative_url }}">DeviceInfo</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkinfo/' | relative_url }}">DeviceNetworkInfo</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2025-11-25-Identify-Your-Exposed-Internet-Facing-Devices-Before-They-Identify-You/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-devices-are-internet-facing">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -53,14 +59,16 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
-// -------------------------------------------
-// 1) Decide what “public” actually means (IPv4 and IPv6)
-// -------------------------------------------
-// Define private IP ranges for IPv4
+// Source: Identify Your Exposed Internet Facing Devices Before They Identify You (2025-11-25) — https://www.hanley.cloud/2025-11-25-Identify-Your-Exposed-Internet-Facing-Devices-Before-They-Identify-You/
 // Tactics: Reconnaissance
 // Techniques: T1590.005
 // Platforms: Endpoint, Multi-cloud
 // Data: DeviceInfo, DeviceNetworkInfo
+//
+// -------------------------------------------
+// 1) Decide what “public” actually means (IPv4 and IPv6)
+// -------------------------------------------
+// Define private IP ranges for IPv4
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
 // Define private IP ranges for IPv6
 let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';

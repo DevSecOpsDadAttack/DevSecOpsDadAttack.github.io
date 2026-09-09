@@ -34,8 +34,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicetvmsoftwareinventory/' | relative_url }}">DeviceTvmSoftwareInventory</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicetvmsoftwarevulnerabilities/' | relative_url }}">DeviceTvmSoftwareVulnerabilities</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-devices-or-software-are-eol">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -49,6 +55,7 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Devices that have at least one end-of-support (EOL/EOS) title or version
+// Source: The Ghosts Hiding In Every Network: End Of Life Devices And Software (2025-11-03) — https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/
 // Tactics: Reconnaissance
 // Platforms: Endpoint
 // Data: DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities

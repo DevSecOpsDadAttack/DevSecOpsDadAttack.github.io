@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Devices that have at least one end-of-support (EOL/EOS) title or version
+// Source: The Ghosts Hiding In Every Network: End Of Life Devices And Software (2025-11-03) — https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/
 // Tactics: Reconnaissance
 // Platforms: Endpoint
 // Data: DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities
