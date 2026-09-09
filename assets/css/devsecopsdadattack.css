@@ -747,6 +747,77 @@ footer { box-shadow: 0 -12px 40px rgba(0,0,0,.22); }
 .kql-lib-tag-actor     { border-left: 3px solid var(--attack-orange); background: rgba(249, 115,  22, .12); color: #fdba74; }
 .kql-lib-tag-platform  { border-left: 3px solid var(--attack-green);  background: rgba( 34, 197,  94, .10); color: #86efac; }
 .kql-lib-tag-data      { border-left: 3px solid var(--attack-blue);   background: rgba( 56, 189, 248, .10); color: #93d9fb; }
+/* Deep Dive is a boolean tag ("has an article"), sits in the same violet
+   family as Copy / Download; the ⚡ glyph inside the pill is its identity. */
+.kql-lib-tag-deepdive  { border-left: 3px solid var(--attack-violet); background: rgba(168,  85, 247, .10); color: var(--attack-violet-soft); }
+.kql-lib-tag-deepdive .fa-bolt { color: var(--attack-violet-soft); }
+
+/* Deep Dive: same violet family as Copy / Download so the actions row reads
+   as one group. Kept as an <a> (real link) so it inherits the same visual
+   weight as the others; the ⚡ glyph is the only distinguisher. */
+.kql-lib-deep-dive-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: .5rem .9rem;
+  border-radius: .5rem;
+  border: 1px solid var(--attack-border);
+  background: rgba(168, 85, 247, .1);
+  color: var(--attack-violet-soft);
+  text-decoration: none;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.kql-lib-deep-dive-btn:hover,
+.kql-lib-deep-dive-btn:focus {
+  border-color: var(--attack-violet);
+  color: #fff;
+  background: rgba(168, 85, 247, .18);
+  outline: none;
+  text-decoration: none;
+}
+
+/* Mini ⚡ badge — inline on category-page items and landing search cards.
+   Same violet family; subtle presence, no gold glow. */
+.kql-lib-deep-dive-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--attack-violet-soft);
+  font-size: .8em;
+  margin-left: .25em;
+  vertical-align: middle;
+  opacity: .85;
+}
+.kql-lib-deep-dive-mini .fa-bolt { line-height: 1; }
+
+/* Landing hero counts row — same neutral pill; Deep Dives cell is just a
+   ⚡ glyph plus the number, in the standard body color. */
+.kql-lib-hero-counts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .35rem .75rem;
+  margin: 1.25rem auto 0;
+  padding: .55rem 1rem;
+  color: var(--attack-muted);
+  font-size: .95rem;
+  border: 1px solid var(--attack-border);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, .6);
+}
+.kql-lib-hero-counts strong {
+  color: #eef6ff;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.kql-lib-hero-counts .kql-lib-hero-count-dd .fa-bolt {
+  color: var(--attack-violet-soft);
+}
 
 @media (max-width: 620px) {
   .kql-lib-tag-label {

@@ -3,14 +3,15 @@
 #
 # Bash port of scripts/build_kql_library.py — same output layout, but with
 # nothing beyond gawk / sed / coreutils, so a GitHub Actions Ubuntu runner
-# can run it with no setup step. Called by
-# .github/workflows/regenerate-kql-library.yml.
+# can run it with no setup step.
 #
-# Now tag-aware: reads `// Tactics:` / `// Techniques:` / `// Actors:` /
-# `// Platforms:` / `// Data:` comment lines from each .kql, renders pill
-# HTML on each query and category page, generates a /kql-library/tag/<slug>/
-# index page per tag, and folds tag slugs + raw labels into the landing
-# page search index.
+# Reads structured metadata from each .kql's comment header:
+#   // Tactics: / // Techniques: / // Actors: / // Platforms: / // Data:
+#     -> pills + per-tag index page
+#   // Source: <URL>
+#     -> counts as a Deep Dive. Renders the ⚡ button on the detail page,
+#        adds a "Deep Dive" pill in the tag block, records the query on
+#        /kql-library/tag/deep-dive/, feeds the landing hero counts row.
 #
 # Usage: bash scripts/build_kql_library.sh <attack-pack checkout> <site root>
 # Bash port of scripts/build_kql_library.py — same output layout.
@@ -170,7 +171,7 @@ mitre_technique_url() {
 read_all_tag_fields() {
   local file="$1"
   gawk '
-    BEGIN { tac=""; tech=""; act=""; plat=""; data="" }
+    BEGIN { tac=""; tech=""; act=""; plat=""; data=""; src="" }
     /^\/\// {
       line = $0
       sub(/^\/\/[[:space:]]*/, "", line)
@@ -179,10 +180,25 @@ read_all_tag_fields() {
       else if (line ~ /^Actors[[:space:]]*:/)     { sub(/^Actors[[:space:]]*:[[:space:]]*/,     "", line); sub(/[[:space:]]+$/, "", line); act=line;  next }
       else if (line ~ /^Platforms[[:space:]]*:/)  { sub(/^Platforms[[:space:]]*:[[:space:]]*/,  "", line); sub(/[[:space:]]+$/, "", line); plat=line; next }
       else if (line ~ /^Data[[:space:]]*:/)       { sub(/^Data[[:space:]]*:[[:space:]]*/,       "", line); sub(/[[:space:]]+$/, "", line); data=line; next }
+      else if (line ~ /^Source[[:space:]]*:/) {
+        # A Source line typically looks like:
+        #   // Source: KQL Detection of the Week: Foo (2026-XX-XX) — https://...
+        # Take the LAST http/https token as the URL. If no URL appears,
+        # the field stays empty (the article write-up section is what we
+        # gate the Deep Dive button on, so no URL == no button).
+        rest = line
+        while (match(rest, /https?:\/\/[^[:space:]]+/)) {
+          src = substr(rest, RSTART, RLENGTH)
+          rest = substr(rest, RSTART + RLENGTH)
+        }
+        # trim a trailing comma or period that occasionally lands on a URL
+        sub(/[.,)]+$/, "", src)
+        next
+      }
       next
     }
     { exit }
-    END { print tac; print tech; print act; print plat; print data }
+    END { print tac; print tech; print act; print plat; print data; print src }
   ' "$file"
 }
 
@@ -211,19 +227,17 @@ trap "rm -rf '$TAG_DIR'" EXIT
 # data-attribute.
 LAST_TAG_LIST=""
 emit_pills_to_file() {
-  local out_file="$1" kql="$2" qurl="$3" qtitle="$4" qdesc="$5" qcat="$6"
+  # Args:  out_file  tactics  techniques  actors  platforms  data
+  #        qurl  qtitle  qdesc  qcat  deepdive_url
+  # Tag values are pre-read by the caller (one gawk call per query, hoisted
+  # into the outer loop) so we don't fork for a re-read here.
+  # deepdive_url is either the query's `// Source:` URL or empty.
+  local out_file="$1"
+  local tactics="$2" techniques="$3" actors="$4" platforms="$5" data="$6"
+  local qurl="$7" qtitle="$8" qdesc="$9" qcat="${10}" deepdive_url="${11:-}"
   LAST_TAG_LIST=""
 
-  local tactics techniques actors platforms data
-  local -a _tag_fields
-  mapfile -t _tag_fields < <(read_all_tag_fields "$kql")
-  tactics="${_tag_fields[0]:-}"
-  techniques="${_tag_fields[1]:-}"
-  actors="${_tag_fields[2]:-}"
-  platforms="${_tag_fields[3]:-}"
-  data="${_tag_fields[4]:-}"
-
-  if [[ -z "$tactics$techniques$actors$platforms$data" ]]; then
+  if [[ -z "$tactics$techniques$actors$platforms$data$deepdive_url" ]]; then
     return
   fi
 
@@ -260,6 +274,27 @@ emit_pills_to_file() {
       done < <(split_tags "$values")
       echo "  </div>"
     done
+    # Deep Dive: a boolean tag, so it's always a single "Deep Dive" pill,
+    # slug "deep-dive". Rendered as its own row at the bottom of the block
+    # so it reads as a distinct dimension (research-backed) rather than a
+    # normal metadata field.
+    if [[ -n "$deepdive_url" ]]; then
+      echo "  <div class=\"kql-lib-tag-row\">"
+      echo "    <span class=\"kql-lib-tag-label\">Deep Dive</span>"
+      echo "    <a class=\"kql-lib-tag kql-lib-tag-deepdive\" href=\"{{ '/kql-library/tag/deep-dive/' | relative_url }}\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i>&nbsp;Deep Dive</a>"
+      printf '%s\t%s\t%s\n' "deep-dive" "deepdive" "Deep Dive" >> "$TAG_DIR/_manifest"
+      {
+        echo "  <li class=\"kql-lib-query-item\">"
+        echo "    <a href=\"{{ '$qurl' | relative_url }}\">"
+        echo "      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$qcat")</span>"
+        echo "      <span class=\"kql-lib-query-title\">$(html_esc "$qtitle")</span>"
+        echo "      <span class=\"kql-lib-deep-dive-mini\" title=\"Deep Dive article available\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i></span>"
+        echo "    </a>"
+        [[ -n "$qdesc" ]] && echo "    <p class=\"kql-lib-query-desc\">$(html_esc "$qdesc")</p>"
+        echo "  </li>"
+      } >> "$TAG_DIR/deep-dive.entries"
+      LAST_TAG_LIST+="deep-dive deep dive "
+    fi
     echo '</div>'
   } >> "$out_file"
 }
@@ -286,7 +321,10 @@ YAML="$OUT/_data/kql_library.yml"
 } > "$YAML"
 
 TOTAL_QUERIES=0
+DEEP_DIVE_COUNT=0
 LANDING_RESULTS=""   # accumulator for the search-results <li>s
+# Per-category counts we surface in the landing hero counter row.
+declare -A CAT_QCOUNT
 
 for cat in "${CATS[@]}"; do
   cat_title="${TITLE[$cat]:-$(titleize "$cat")}"
@@ -351,6 +389,21 @@ for cat in "${CATS[@]}"; do
       [[ -z "$desc" ]] && desc="$(kql_first_comment "$kq")"
       cat_query_count=$((cat_query_count+1))
       TOTAL_QUERIES=$((TOTAL_QUERIES+1))
+      # Read tag fields + source URL from the .kql (one gawk pass, hoisted
+      # so category-page item / landing card can also branch on has-deep-dive).
+      _md=()
+      mapfile -t _md < <(read_all_tag_fields "$kq")
+      q_tactics="${_md[0]:-}"
+      q_techniques="${_md[1]:-}"
+      q_actors="${_md[2]:-}"
+      q_platforms="${_md[3]:-}"
+      q_data="${_md[4]:-}"
+      q_source="${_md[5]:-}"
+      dd_badge=""
+      if [[ -n "$q_source" ]]; then
+        DEEP_DIVE_COUNT=$((DEEP_DIVE_COUNT+1))
+        dd_badge="      <span class=\"kql-lib-deep-dive-mini\" title=\"Deep Dive article available\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i></span>"
+      fi
       # yaml
       {
         echo "      - slug: $(yaml_q "$slug")"
@@ -359,12 +412,14 @@ for cat in "${CATS[@]}"; do
         echo "        file_name: $(yaml_q "$fn")"
         echo "        asset_path: $(yaml_q "$cat/$fn")"
         echo "        category_slug: $(yaml_q "$cat")"
+        [[ -n "$q_source" ]] && echo "        deep_dive_url: $(yaml_q "$q_source")"
       } >> "$YAML"
       # category page entry
       {
         echo "  <li class=\"kql-lib-query-item\">"
         echo "    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"
         echo "      <span class=\"kql-lib-query-title\">$(html_esc "$title")</span>"
+        [[ -n "$dd_badge" ]] && echo "$dd_badge"
         echo "      <code class=\"kql-lib-query-file\">$(html_esc "$fn")</code>"
         echo "    </a>"
         [[ -n "$desc" ]] && echo "    <p class=\"kql-lib-query-desc\">$(html_esc "$desc")</p>"
@@ -403,10 +458,17 @@ for cat in "${CATS[@]}"; do
         [[ -n "$desc" ]] && echo "<p class=\"kql-lib-query-longdesc\">$(html_esc "$desc")</p>" && echo ""
       } > "$QD"
       # Tag pills (also records per-tag <li>s in $TAG_DIR/<slug>.entries)
-      emit_pills_to_file "$QD" "$kq" "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title"
+      emit_pills_to_file "$QD" \
+        "$q_tactics" "$q_techniques" "$q_actors" "$q_platforms" "$q_data" \
+        "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title" "$q_source"
       TAGS_FOR_LANDING="$LAST_TAG_LIST"
       {
         echo "<div class=\"kql-lib-query-actions\">"
+        if [[ -n "$q_source" ]]; then
+          echo "  <a class=\"kql-lib-deep-dive-btn\" href=\"$q_source\" target=\"_blank\" rel=\"noopener\">"
+          echo "    <i class=\"fas fa-bolt\" aria-hidden=\"true\"></i>&nbsp;Deep Dive"
+          echo "  </a>"
+        fi
         echo "  <button type=\"button\" class=\"kql-lib-copy-btn\" data-copy-target=\"kql-code-$slug\">"
         echo "    <i class=\"far fa-copy\" aria-hidden=\"true\"></i>&nbsp;Copy query"
         echo "  </button>"
@@ -427,9 +489,12 @@ for cat in "${CATS[@]}"; do
       dtitle="$(echo "$title" | tr '[:upper:]' '[:lower:]')"
       ddesc="$(echo "$desc"   | tr '[:upper:]' '[:lower:]')"
       dcat="$(echo "$cat_title" | tr '[:upper:]' '[:lower:]')"
-      LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\">"$'\n'
+      dd_extra=""
+      [[ -n "$q_source" ]] && dd_extra=" data-deepdive=\"1\""
+      LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\"$dd_extra>"$'\n'
       LANDING_RESULTS+="    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"$'\n'
       LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$cat_title")</span>"$'\n'
+      [[ -n "$q_source" ]] && LANDING_RESULTS+="      <span class=\"kql-lib-deep-dive-mini\" title=\"Deep Dive available\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i></span>"$'\n'
       LANDING_RESULTS+="      <span class=\"kql-lib-result-title\">$(html_esc "$title")</span>"$'\n'
       LANDING_RESULTS+="    </a>"$'\n'
       [[ -n "$desc" ]] && LANDING_RESULTS+="    <p class=\"kql-lib-result-desc\">$(html_esc "$desc")</p>"$'\n'
@@ -475,6 +540,19 @@ for cat in "${CATS[@]}"; do
         [[ -z "$desc" ]] && desc="$(kql_first_comment "$kq")"
         cat_query_count=$((cat_query_count+1))
         TOTAL_QUERIES=$((TOTAL_QUERIES+1))
+        _md=()
+        mapfile -t _md < <(read_all_tag_fields "$kq")
+        q_tactics="${_md[0]:-}"
+        q_techniques="${_md[1]:-}"
+        q_actors="${_md[2]:-}"
+        q_platforms="${_md[3]:-}"
+        q_data="${_md[4]:-}"
+        q_source="${_md[5]:-}"
+        dd_badge=""
+        if [[ -n "$q_source" ]]; then
+          DEEP_DIVE_COUNT=$((DEEP_DIVE_COUNT+1))
+          dd_badge="      <span class=\"kql-lib-deep-dive-mini\" title=\"Deep Dive article available\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i></span>"
+        fi
         {
           echo "          - slug: $(yaml_q "$slug")"
           echo "            title: $(yaml_q "$title")"
@@ -484,12 +562,14 @@ for cat in "${CATS[@]}"; do
           echo "            category_slug: $(yaml_q "$cat")"
           echo "            subcategory_slug: $(yaml_q "$sub_slug")"
           echo "            subcategory_title: $(yaml_q "$sub_title")"
+          [[ -n "$q_source" ]] && echo "            deep_dive_url: $(yaml_q "$q_source")"
         } >> "$YAML"
 
         {
           echo "  <li class=\"kql-lib-query-item\">"
           echo "    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"
           echo "      <span class=\"kql-lib-query-title\">$(html_esc "$title")</span>"
+          [[ -n "$dd_badge" ]] && echo "$dd_badge"
           echo "      <code class=\"kql-lib-query-file\">$(html_esc "$fn")</code>"
           echo "    </a>"
           [[ -n "$desc" ]] && echo "    <p class=\"kql-lib-query-desc\">$(html_esc "$desc")</p>"
@@ -529,10 +609,17 @@ for cat in "${CATS[@]}"; do
           [[ -n "$desc" ]] && echo "<p class=\"kql-lib-query-longdesc\">$(html_esc "$desc")</p>" && echo ""
         } > "$QD"
         # Tag pills (also records per-tag <li>s in $TAG_DIR/<slug>.entries)
-        emit_pills_to_file "$QD" "$kq" "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title / $sub_title"
+        emit_pills_to_file "$QD" \
+          "$q_tactics" "$q_techniques" "$q_actors" "$q_platforms" "$q_data" \
+          "/kql-library/$cat/$slug/" "$title" "$desc" "$cat_title / $sub_title" "$q_source"
         TAGS_FOR_LANDING="$LAST_TAG_LIST"
         {
           echo "<div class=\"kql-lib-query-actions\">"
+          if [[ -n "$q_source" ]]; then
+            echo "  <a class=\"kql-lib-deep-dive-btn\" href=\"$q_source\" target=\"_blank\" rel=\"noopener\">"
+            echo "    <i class=\"fas fa-bolt\" aria-hidden=\"true\"></i>&nbsp;Deep Dive"
+            echo "  </a>"
+          fi
           echo "  <button type=\"button\" class=\"kql-lib-copy-btn\" data-copy-target=\"kql-code-$slug\">"
           echo "    <i class=\"far fa-copy\" aria-hidden=\"true\"></i>&nbsp;Copy query"
           echo "  </button>"
@@ -553,10 +640,13 @@ for cat in "${CATS[@]}"; do
         dtitle="$(echo "$title" | tr '[:upper:]' '[:lower:]')"
         ddesc="$(echo "$desc"   | tr '[:upper:]' '[:lower:]')"
         dcat="$(echo "$cat_title $sub_title" | tr '[:upper:]' '[:lower:]')"
-        LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\">"$'\n'
+        dd_extra=""
+        [[ -n "$q_source" ]] && dd_extra=" data-deepdive=\"1\""
+        LANDING_RESULTS+="  <li class=\"kql-lib-result\" data-title=\"$(html_esc "$dtitle")\" data-desc=\"$(html_esc "$ddesc")\" data-cat=\"$(html_esc "$dcat")\" data-catslug=\"$cat\" data-tags=\"$(html_esc "$TAGS_FOR_LANDING")\"$dd_extra>"$'\n'
         LANDING_RESULTS+="    <a href=\"{{ '/kql-library/$cat/$slug/' | relative_url }}\">"$'\n'
         LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-lib\">$(html_esc "$cat_title")</span>"$'\n'
         LANDING_RESULTS+="      <span class=\"attack-badge attack-badge-sub\">$(html_esc "$sub_title")</span>"$'\n'
+        [[ -n "$q_source" ]] && LANDING_RESULTS+="      <span class=\"kql-lib-deep-dive-mini\" title=\"Deep Dive available\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i></span>"$'\n'
         LANDING_RESULTS+="      <span class=\"kql-lib-result-title\">$(html_esc "$title")</span>"$'\n'
         LANDING_RESULTS+="    </a>"$'\n'
         [[ -n "$desc" ]] && LANDING_RESULTS+="    <p class=\"kql-lib-result-desc\">$(html_esc "$desc")</p>"$'\n'
@@ -569,6 +659,7 @@ for cat in "${CATS[@]}"; do
     echo '    subcategories: []' >> "$YAML"
   fi
   echo "    query_count: $cat_query_count" >> "$YAML"
+  CAT_QCOUNT[$cat]=$cat_query_count
   unset ROOT_DESC
 done
 
@@ -622,6 +713,7 @@ if [[ -s "$TAG_DIR/_manifest" ]]; then
       actor)    type_label="Actor / Malware Family"; type_noun="actor";;
       platform) type_label="Platform"; type_noun="platform";;
       data)     type_label="Data Source"; type_noun="data source";;
+      deepdive) type_label="Deep Dive"; type_noun="deep dive article";;
     esac
 
     TP="$OUT/kql-library/tag/$slug/index.html"
@@ -640,11 +732,18 @@ if [[ -s "$TAG_DIR/_manifest" ]]; then
       echo "<section class=\"attack-home-intro attack-home-intro-lib\">"
       echo "  <p class=\"attack-eyebrow\">$type_label</p>"
       echo "  <h2>$esc_label</h2>"
-      echo "  <p>$count $q_word tagged with this $type_noun."
-      if [[ -n "$mitre_url" ]]; then
-        echo "  <br><a href=\"$mitre_url\" target=\"_blank\" rel=\"noopener\">View on MITRE ATT&amp;CK &rarr;</a>"
+      if [[ "$ttype" == "deepdive" ]]; then
+        # The Deep Dive tag isn't a metadata bucket — it's the queries backed
+        # by a KQL Detection of the Week write-up. Give it a description that
+        # reflects that instead of the generic "tagged with this ..." line.
+        echo "  <p>$count $q_word backed by a KQL Detection of the Week Deep Dive article — long-form research explaining the design rationale, telemetry assumptions, tuning, and ATT&amp;CK context behind each detection.</p>"
+      else
+        echo "  <p>$count $q_word tagged with this $type_noun."
+        if [[ -n "$mitre_url" ]]; then
+          echo "  <br><a href=\"$mitre_url\" target=\"_blank\" rel=\"noopener\">View on MITRE ATT&amp;CK &rarr;</a>"
+        fi
+        echo "  </p>"
       fi
-      echo "  </p>"
       echo "</section>"
       echo ""
       echo "<ul class=\"kql-lib-query-list list-unstyled\" role=\"list\">"
@@ -701,6 +800,29 @@ js:
   <p>The queries I keep coming back to whenever a complicated problem shows up in
   Microsoft Sentinel, Defender XDR, or Log Analytics. Grouped by what they answer,
   each one shipped with the description of when to reach for it.</p>
+FM
+  # Counts row: Total · Analytics Rules · Hunts · Deep Dives. Emit only the
+  # buckets that actually have a value so it stays clean if categories change.
+  ar_count="${CAT_QCOUNT[analytics-rules]:-0}"
+  hunt_count="${CAT_QCOUNT[hunting]:-0}"
+  {
+    echo "  <p class=\"kql-lib-hero-counts\">"
+    echo "    <span><strong>$TOTAL_QUERIES</strong>&nbsp;Queries</span>"
+    if [[ "$ar_count" -gt 0 ]]; then
+      echo "    <span aria-hidden=\"true\">·</span>"
+      echo "    <span><strong>$ar_count</strong>&nbsp;Analytics&nbsp;Rules</span>"
+    fi
+    if [[ "$hunt_count" -gt 0 ]]; then
+      echo "    <span aria-hidden=\"true\">·</span>"
+      echo "    <span><strong>$hunt_count</strong>&nbsp;Hunts</span>"
+    fi
+    if [[ "$DEEP_DIVE_COUNT" -gt 0 ]]; then
+      echo "    <span aria-hidden=\"true\">·</span>"
+      echo "    <span class=\"kql-lib-hero-count-dd\"><i class=\"fas fa-bolt\" aria-hidden=\"true\"></i>&nbsp;<strong>$DEEP_DIVE_COUNT</strong>&nbsp;Deep&nbsp;Dives</span>"
+    fi
+    echo "  </p>"
+  }
+  cat <<'FM_TAIL_INTRO'
 </section>
 
 <hr class="attack-separator">
@@ -710,7 +832,7 @@ js:
     type="search"
     id="kql-lib-search"
     class="tag-filter-input kql-lib-search"
-FM
+FM_TAIL_INTRO
   echo "    placeholder=\"Search $TOTAL_QUERIES queries by title, description, or category…\""
   cat <<'FM2'
     aria-label="Search KQL queries">
