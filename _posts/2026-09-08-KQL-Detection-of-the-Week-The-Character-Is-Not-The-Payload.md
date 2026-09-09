@@ -614,7 +614,7 @@ The general rule: treat `make_list()` as unordered unless you've explicitly esta
 
 <br/>
 
-## The Common Thread
+## 🪡 The Common Thread
 
 ![Common-Thread](/assets/img/TheCharacterIsNotThePayload/7.png)
 
