@@ -4,6 +4,11 @@
 // Collapses those attempts into a single query that gets the term-matching right (multi-token
 // needles like 'certutil -decode' need contains, not has_any).
 // Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+// Tactics: Execution, Defense Evasion
+// Techniques: T1190, T1059.001, T1027.004
+// Actors: ToolShell
+// Platforms: Windows, Microsoft 365
+// Data: DeviceProcessEvents
 
 let lookback = 7d;
 // Normalize image names: strip path and extension so w3wp.exe, w3wp, and

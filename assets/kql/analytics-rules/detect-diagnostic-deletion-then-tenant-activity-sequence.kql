@@ -4,6 +4,10 @@
 // attackers by shape rather than event content — one modifies logging and goes to lunch, the other
 // modifies logging and starts touching things.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Defense Evasion
+// Techniques: T1562.008
+// Platforms: Azure
+// Data: AzureActivity
 
 let lookback = 4h;
 let followOnWindow = 60m;

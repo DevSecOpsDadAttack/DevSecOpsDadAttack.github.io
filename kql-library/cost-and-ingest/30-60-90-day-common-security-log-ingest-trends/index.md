@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Compare `CommonSecurityLog` volume by `DeviceAction` across 30-, 60-, and 90-day periods to spot which actions are driving growth.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/network/' | relative_url }}">Network</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-30-60-90-day-common-security-log-ingest-trends">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -36,6 +47,8 @@ js:
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Compare CommonSecurityLog ingest trends by DeviceAction across 30, 60, and 90 day periods
 // This query analyzes security log volume changes to identify trends and cost impacts
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 // Period 1: 60-90 days ago (oldest period)
 let Period90Days = CommonSecurityLog

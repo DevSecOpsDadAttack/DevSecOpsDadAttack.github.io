@@ -3,6 +3,10 @@
 // 1) Decide what “public” actually means (IPv4 and IPv6)
 // -------------------------------------------
 // Define private IP ranges for IPv4
+// Tactics: Reconnaissance
+// Techniques: T1590.005
+// Platforms: Endpoint, Multi-cloud
+// Data: DeviceInfo, DeviceNetworkInfo
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
 // Define private IP ranges for IPv6
 let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';

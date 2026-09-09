@@ -20,6 +20,28 @@ js:
 
 <p class="kql-lib-query-longdesc">Next.js middleware authorization-bypass pattern — successful requests to authenticated routes without going through the expected auth path.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1190/' | relative_url }}">T1190</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1550/' | relative_url }}">T1550</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/web/' | relative_url }}">Web</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/linux/' | relative_url }}">Linux</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/im-websession/' | relative_url }}">_Im_WebSession</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-nextjs-middleware-authorization-bypass">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +59,10 @@ js:
 // authenticated routes without going through the expected auth path. Catches the exploitation of
 // the specific middleware weakness by shape rather than by known payload.
 // Source: KQL Detection of the Week: A Name Is a Claim, Not a Fact (2026-06-29) — https://devsecopsdadattack.com/2026-06-29-KQL-Detection-of-the-Week_-A-Name-Is-a-Claim_-Not-a-Fact/
+// Tactics: Initial Access, Defense Evasion
+// Techniques: T1190, T1550
+// Platforms: Web, Linux
+// Data: _Im_WebSession, CommonSecurityLog
 
 CommonSecurityLog
 | where TimeGenerated > ago(24h)

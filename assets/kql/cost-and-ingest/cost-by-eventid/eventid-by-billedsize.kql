@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //Return the ingest volume in GB for a given EventID from the SecurityEvent table
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 SecurityEvent		             		        //<-- Query the SecurityEvent table
 | where TimeGenerated > ago(1h)		            	//<-- Query the last hour

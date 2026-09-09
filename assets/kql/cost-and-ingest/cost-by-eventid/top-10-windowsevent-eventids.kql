@@ -1,4 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Windows, Microsoft Sentinel
+// Data: WindowsEvent
 
 // This query will break down your top 10 most expensive EventIDs from the Windows Event table over the last 90 days
 // East US Region | 100GB/Day commitment tier | Effective Cost per GB - https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/?cdn=disable

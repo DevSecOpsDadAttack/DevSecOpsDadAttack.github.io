@@ -21,6 +21,23 @@ js:
 
 <p class="kql-lib-query-longdesc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/entra-id/' | relative_url }}">Entra ID</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/officeactivity/' | relative_url }}">OfficeActivity</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/auditlogs/' | relative_url }}">AuditLogs</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-whats-this-user-doing">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -36,6 +53,9 @@ js:
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This is great for tracking down activity for 'those' users (every company has one). 
 // Be warned, this is a powerful query that could get you into GDPR trouble as it returns a detailed account of user activity history, including browser URLs etc. 
+// Tactics: Discovery
+// Platforms: Microsoft 365, Entra ID
+// Data: OfficeActivity, SigninLogs, AuditLogs
 
 union DeviceEvents,DeviceNetworkEvents,DeviceFileEvents    //<-- query Device Events, DeviceNetworkEvents, and DeviceFileEvents tables and combine the results.
 | where RemoteUrl contains '' or FileOriginUrl != '' or FileOriginReferrerUrl != ''    //<-- show me every website URL, file URL, etc. that this user has touched.

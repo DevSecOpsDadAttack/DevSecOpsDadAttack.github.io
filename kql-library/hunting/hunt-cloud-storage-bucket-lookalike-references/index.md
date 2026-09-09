@@ -20,6 +20,28 @@ js:
 
 <p class="kql-lib-query-longdesc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/collection/' | relative_url }}">Collection</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/exfiltration/' | relative_url }}">Exfiltration</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1583-006/' | relative_url }}">T1583.006</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1567-002/' | relative_url }}">T1567.002</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkevents/' | relative_url }}">DeviceNetworkEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-cloud-storage-bucket-lookalike-references">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +60,10 @@ js:
 // references in traffic/config against a curated list of your real bucket names, since bucket
 // names are globally unique.
 // Source: KQL Detection of the Week: A Name Is a Claim, Not a Fact (2026-06-29) — https://devsecopsdadattack.com/2026-06-29-KQL-Detection-of-the-Week_-A-Name-Is-a-Claim_-Not-a-Fact/
+// Tactics: Collection, Exfiltration, Initial Access
+// Techniques: T1583.006, T1567.002
+// Platforms: Multi-cloud
+// Data: DeviceNetworkEvents, CommonSecurityLog
 
 let lookback = 90d;
 let hijackWindow = 30d;

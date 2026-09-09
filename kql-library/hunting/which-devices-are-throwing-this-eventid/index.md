@@ -21,6 +21,20 @@ js:
 
 <p class="kql-lib-query-longdesc">Which computers fire a specific Event ID and how often, per day.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-devices-are-throwing-this-eventid">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -35,6 +49,9 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Ever wonder how many times each computer in your environment throws a specific EventID per day?
+// Tactics: Discovery
+// Platforms: Windows
+// Data: SecurityEvent
 
 SecurityEvent                     // <--Define the table to query
 | where EventID == "8002"         // <--Declare which EventID you're looking for

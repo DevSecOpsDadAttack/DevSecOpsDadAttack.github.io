@@ -20,6 +20,29 @@ js:
 
 <p class="kql-lib-query-longdesc">Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/command-and-control/' | relative_url }}">Command and Control</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1071/' | relative_url }}">T1071</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1029/' | relative_url }}">T1029</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/argamal/' | relative_url }}">Argamal</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkevents/' | relative_url }}">DeviceNetworkEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-c2-beacon-by-connection-window-rhythm">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +61,11 @@ js:
 // spread-over-time and hide under any volume threshold. Filters to user-writable paths
 // (Downloads/Temp/AppData) with an allowlist for legit beacons (Slack, VS Code, Teams, etc.).
 // Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+// Tactics: Command and Control
+// Techniques: T1071, T1029
+// Actors: Argamal
+// Platforms: Windows
+// Data: DeviceNetworkEvents
 
 let lookback = 24h;
 let beaconCandidates = DeviceNetworkEvents

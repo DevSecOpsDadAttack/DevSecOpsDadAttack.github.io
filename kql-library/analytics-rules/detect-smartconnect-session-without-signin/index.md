@@ -20,6 +20,29 @@ js:
 
 <p class="kql-lib-query-longdesc">Microsoft SmartConnect (CVE-2026-55040) sessions lacking a corresponding sign-in event — absence-detection with windowed leftouter + countif.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1550/' | relative_url }}">T1550</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1078-004/' | relative_url }}">T1078.004</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/sharepoint/' | relative_url }}">SharePoint</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/officeactivity/' | relative_url }}">OfficeActivity</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/aadnoninteractiveusersigninlogs/' | relative_url }}">AADNonInteractiveUserSignInLogs</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-smartconnect-session-without-signin">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +60,10 @@ js:
 // — the classic absence-detection pattern applied to the SmartConnect auth-bypass. Uses windowed
 // leftouter + countif for reliable time-bounded absence.
 // Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+// Tactics: Defense Evasion, Initial Access
+// Techniques: T1550, T1078.004
+// Platforms: Microsoft 365, SharePoint
+// Data: OfficeActivity, SigninLogs, AADNonInteractiveUserSignInLogs
 
 let accessWindow = 1d;
 let signinWindow = 2d;

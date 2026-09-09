@@ -1,5 +1,9 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // I wrote this up for a client that needed to prove to an auditor that they could track file activities (open, read, modify, delete, create, etc.) by user and device with timestamps. 
+// Tactics: Discovery, Collection
+// Techniques: T1083, T1005
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 union DeviceEvents,DeviceNetworkEvents,DeviceFileEvents    //<-- query Device Events, DeviceNetworkEvents, and DeviceFileEvents tables and combine the results.
 | where RemoteUrl contains '' or FileOriginUrl != '' or FileOriginReferrerUrl != ''    //<-- show me every website URL, file URL, etc. that this user has touched.

@@ -4,6 +4,8 @@
 // combos are driving your CEF/Syslog appliance cost.
 // For a Reason-focused enhanced variant with cost-tier emojis, see the -enhanced-by-reason file
 // in the same folder.
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 CommonSecurityLog

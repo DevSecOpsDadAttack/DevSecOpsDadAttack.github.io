@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-log-sources-with-cost">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +48,8 @@ js:
 // Use this variant when you want the raw numbers — CostUSD stays a float so it plays nicely with
 // dashboards and downstream aggregation. For a display-friendly variant with cost-tier emojis,
 // see top-10-log-sources-with-cost-enhanced.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 Usage

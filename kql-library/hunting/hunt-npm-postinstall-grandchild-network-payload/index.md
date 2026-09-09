@@ -20,6 +20,33 @@ js:
 
 <p class="kql-lib-query-longdesc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/execution/' | relative_url }}">Execution</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/command-and-control/' | relative_url }}">Command and Control</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1195-002/' | relative_url }}">T1195.002</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1105/' | relative_url }}">T1105</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/asyncapi/' | relative_url }}">AsyncAPI</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/linux/' | relative_url }}">Linux</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceprocessevents/' | relative_url }}">DeviceProcessEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkevents/' | relative_url }}">DeviceNetworkEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-npm-postinstall-grandchild-network-payload">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +64,11 @@ js:
 // initial npm install — the 'sins of the grandfather' shape. Traces process ancestry through npm
 // -> sh -c -> curl (or equivalent) rather than looking at the direct child.
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Initial Access, Execution, Command and Control
+// Techniques: T1195.002, T1105
+// Actors: AsyncAPI
+// Platforms: Linux, Windows
+// Data: DeviceProcessEvents, DeviceNetworkEvents
 
 let lookback = 7d;
 // Image names arrive inconsistently. FileName is usually bare, but the schema documents

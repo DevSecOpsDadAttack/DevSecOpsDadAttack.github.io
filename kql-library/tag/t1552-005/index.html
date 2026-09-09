@@ -1,0 +1,33 @@
+---
+layout: page
+title: "T1552.005"
+subtitle: "MITRE ATT&amp;CK Technique — 2 queries"
+permalink: /kql-library/tag/t1552-005/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1552.005</h2>
+  <p>2 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1552/005/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+    </a>
+    <p class="kql-lib-query-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+</ul>

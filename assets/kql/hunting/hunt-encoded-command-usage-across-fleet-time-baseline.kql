@@ -3,6 +3,10 @@
 // Uses TimeBucket alone as the join key (deliberately no DeviceId, no user) to detect
 // campaign-level shape: many hosts running similar encoded commands within the same window.
 // Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+// Tactics: Defense Evasion, Execution
+// Techniques: T1027.010, T1059.001
+// Platforms: Windows
+// Data: DeviceProcessEvents
 
 let lookback = 1d;
 let Bare = (s:string) {

@@ -20,6 +20,30 @@ js:
 
 <p class="kql-lib-query-longdesc">Inventory of npm packages installed across your fleet that carry postinstall / preinstall / install lifecycle scripts — the finite, closable population for sins-of-the-grandfather class attacks.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1195-002/' | relative_url }}">T1195.002</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/asyncapi/' | relative_url }}">AsyncAPI</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/linux/' | relative_url }}">Linux</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicefileevents/' | relative_url }}">DeviceFileEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceprocessevents/' | relative_url }}">DeviceProcessEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-inventory-installed-npm-packages-with-lifecycle-scripts">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +61,11 @@ js:
 // install lifecycle scripts — the finite, closable population for the sins-of-the-grandfather
 // class of attacks. Not adversary telemetry, configuration inventory: 'the thing you can close.'
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Initial Access
+// Techniques: T1195.002
+// Actors: AsyncAPI
+// Platforms: Linux, Windows
+// Data: DeviceFileEvents, DeviceProcessEvents
 
 let window = 30d;
 let Bare = (s:string) {

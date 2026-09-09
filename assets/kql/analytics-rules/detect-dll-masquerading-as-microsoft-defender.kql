@@ -3,6 +3,11 @@
 // publisher/original-filename metadata against the signing certificate — a Vidar Stealer TTP. The
 // disguise fools name-based checks but not certificate-chain inspection.
 // Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+// Tactics: Defense Evasion
+// Techniques: T1036.005, T1574.002
+// Actors: Vidar Stealer
+// Platforms: Windows
+// Data: DeviceImageLoadEvents
 
 DeviceImageLoadEvents
 | where Timestamp > ago(7d)

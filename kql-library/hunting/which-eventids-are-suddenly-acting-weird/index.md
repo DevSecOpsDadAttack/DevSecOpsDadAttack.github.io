@@ -21,6 +21,20 @@ js:
 
 <p class="kql-lib-query-longdesc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-eventids-are-suddenly-acting-weird">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -35,6 +49,9 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // GitHub: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+// Tactics: Discovery
+// Platforms: Windows
+// Data: SecurityEvent
 
 // Which Event IDs have recently spiked well beyond their 90-day historical baseline?
 // Returns EventID, baseline avg daily count, recent avg daily count, and the deviation

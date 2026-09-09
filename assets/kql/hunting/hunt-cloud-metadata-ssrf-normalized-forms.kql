@@ -4,6 +4,10 @@
 // resolved target before matching, instead of hardcoding '169.254.169.254' the way four
 // consecutive briefs did.
 // Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+// Tactics: Credential Access, Discovery, Defense Evasion
+// Techniques: T1552.005, T1027
+// Platforms: Multi-cloud, Web
+// Data: CommonSecurityLog, _Im_WebSession
 
 let lookback = 1d;
 // ============================================================

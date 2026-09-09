@@ -2,6 +2,8 @@
 // Calculate your effective Per GB Price https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/?cdn=disable
 // If your environment has different commitment tiers for your workspace and sentinel instances, follow this guide to calculate your effective Per GB rate: 
 // https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/
+// Platforms: Linux, Microsoft Sentinel
+// Data: Syslog
 
 let rate = 2.53;  //<-- Effective Cost per GB (500GB / Day Commitment Tier in EastUS)
 Syslog                                            //<-- Query the Syslog table

@@ -20,6 +20,26 @@ js:
 
 <p class="kql-lib-query-longdesc">C2 traffic hidden inside blockchain-RPC calls to public utilities (QuickNode, Alchemy) — 'the dead drop is a public utility.'</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/command-and-control/' | relative_url }}">Command and Control</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1071-001/' | relative_url }}">T1071.001</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1102/' | relative_url }}">T1102</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/endpoint/' | relative_url }}">Endpoint</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkevents/' | relative_url }}">DeviceNetworkEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-blockchain-rpc-c2-dead-drop">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +58,10 @@ js:
 // commands. Looks for anomalous RPC method sequences and payload sizes to services that are
 // legitimately used but rarely by dev workstations.
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Command and Control
+// Techniques: T1071.001, T1102
+// Platforms: Endpoint, Multi-cloud
+// Data: DeviceNetworkEvents
 
 let lookback  = 14d;   // findings window
 let baseline  = 45d;   // total window; baseline is (45d .. 14d ago)

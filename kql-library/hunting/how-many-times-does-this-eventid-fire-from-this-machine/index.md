@@ -21,6 +21,20 @@ js:
 
 <p class="kql-lib-query-longdesc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-how-many-times-does-this-eventid-fire-from-this-machine">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -35,6 +49,9 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //How Many Times Has This Machine Thrown This Event Today?
+// Tactics: Discovery
+// Platforms: Windows
+// Data: SecurityEvent
 
 SecurityEvent                                                                               // <--Define the table to query
 | where EventID == "EventID"                                                                // <--Define the EventID to query for

@@ -1,4 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 WindowsEvent
 | where TimeGenerated >ago(90d)
 | where EventID == "4672"

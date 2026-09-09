@@ -4,6 +4,10 @@
 // byte directions because CEF does not tell you which side is the response — run the byte-direction
 // validation query at the bottom to settle it once per source.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Collection, Credential Access, Exfiltration
+// Techniques: T1552.001, T1005, T1567
+// Platforms: Web, Network
+// Data: CommonSecurityLog
 
 let lookback = 7d;
 let ActuatorEndpoints = dynamic([

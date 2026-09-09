@@ -1,0 +1,61 @@
+---
+layout: page
+title: "Persistence"
+subtitle: "MITRE ATT&amp;CK Tactic — 6 queries"
+permalink: /kql-library/tag/persistence/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Tactic</p>
+  <h2>Persistence</h2>
+  <p>6 queries tagged with this tactic.
+  <br><a href="https://attack.mitre.org/tactics/TA0003/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-unsigned-dll-load-verified-signing-state/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Unsigned Dll Load Verified Signing State</span>
+    </a>
+    <p class="kql-lib-query-desc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cav3rn-endpoint-local-log-file-artifact/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cav3rn Endpoint Local Log File Artifact</span>
+    </a>
+    <p class="kql-lib-query-desc">Endpoint-side hunt for Project CAV3RN's local file artifact (`logAzure.txt` and family) — config persistence written by the module.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-first-time-admin-operation-user-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt First Time Admin Operation User Baseline</span>
+    </a>
+    <p class="kql-lib-query-desc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-config-modification-no-user-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Config Modification No User Context</span>
+    </a>
+    <p class="kql-lib-query-desc">npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — AsyncAPI-shaped supply-chain compromise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-outlook-calendar-c2-far-future-standing-meeting/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Outlook Calendar C2 Far Future Standing Meeting</span>
+    </a>
+    <p class="kql-lib-query-desc">Project CAV3RN's Outlook calendar C2 — standing meetings scheduled decades in the future in fixed low-attention windows, carrying operator-agent traffic in the event body.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-suspicious-user-consented-oauth-app-grants/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Suspicious User Consented Oauth App Grants</span>
+    </a>
+    <p class="kql-lib-query-desc">'The backdoor you approved yourself' — OAuth application consents granting broad Graph permissions to unfamiliar apps. Focuses on CONSENT events, not the logins that follow.</p>
+  </li>
+</ul>

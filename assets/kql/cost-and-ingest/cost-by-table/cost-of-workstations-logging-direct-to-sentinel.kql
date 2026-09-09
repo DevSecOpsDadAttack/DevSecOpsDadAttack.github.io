@@ -3,6 +3,8 @@
 // For this query, the ingestioncost variable is manually configured based on the workspace's region.
 // Go here for effective cost per GB based on your region: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 let rate=3.96;                                                                  //<-- Plug in Effective per GB Rate Here)
 Heartbeat                                                                       //<-- Query the Heartbeat table

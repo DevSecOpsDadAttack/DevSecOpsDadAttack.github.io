@@ -5,6 +5,8 @@
 // contain common noise like "N/A" — those are filtered out here).
 // For a DeviceVendor/DeviceProduct-focused variant with numeric cost, see
 // top-10-common-security-logs-by-severity-with-cost.kql.
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 CommonSecurityLog
 | where TimeGenerated > ago(90d)

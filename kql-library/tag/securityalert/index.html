@@ -1,0 +1,60 @@
+---
+layout: page
+title: "SecurityAlert"
+subtitle: "Data Source — 6 queries"
+permalink: /kql-library/tag/securityalert/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>SecurityAlert</h2>
+  <p>6 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/health-checks/analytics-rule-health/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Health Checks</span>
+      <span class="kql-lib-query-title">Analytics Rule Health</span>
+    </a>
+    <p class="kql-lib-query-desc">Analytics Rules that ran successfully in the last 90 days but never produced an alert — candidates for review or tuning.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/health-checks/top-10-alerts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Health Checks</span>
+      <span class="kql-lib-query-title">Top 10 Alerts</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 alert names over 90 days with percentage of total and color-coded impact level (High / Moderate / Low).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-tactics-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-query-title">Mitre Attack Tactics Observed</span>
+    </a>
+    <p class="kql-lib-query-desc">Events mapped against MITRE ATT&amp;CK Tactics that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-techniques-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-query-title">Mitre Attack Techniques Observed</span>
+    </a>
+    <p class="kql-lib-query-desc">Events mapped against MITRE ATT&amp;CK Techniques that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/reporting/alert-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reporting</span>
+      <span class="kql-lib-query-title">Alert Trends</span>
+    </a>
+    <p class="kql-lib-query-desc">Alerts with significant increases vs the previous 90-day period, with severity categorized.</p>
+  </li>
+</ul>

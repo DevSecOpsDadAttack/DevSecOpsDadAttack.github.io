@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This query identifies events mapped against the MITRE ATT&CK Matrix that have been observed in the environment
+// Platforms: Microsoft Sentinel
+// Data: SecurityAlert
 
 let totalCount = toscalar(
     SecurityAlert

@@ -20,6 +20,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Events mapped against MITRE ATT&amp;CK Techniques that have been observed in the environment, with percentage of total.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityalert/' | relative_url }}">SecurityAlert</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-mitre-attack-techniques-observed">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +44,8 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This query identifies events mapped against the MITRE ATT&CK Matrix that have been observed in the environment
+// Platforms: Microsoft Sentinel
+// Data: SecurityAlert
 
 let TotalCount = toscalar(
     SecurityAlert

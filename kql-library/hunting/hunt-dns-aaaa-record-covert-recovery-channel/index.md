@@ -20,6 +20,31 @@ js:
 
 <p class="kql-lib-query-longdesc">Project CAV3RN's DNS AAAA-record recovery channel — IPv6 addresses returned in AAAA queries that decode as ASCII or structured config.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/command-and-control/' | relative_url }}">Command and Control</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1071-004/' | relative_url }}">T1071.004</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1132-001/' | relative_url }}">T1132.001</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/cav3rn/' | relative_url }}">CAV3RN</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/endpoint/' | relative_url }}">Endpoint</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/dnsevents/' | relative_url }}">DnsEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicenetworkevents/' | relative_url }}">DeviceNetworkEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-dns-aaaa-record-covert-recovery-channel">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +62,11 @@ js:
 // OAuth token request or Graph validation call fails. Looks for IPv6 addresses returned in AAAA
 // queries that decode as ASCII text or structured config data.
 // Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+// Tactics: Command and Control
+// Techniques: T1071.004, T1132.001
+// Actors: CAV3RN
+// Platforms: Windows, Endpoint
+// Data: DnsEvents, DeviceNetworkEvents
 
 let lookback = 7d;
 let BootstrapDomains = dynamic(["cloudlanecdn.com"]);

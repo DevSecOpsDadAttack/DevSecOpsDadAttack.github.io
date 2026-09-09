@@ -3,6 +3,11 @@
 // where the payload is padded with null bytes to slip past AV scanners that skip files above a
 // size ceiling. Ranks downloads whose size:entropy ratio suggests inflation.
 // Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+// Tactics: Defense Evasion
+// Techniques: T1027.001
+// Actors: Vidar Stealer
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 DeviceFileEvents
 | where Timestamp > ago(7d)

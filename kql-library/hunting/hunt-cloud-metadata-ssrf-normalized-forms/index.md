@@ -20,6 +20,29 @@ js:
 
 <p class="kql-lib-query-longdesc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1552-005/' | relative_url }}">T1552.005</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1027/' | relative_url }}">T1027</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/web/' | relative_url }}">Web</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/im-websession/' | relative_url }}">_Im_WebSession</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-cloud-metadata-ssrf-normalized-forms">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +61,10 @@ js:
 // resolved target before matching, instead of hardcoding '169.254.169.254' the way four
 // consecutive briefs did.
 // Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+// Tactics: Credential Access, Discovery, Defense Evasion
+// Techniques: T1552.005, T1027
+// Platforms: Multi-cloud, Web
+// Data: CommonSecurityLog, _Im_WebSession
 
 let lookback = 1d;
 // ============================================================

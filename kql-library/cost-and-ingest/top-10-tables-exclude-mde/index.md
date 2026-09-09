@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Top 10 most expensive log sources over 90 days, excluding MDE, via the fast `Usage` table.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-tables-exclude-mde">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +49,8 @@ js:
 // instead of scanning every row in every table. Use this by default; only fall back to the
 // `search *` variant (top-10-tables-exclude-mde-search-star.kql) if you need per-table event
 // counts alongside billable volume.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 let CostPerGB = 4.30;   // <-- Set to Effective Cost per GB for your region: https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/
 Usage

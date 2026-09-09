@@ -21,6 +21,18 @@ js:
 
 <p class="kql-lib-query-longdesc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/windowsevent/' | relative_url }}">WindowsEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-eventid">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +51,8 @@ js:
 // You can calculate the LAW cost and Sentinel cost separately, or both (effective cost per GB) by setting the rate variable
 // The rate for your region can be found here: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // This doesn't have to be over the last hour, you can adjust the TimeGenerated parameter to a week (7d), a day (1d), or even a month (30d) etc.
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent, WindowsEvent
 
 let rate = 4.30;                                        //<-- Effective Cost per GB
 SecurityEvent		             		        //<-- Query the SecurityEvent table

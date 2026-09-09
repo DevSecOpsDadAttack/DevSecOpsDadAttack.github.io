@@ -21,6 +21,29 @@ js:
 
 <p class="kql-lib-query-longdesc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/collection/' | relative_url }}">Collection</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/exfiltration/' | relative_url }}">Exfiltration</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1552-001/' | relative_url }}">T1552.001</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1005/' | relative_url }}">T1005</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1567/' | relative_url }}">T1567</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/web/' | relative_url }}">Web</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/im-websession/' | relative_url }}">_Im_WebSession</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-spring-boot-heapdump-exfiltration-asim">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +61,10 @@ js:
 // as a path segment (position-independent) instead of hardcoding /actuator/heapdump — recovers the real
 // base path from traffic and ranks by response-size verdict, not by request volume.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Collection, Credential Access, Exfiltration
+// Techniques: T1552.001, T1005, T1567
+// Platforms: Web, Multi-cloud
+// Data: _Im_WebSession
 
 let lookback = 7d;
 // Endpoint IDs are fixed by Spring. The BASE PATH is not -- the ISC capture shows

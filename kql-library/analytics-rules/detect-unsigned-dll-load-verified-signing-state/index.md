@@ -20,6 +20,26 @@ js:
 
 <p class="kql-lib-query-longdesc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/persistence/' | relative_url }}">Persistence</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1574-002/' | relative_url }}">T1574.002</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1027/' | relative_url }}">T1027</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceimageloadevents/' | relative_url }}">DeviceImageLoadEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-unsigned-dll-load-verified-signing-state">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +58,10 @@ js:
 // IsSigned/SigningStatus fields against the actual verification result rather than treating a null
 // hash as evidence of signing state.
 // Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+// Tactics: Defense Evasion, Persistence
+// Techniques: T1574.002, T1027
+// Platforms: Windows
+// Data: DeviceImageLoadEvents
 
 let lookback = 7d;
 let followOnWindow = 5m;

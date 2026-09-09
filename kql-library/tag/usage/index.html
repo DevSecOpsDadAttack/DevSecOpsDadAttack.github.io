@@ -1,0 +1,123 @@
+---
+layout: page
+title: "Usage"
+subtitle: "Data Source — 15 queries"
+permalink: /kql-library/tag/usage/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>Usage</h2>
+  <p>15 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day-formatted/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day Formatted</span>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days, formatted as human-readable strings (`$X.XX / Day`, `XGB / Day`). Table-friendly, not chart-friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day</span>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days with numeric `CostUSD`. The default cost-over-time view — plottable and aggregatable.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-volume-by-solution/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Volume By Solution</span>
+    </a>
+    <p class="kql-lib-query-desc">Billable GB per day for the past 90 days, sliced by Solution, rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/efficiency-exercise/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">Efficiency Exercise</span>
+    </a>
+    <p class="kql-lib-query-desc">Teaching walkthrough of the "average daily ingest" question written four ways, from a slow `search *` to an efficient `Usage`-scoped version with cost. Read this before writing your own daily-average query.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Cost Of A Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Estimated dollar cost of a single table over a chosen window, given your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/how-loud-is-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">How Loud Is A Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Row-count-per-day graph for a given table (defaults to `Syslog`) — a quick "is this table getting louder?" check.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-billable-mde-tables/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Billable MDE Tables</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Microsoft Defender for Endpoint tables over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost</span>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-tables-exclude-mde/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Tables Exclude MDE</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive log sources over 90 days, excluding MDE, via the fast `Usage` table.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-ingest-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">30 60 90 Day Ingest Trends</span>
+    </a>
+    <p class="kql-lib-query-desc">Same three-window comparison against the `Usage` table for a workspace-wide view.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/day-by-day-change/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">Day By Day Change</span>
+    </a>
+    <p class="kql-lib-query-desc">Percent change in daily ingest volume vs the previous day over the last 31 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/log-sources-with-greatest-delta/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">Log Sources With Greatest Delta</span>
+    </a>
+    <p class="kql-lib-query-desc">Which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/pihole-usage/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Pihole Usage</span>
+    </a>
+    <p class="kql-lib-query-desc">Billable ingest volume for the Pi-hole custom log over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/reporting/data-sources-with-biggest-delta-in-log-volume/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reporting</span>
+      <span class="kql-lib-query-title">Data Sources With Biggest Delta In Log Volume</span>
+    </a>
+    <p class="kql-lib-query-desc">Data sources with the biggest log-volume delta between comparison periods — configurable tunables at the top of the query.</p>
+  </li>
+</ul>

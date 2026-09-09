@@ -1,5 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //How Many Times Has This Machine Thrown This Event Today?
+// Tactics: Discovery
+// Platforms: Windows
+// Data: SecurityEvent
 
 SecurityEvent                                                                               // <--Define the table to query
 | where EventID == "EventID"                                                                // <--Define the EventID to query for

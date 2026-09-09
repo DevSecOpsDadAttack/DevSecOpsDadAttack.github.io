@@ -1,4 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: SecurityEvent
 SecurityEvent
 | where _IsBillable == True                //<-- Filter out non-billable data
 | summarize EventCount=count(), Billable_GB=sum(_BilledSize / 1000 / 1000 / 1000) by EventID

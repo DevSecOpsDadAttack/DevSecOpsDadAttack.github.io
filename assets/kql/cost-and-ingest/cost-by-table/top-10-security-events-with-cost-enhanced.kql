@@ -3,6 +3,8 @@
 // with GiB, an emoji cost-tier indicator, and a formatted '$X.XX' cost column. Best for
 // human-readable dashboards. For a numeric-cost variant that includes the Activity name,
 // see top-10-security-events-with-cost.kql.
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 SecurityEvent
 | where TimeGenerated > ago(30d)

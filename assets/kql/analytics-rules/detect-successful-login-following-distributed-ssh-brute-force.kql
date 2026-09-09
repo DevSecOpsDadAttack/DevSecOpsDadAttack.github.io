@@ -3,6 +3,10 @@
 // campaign (Act I's shape). The Act-I hunt tells you the storm is happening; this rule tells you
 // if the lightning hit anything.
 // Source: KQL Detection of the Week: The Attack That Stayed Under the Threshold (2026-06-19) — https://devsecopsdadattack.com/2026-06-19-KQL-of-the-Week_-The-Attack-That-Stayed-Under-the-Threshold/
+// Tactics: Credential Access, Initial Access
+// Techniques: T1110.003, T1078
+// Platforms: Linux
+// Data: Syslog
 
 let lookback = 1h;
 let failThreshold = 10;

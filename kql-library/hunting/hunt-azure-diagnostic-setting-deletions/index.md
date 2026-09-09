@@ -20,6 +20,24 @@ js:
 
 <p class="kql-lib-query-longdesc">Deletions of Azure diagnostic settings — the moment an attacker turns off logging (T1562.008). Step 1 of a two-step sequence.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1562-008/' | relative_url }}">T1562.008</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/azure/' | relative_url }}">Azure</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/azureactivity/' | relative_url }}">AzureActivity</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-azure-diagnostic-setting-deletions">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +55,10 @@ js:
 // touching resources (T1562.008). Step 1 of a two-step sequence: this is the event, the follow-on
 // activity is the sequence detection.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Defense Evasion
+// Techniques: T1562.008
+// Platforms: Azure
+// Data: AzureActivity
 
 AzureActivity
 | where TimeGenerated > ago(1d)

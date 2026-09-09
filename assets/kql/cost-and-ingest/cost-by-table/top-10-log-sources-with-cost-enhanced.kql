@@ -3,6 +3,8 @@
 // indicator and a formatted '$X.XX' cost column. Best for tables and human-readable dashboards.
 // For a numeric CostUSD variant that plays nicely with charts and downstream aggregation,
 // see top-10-log-sources-with-cost.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage
 | where TimeGenerated > ago(30d)

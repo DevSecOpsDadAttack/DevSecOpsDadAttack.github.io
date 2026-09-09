@@ -20,6 +20,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Distribution of DNS query types (A, AAAA, TXT, etc.).</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/pi-hole/' | relative_url }}">Pi-hole</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/pihole-cl/' | relative_url }}">pihole_CL</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-query-type-distribution">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +44,8 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Determine the distribution of query types
+// Platforms: Pi-hole
+// Data: pihole_CL
 
 PiHole
 | summarize Count = count() by QueryType  // Aggregate counts by query type

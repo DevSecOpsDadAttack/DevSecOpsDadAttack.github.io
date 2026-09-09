@@ -21,6 +21,25 @@ js:
 
 <p class="kql-lib-query-longdesc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/lateral-movement/' | relative_url }}">Lateral Movement</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1021-001/' | relative_url }}">T1021.001</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-rdp-logins-per-day-per-user">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +53,10 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Tactics: Lateral Movement, Discovery
+// Techniques: T1021.001
+// Platforms: Windows
+// Data: SecurityEvent
 
 // RDP logins per user per day, rendered as a timechart. Great for identifying your
 // heaviest RDP users and establishing a baseline of "normal" login volume before

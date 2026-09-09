@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Identify the top 10 clients making DNS queries
+// Platforms: Pi-hole
+// Data: pihole_CL
 PiHole
 | summarize Count = count() by ClientIP  // Aggregate counts by client IP
 | top 10 by Count  // Select the top 10 clients by count

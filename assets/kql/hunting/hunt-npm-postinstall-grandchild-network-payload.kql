@@ -3,6 +3,11 @@
 // initial npm install — the 'sins of the grandfather' shape. Traces process ancestry through npm
 // -> sh -c -> curl (or equivalent) rather than looking at the direct child.
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Initial Access, Execution, Command and Control
+// Techniques: T1195.002, T1105
+// Actors: AsyncAPI
+// Platforms: Linux, Windows
+// Data: DeviceProcessEvents, DeviceNetworkEvents
 
 let lookback = 7d;
 // Image names arrive inconsistently. FileName is usually bare, but the schema documents

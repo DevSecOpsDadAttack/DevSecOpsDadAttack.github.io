@@ -20,6 +20,26 @@ js:
 
 <p class="kql-lib-query-longdesc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1556/' | relative_url }}">T1556</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1078/' | relative_url }}">T1078</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/network/' | relative_url }}">Network</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-vpn-session-without-prior-authentication">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +58,10 @@ js:
 // join + windowed countif instead of leftanti with range predicates (the latter silently
 // suppresses alerts when any same-IP auth exists anywhere in the lookback).
 // Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+// Tactics: Defense Evasion, Initial Access
+// Techniques: T1556, T1078
+// Platforms: Network
+// Data: CommonSecurityLog
 
 let lookback = 1d;
 let window = 5m;

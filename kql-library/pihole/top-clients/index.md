@@ -20,6 +20,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Top 10 clients by DNS query count.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/pi-hole/' | relative_url }}">Pi-hole</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/pihole-cl/' | relative_url }}">pihole_CL</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-clients">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +44,8 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Identify the top 10 clients making DNS queries
+// Platforms: Pi-hole
+// Data: pihole_CL
 PiHole
 | summarize Count = count() by ClientIP  // Aggregate counts by client IP
 | top 10 by Count  // Select the top 10 clients by count

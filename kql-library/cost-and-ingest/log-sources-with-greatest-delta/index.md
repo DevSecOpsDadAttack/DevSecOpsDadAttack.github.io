@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-log-sources-with-greatest-delta">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +44,8 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 //This query:
 //-->Finds the exact time ranges for comparison periods (previous 30 days vs current 30 days)

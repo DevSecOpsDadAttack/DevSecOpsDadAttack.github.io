@@ -3,6 +3,11 @@
 // OAuth token request or Graph validation call fails. Looks for IPv6 addresses returned in AAAA
 // queries that decode as ASCII text or structured config data.
 // Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+// Tactics: Command and Control
+// Techniques: T1071.004, T1132.001
+// Actors: CAV3RN
+// Platforms: Windows, Endpoint
+// Data: DnsEvents, DeviceNetworkEvents
 
 let lookback = 7d;
 let BootstrapDomains = dynamic(["cloudlanecdn.com"]);

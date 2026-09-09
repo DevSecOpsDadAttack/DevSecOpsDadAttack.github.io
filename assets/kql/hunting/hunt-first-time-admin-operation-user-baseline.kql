@@ -3,6 +3,10 @@
 // outside that set successfully performs one — 'the admin who has never administered.' First-seen
 // baseline structurally similar to first-country-seen for OAuth tokens.
 // Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+// Tactics: Privilege Escalation, Persistence
+// Techniques: T1078, T1098
+// Platforms: Microsoft 365, SharePoint
+// Data: OfficeActivity
 
 let baseline_window = 60d;
 let detection_window = 1d;

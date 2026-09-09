@@ -1,4 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Tactics: Lateral Movement, Discovery
+// Techniques: T1021.001
+// Platforms: Windows
+// Data: SecurityEvent
 
 // RDP logins per user per day, rendered as a timechart. Great for identifying your
 // heaviest RDP users and establishing a baseline of "normal" login volume before

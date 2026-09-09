@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Daily billable GB and cost over 90 days, formatted as human-readable strings (`$X.XX / Day`, `XGB / Day`). Table-friendly, not chart-friendly.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-90-day-billable-cost-per-day-formatted">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +48,8 @@ js:
 // ('$X.XX / Day' and 'X.XXGB / Day'). Best for tables and dashboards where readability
 // matters more than plottability — the string formatting means these columns are not
 // chart-friendly. For a numeric CostUSD variant, see 90-day-billable-cost-per-day.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage                                                                                   // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                        // <--Query the last 90 days

@@ -1,6 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Compare CommonSecurityLog ingest trends by DeviceAction across 30, 60, and 90 day periods
 // This query analyzes security log volume changes to identify trends and cost impacts
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 // Period 1: 60-90 days ago (oldest period)
 let Period90Days = CommonSecurityLog

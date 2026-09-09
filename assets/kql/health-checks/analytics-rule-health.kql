@@ -1,4 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: SecurityAlert
 let activeRules = SentinelHealth
 | where TimeGenerated >= ago(90d)
 | where SentinelResourceType == "Analytics Rule" and Status == "Success"

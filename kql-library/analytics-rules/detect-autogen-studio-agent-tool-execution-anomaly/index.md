@@ -20,6 +20,32 @@ js:
 
 <p class="kql-lib-query-longdesc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/execution/' | relative_url }}">Execution</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/privilege-escalation/' | relative_url }}">Privilege Escalation</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1204/' | relative_url }}">T1204</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1651/' | relative_url }}">T1651</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/autojack/' | relative_url }}">AutoJack</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/azure/' | relative_url }}">Azure</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/saas/' | relative_url }}">SaaS</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/azurediagnostics/' | relative_url }}">AzureDiagnostics</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/autogenstudio-cl/' | relative_url }}">AutoGenStudio_CL</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-autogen-studio-agent-tool-execution-anomaly">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +63,11 @@ js:
 // its baseline set — the 'AutoJack' agent-abuse shape where a legitimately-hosted agent becomes
 // the exploit primitive.
 // Source: KQL Detection of the Week: The Attack That Stayed Under the Threshold (2026-06-19) — https://devsecopsdadattack.com/2026-06-19-KQL-of-the-Week_-The-Attack-That-Stayed-Under-the-Threshold/
+// Tactics: Execution, Privilege Escalation
+// Techniques: T1204, T1651
+// Actors: AutoJack
+// Platforms: Azure, SaaS
+// Data: AzureDiagnostics, AutoGenStudio_CL
 
 let autogenProcesses = dynamic(["autogenstudio", "autogen_studio", "python.exe", "python", "python3"]);
 let autogenCmdlineTerms = dynamic(["autogen", "autogenstudio", "mcp", "websocket"]);

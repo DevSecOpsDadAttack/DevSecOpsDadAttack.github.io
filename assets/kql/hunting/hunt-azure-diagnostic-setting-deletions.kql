@@ -3,6 +3,10 @@
 // touching resources (T1562.008). Step 1 of a two-step sequence: this is the event, the follow-on
 // activity is the sequence detection.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Defense Evasion
+// Techniques: T1562.008
+// Platforms: Azure
+// Data: AzureActivity
 
 AzureActivity
 | where TimeGenerated > ago(1d)

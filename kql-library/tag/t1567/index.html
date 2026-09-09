@@ -1,0 +1,47 @@
+---
+layout: page
+title: "T1567"
+subtitle: "MITRE ATT&amp;CK Technique — 4 queries"
+permalink: /kql-library/tag/t1567/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1567</h2>
+  <p>4 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1567/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-ci-build-egress-to-first-seen-domain/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Ci Build Egress To First Seen Domain</span>
+    </a>
+    <p class="kql-lib-query-desc">CI/CD build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/external-email-accounts-synced-to-outlook-sending-attachments/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">External Email Accounts Synced To Outlook Sending Attachments</span>
+    </a>
+    <p class="kql-lib-query-desc">Employees using Outlook on corporate machines to send email via third-party SMTP servers, with attachments — a common data-exfiltration pattern.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+    </a>
+    <p class="kql-lib-query-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+    </a>
+    <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
+  </li>
+</ul>

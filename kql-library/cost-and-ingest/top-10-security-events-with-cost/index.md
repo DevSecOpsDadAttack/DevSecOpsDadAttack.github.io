@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-security-events-with-cost">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +50,8 @@ js:
 // successfully logged on) apart from 4625 etc. at a glance.
 // For a display-friendly variant with cost-tier emojis (and simpler EventID-only grouping),
 // see top-10-security-events-with-cost-enhanced.kql.
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 SecurityEvent

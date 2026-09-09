@@ -20,6 +20,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Side-by-side of `sort by` vs `top` on a cost-per-EventID query, showing that both produce identical results in this case — a small worked example for anyone learning KQL sort semantics.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-sort-function-result-comparison">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -33,6 +43,8 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: SecurityEvent
 SecurityEvent
 | where _IsBillable == True                //<-- Filter out non-billable data
 | summarize EventCount=count(), Billable_GB=sum(_BilledSize / 1000 / 1000 / 1000) by EventID

@@ -4,6 +4,10 @@
 // real management base path from traffic, classifies P1-P5 by secret-bearing vs state-changing endpoint,
 // and requires ONE confirmed 200 in 30 days rather than a request-volume threshold.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Reconnaissance, Initial Access
+// Techniques: T1595.002, T1190
+// Platforms: Web, Multi-cloud
+// Data: _Im_WebSession, CommonSecurityLog
 
 let lookback = 30d;
 let ActuatorEndpoints = dynamic([

@@ -20,6 +20,24 @@ js:
 
 <p class="kql-lib-query-longdesc">T1562.008 sequence: Azure diagnostic-setting deletion followed by any activity from the same Caller within 60 minutes.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1562-008/' | relative_url }}">T1562.008</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/azure/' | relative_url }}">Azure</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/azureactivity/' | relative_url }}">AzureActivity</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-diagnostic-deletion-then-tenant-activity-sequence">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +56,10 @@ js:
 // attackers by shape rather than event content — one modifies logging and goes to lunch, the other
 // modifies logging and starts touching things.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Defense Evasion
+// Techniques: T1562.008
+// Platforms: Azure
+// Data: AzureActivity
 
 let lookback = 4h;
 let followOnWindow = 60m;

@@ -4,6 +4,8 @@
 // successfully logged on) apart from 4625 etc. at a glance.
 // For a display-friendly variant with cost-tier emojis (and simpler EventID-only grouping),
 // see top-10-security-events-with-cost-enhanced.kql.
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 SecurityEvent

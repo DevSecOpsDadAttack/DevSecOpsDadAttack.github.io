@@ -3,6 +3,8 @@
 // Use this variant when you want to graph cost over time — CostUSD stays a float,
 // which the chart renderers can plot directly. For a display-friendly '$X.XX / Day'
 // string version, see 90-day-billable-cost-per-day-formatted.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage                                                                                             // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                                  // <--Query the last 90 days

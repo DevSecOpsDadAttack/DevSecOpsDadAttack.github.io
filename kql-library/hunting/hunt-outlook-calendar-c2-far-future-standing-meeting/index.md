@@ -20,6 +20,31 @@ js:
 
 <p class="kql-lib-query-longdesc">Project CAV3RN's Outlook calendar C2 — standing meetings scheduled decades in the future in fixed low-attention windows, carrying operator-agent traffic in the event body.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/command-and-control/' | relative_url }}">Command and Control</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/persistence/' | relative_url }}">Persistence</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1071/' | relative_url }}">T1071</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1546/' | relative_url }}">T1546</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/cav3rn/' | relative_url }}">CAV3RN</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/officeactivity/' | relative_url }}">OfficeActivity</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/emailevents/' | relative_url }}">EmailEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-outlook-calendar-c2-far-future-standing-meeting">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +63,11 @@ js:
 // event body. Reads OfficeActivity for calendar-item creation with far-future StartTime and
 // repeating cadence.
 // Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+// Tactics: Command and Control, Persistence
+// Techniques: T1071, T1546
+// Actors: CAV3RN
+// Platforms: Microsoft 365
+// Data: OfficeActivity, EmailEvents
 
 let lookback = 7d;
 let RenameWindowSec = 300;

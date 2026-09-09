@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //MTTR
+// Platforms: Microsoft Sentinel
+// Data: SecurityIncident
 SecurityIncident
 | where TimeGenerated > ago(90d)
 | where Status == "Closed"

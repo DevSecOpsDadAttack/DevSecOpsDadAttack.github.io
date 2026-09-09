@@ -1,5 +1,9 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Great for tracking PIM activations
+// Tactics: Privilege Escalation
+// Techniques: T1078.004, T1098.003
+// Platforms: Entra ID
+// Data: AuditLogs
 
 AuditLogs
 | where Category == "RoleManagement"

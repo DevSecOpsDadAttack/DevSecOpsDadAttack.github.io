@@ -1,4 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Tactics: Impact
+// Techniques: T1531
+// Platforms: Windows
+// Data: SecurityEvent
 SecurityEvent
 | where TimeGenerated > ago (90d)
 | where EventID == "4726"

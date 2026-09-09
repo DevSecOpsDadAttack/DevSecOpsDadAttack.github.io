@@ -1,5 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Devices that have at least one end-of-support (EOL/EOS) title or version
+// Tactics: Reconnaissance
+// Platforms: Endpoint
+// Data: DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities
 
 DeviceTvmSoftwareInventory
 | where isnotempty(DeviceName)

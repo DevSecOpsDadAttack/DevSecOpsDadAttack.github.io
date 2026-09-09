@@ -1,0 +1,47 @@
+---
+layout: page
+title: "Privilege Escalation"
+subtitle: "MITRE ATT&amp;CK Tactic — 4 queries"
+permalink: /kql-library/tag/privilege-escalation/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Tactic</p>
+  <h2>Privilege Escalation</h2>
+  <p>4 queries tagged with this tactic.
+  <br><a href="https://attack.mitre.org/tactics/TA0004/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-autogen-studio-agent-tool-execution-anomaly/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Autogen Studio Agent Tool Execution Anomaly</span>
+    </a>
+    <p class="kql-lib-query-desc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-first-time-admin-operation-user-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt First Time Admin Operation User Baseline</span>
+    </a>
+    <p class="kql-lib-query-desc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-suspicious-user-consented-oauth-app-grants/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Suspicious User Consented Oauth App Grants</span>
+    </a>
+    <p class="kql-lib-query-desc">'The backdoor you approved yourself' — OAuth application consents granting broad Graph permissions to unfamiliar apps. Focuses on CONSENT events, not the logins that follow.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/whos-activating-roles-via-pim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Whos Activating Roles Via PIM</span>
+    </a>
+    <p class="kql-lib-query-desc">PIM role activations from `AuditLogs` — useful for tracking privileged-role usage.</p>
+  </li>
+</ul>

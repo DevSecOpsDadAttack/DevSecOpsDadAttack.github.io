@@ -1,5 +1,9 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //New or Rarely Seen Domains
+// Tactics: Command and Control
+// Techniques: T1071.004
+// Platforms: Pi-hole
+// Data: pihole_CL
 let cutoff = ago(24h);
 let recent = pihole_CL
 | where TimeGenerated > cutoff

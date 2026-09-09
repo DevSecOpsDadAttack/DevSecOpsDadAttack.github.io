@@ -1,0 +1,75 @@
+---
+layout: page
+title: "Execution"
+subtitle: "MITRE ATT&amp;CK Tactic — 8 queries"
+permalink: /kql-library/tag/execution/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Tactic</p>
+  <h2>Execution</h2>
+  <p>8 queries tagged with this tactic.
+  <br><a href="https://attack.mitre.org/tactics/TA0002/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-autogen-studio-agent-tool-execution-anomaly/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Autogen Studio Agent Tool Execution Anomaly</span>
+    </a>
+    <p class="kql-lib-query-desc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-excel-xll-addin-spawning-shell-or-network/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Excel Xll Addin Spawning Shell Or Network</span>
+    </a>
+    <p class="kql-lib-query-desc">Excel loading an XLL add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-peoplesoft-process-spawning-unexpected-shell/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Peoplesoft Process Spawning Unexpected Shell</span>
+    </a>
+    <p class="kql-lib-query-desc">Oracle PeopleSoft server processes (psadmin, psappsrv, java) spawning cmd, bash, whoami, curl, or net — post-exploitation shape of a PeopleSoft RCE.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-remote-shell-command-arrival-over-wire/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Remote Shell Command Arrival Over Wire</span>
+    </a>
+    <p class="kql-lib-query-desc">Shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-sharepoint-toolshell-rce-encoded-command/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Sharepoint Toolshell Rce Encoded Command</span>
+    </a>
+    <p class="kql-lib-query-desc">SharePoint ToolShell RCE: encoded PowerShell arriving via SharePoint worker processes. Multi-token needles (`certutil -decode`) need `contains`, not `has_any`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-encoded-command-usage-across-fleet-time-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Encoded Command Usage Across Fleet Time Baseline</span>
+    </a>
+    <p class="kql-lib-query-desc">Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-config-modification-no-user-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Config Modification No User Context</span>
+    </a>
+    <p class="kql-lib-query-desc">npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — AsyncAPI-shaped supply-chain compromise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+    </a>
+    <p class="kql-lib-query-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+</ul>

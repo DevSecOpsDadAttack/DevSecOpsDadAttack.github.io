@@ -20,6 +20,27 @@ js:
 
 <p class="kql-lib-query-longdesc">Shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/execution/' | relative_url }}">Execution</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/lateral-movement/' | relative_url }}">Lateral Movement</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1021-002/' | relative_url }}">T1021.002</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1059/' | relative_url }}">T1059</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/deviceprocessevents/' | relative_url }}">DeviceProcessEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicelogonevents/' | relative_url }}">DeviceLogonEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-remote-shell-command-arrival-over-wire">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +58,10 @@ js:
 // observation that legitimate remote code execution rarely originates from an
 // outbound-then-inbound-executed script. Third-listener honorable mention pattern.
 // Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+// Tactics: Execution, Lateral Movement
+// Techniques: T1021.002, T1059
+// Platforms: Windows
+// Data: DeviceProcessEvents, DeviceLogonEvents
 
 let psexec_shells = DeviceProcessEvents
 | where Timestamp > ago(7d)

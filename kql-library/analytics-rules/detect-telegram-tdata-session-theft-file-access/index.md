@@ -20,6 +20,26 @@ js:
 
 <p class="kql-lib-query-longdesc">Theft of Telegram's tdata session directory by an unexpected process. Uses actual DeviceFileEvents ActionTypes (FileCreated/Modified) — `FileRead` doesn't exist.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/collection/' | relative_url }}">Collection</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1539/' | relative_url }}">T1539</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1005/' | relative_url }}">T1005</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicefileevents/' | relative_url }}">DeviceFileEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-telegram-tdata-session-theft-file-access">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +58,10 @@ js:
 // DeviceFileEvents doesn't emit generic reads. Uses FileCreated/FileModified against tdata's
 // actual write patterns instead.
 // Source: KQL Detection of the Week: The Field That Wasn't There (2026-08-26) — https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/
+// Tactics: Credential Access, Collection
+// Techniques: T1539, T1005
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 let lookback = 1d;
 // LEGITIMATE TELEGRAM PROCESSES. These are the processes that belong in

@@ -20,6 +20,28 @@ js:
 
 <p class="kql-lib-query-longdesc">Inventory of Spring Boot Actuator endpoints that answer 200 anywhere in your estate — flips the entity from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). Recovers the real management base path from traffic.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/reconnaissance/' | relative_url }}">Reconnaissance</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1595-002/' | relative_url }}">T1595.002</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1190/' | relative_url }}">T1190</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/web/' | relative_url }}">Web</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/im-websession/' | relative_url }}">_Im_WebSession</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-inventory-exposed-spring-boot-actuator-endpoints">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +60,10 @@ js:
 // real management base path from traffic, classifies P1-P5 by secret-bearing vs state-changing endpoint,
 // and requires ONE confirmed 200 in 30 days rather than a request-volume threshold.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Reconnaissance, Initial Access
+// Techniques: T1595.002, T1190
+// Platforms: Web, Multi-cloud
+// Data: _Im_WebSession, CommonSecurityLog
 
 let lookback = 30d;
 let ActuatorEndpoints = dynamic([

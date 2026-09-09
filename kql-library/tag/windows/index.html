@@ -1,0 +1,256 @@
+---
+layout: page
+title: "Windows"
+subtitle: "Platform — 34 queries"
+permalink: /kql-library/tag/windows/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Platform</p>
+  <h2>Windows</h2>
+  <p>34 queries tagged with this platform.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-dll-masquerading-as-microsoft-defender/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Dll Masquerading As Microsoft Defender</span>
+    </a>
+    <p class="kql-lib-query-desc">DLLs pretending to be Microsoft Defender via resource-level publisher/original-filename metadata — a Vidar Stealer TTP.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-excel-xll-addin-spawning-shell-or-network/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Excel Xll Addin Spawning Shell Or Network</span>
+    </a>
+    <p class="kql-lib-query-desc">Excel loading an XLL add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-peoplesoft-process-spawning-unexpected-shell/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Peoplesoft Process Spawning Unexpected Shell</span>
+    </a>
+    <p class="kql-lib-query-desc">Oracle PeopleSoft server processes (psadmin, psappsrv, java) spawning cmd, bash, whoami, curl, or net — post-exploitation shape of a PeopleSoft RCE.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-remote-shell-command-arrival-over-wire/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Remote Shell Command Arrival Over Wire</span>
+    </a>
+    <p class="kql-lib-query-desc">Shell command that arrived over the network — outbound-then-inbound-executed script pattern uncommon in legitimate remote code execution.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-sharepoint-toolshell-rce-encoded-command/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Sharepoint Toolshell Rce Encoded Command</span>
+    </a>
+    <p class="kql-lib-query-desc">SharePoint ToolShell RCE: encoded PowerShell arriving via SharePoint worker processes. Multi-token needles (`certutil -decode`) need `contains`, not `has_any`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-telegram-tdata-session-theft-file-access/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Telegram Tdata Session Theft File Access</span>
+    </a>
+    <p class="kql-lib-query-desc">Theft of Telegram's tdata session directory by an unexpected process. Uses actual DeviceFileEvents ActionTypes (FileCreated/Modified) — `FileRead` doesn't exist.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-unsigned-dll-load-verified-signing-state/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Unsigned Dll Load Verified Signing State</span>
+    </a>
+    <p class="kql-lib-query-desc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid-by-computer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Eventid By Computer</span>
+    </a>
+    <p class="kql-lib-query-desc">Breaks the cost of a specific Event ID out by originating computer (defaults to `EventID == 4672`).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/eventid-by-billedsize/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Eventid By Billedsize</span>
+    </a>
+    <p class="kql-lib-query-desc">Ingest volume in GB per Event ID from the `SecurityEvent` table.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-eventids-windows-securityevents/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Top 10 Eventids Windows Securityevents</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Event IDs from the `SecurityEvent` table over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-windowsevent-eventids/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Top 10 Windowsevent Eventids</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Event IDs from the `WindowsEvent` table (AMA-shipped) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-workstations-logging-direct-to-sentinel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Cost Of Workstations Logging Direct To Sentinel</span>
+    </a>
+    <p class="kql-lib-query-desc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-c2-beacon-by-connection-window-rhythm/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt C2 Beacon By Connection Window Rhythm</span>
+    </a>
+    <p class="kql-lib-query-desc">Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cav3rn-endpoint-local-log-file-artifact/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cav3rn Endpoint Local Log File Artifact</span>
+    </a>
+    <p class="kql-lib-query-desc">Endpoint-side hunt for Project CAV3RN's local file artifact (`logAzure.txt` and family) — config persistence written by the module.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-dns-aaaa-record-covert-recovery-channel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt DNS Aaaa Record Covert Recovery Channel</span>
+    </a>
+    <p class="kql-lib-query-desc">Project CAV3RN's DNS AAAA-record recovery channel — IPv6 addresses returned in AAAA queries that decode as ASCII or structured config.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-encoded-command-usage-across-fleet-time-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Encoded Command Usage Across Fleet Time Baseline</span>
+    </a>
+    <p class="kql-lib-query-desc">Encoded-command executions correlated across the fleet against a rolling per-host time baseline. TimeBucket alone as the join key — deliberately no DeviceId.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-inflated-file-payload-evading-size-based-av-scan/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Inflated File Payload Evading Size Based Av Scan</span>
+    </a>
+    <p class="kql-lib-query-desc">File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-config-modification-no-user-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Config Modification No User Context</span>
+    </a>
+    <p class="kql-lib-query-desc">npm postinstall/lifecycle scripts that modified config without a corresponding interactive user command — AsyncAPI-shaped supply-chain compromise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+    </a>
+    <p class="kql-lib-query-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">How Many Times Does This Eventid Fire From This Machine</span>
+    </a>
+    <p class="kql-lib-query-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Accounts Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Devices Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventid Fires The Most In A Month</span>
+    </a>
+    <p class="kql-lib-query-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+    </a>
+    <p class="kql-lib-query-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird</span>
+    </a>
+    <p class="kql-lib-query-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
+      <span class="kql-lib-query-title">Detect Spring Boot Heapdump Artifact On Disk</span>
+    </a>
+    <p class="kql-lib-query-desc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
+      <span class="kql-lib-query-title">File Activity Audit</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">RDP Logins Per Day Per User</span>
+    </a>
+    <p class="kql-lib-query-desc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whos Logging In And When</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/who-deleted-an-ad-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Who Deleted An AD User</span>
+    </a>
+    <p class="kql-lib-query-desc">Who deleted an AD user (`SecurityEvent` EventID `4726`) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/inventory-installed-npm-packages-with-lifecycle-scripts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-query-title">Inventory Installed Npm Packages With Lifecycle Scripts</span>
+    </a>
+    <p class="kql-lib-query-desc">Inventory of npm packages installed across your fleet that carry postinstall / preinstall / install lifecycle scripts — the finite, closable population for sins-of-the-grandfather class attacks.</p>
+  </li>
+</ul>

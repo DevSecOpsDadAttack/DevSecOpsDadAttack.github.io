@@ -4,6 +4,11 @@
 // event body. Reads OfficeActivity for calendar-item creation with far-future StartTime and
 // repeating cadence.
 // Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+// Tactics: Command and Control, Persistence
+// Techniques: T1071, T1546
+// Actors: CAV3RN
+// Platforms: Microsoft 365
+// Data: OfficeActivity, EmailEvents
 
 let lookback = 7d;
 let RenameWindowSec = 300;

@@ -1,5 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // GitHub: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+// Tactics: Discovery
+// Platforms: Windows
+// Data: SecurityEvent
 
 // Which Event IDs have recently spiked well beyond their 90-day historical baseline?
 // Returns EventID, baseline avg daily count, recent avg daily count, and the deviation

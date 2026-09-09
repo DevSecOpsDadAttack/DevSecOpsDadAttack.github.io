@@ -3,6 +3,11 @@
 // its baseline set — the 'AutoJack' agent-abuse shape where a legitimately-hosted agent becomes
 // the exploit primitive.
 // Source: KQL Detection of the Week: The Attack That Stayed Under the Threshold (2026-06-19) — https://devsecopsdadattack.com/2026-06-19-KQL-of-the-Week_-The-Attack-That-Stayed-Under-the-Threshold/
+// Tactics: Execution, Privilege Escalation
+// Techniques: T1204, T1651
+// Actors: AutoJack
+// Platforms: Azure, SaaS
+// Data: AzureDiagnostics, AutoGenStudio_CL
 
 let autogenProcesses = dynamic(["autogenstudio", "autogen_studio", "python.exe", "python", "python3"]);
 let autogenCmdlineTerms = dynamic(["autogen", "autogenstudio", "mcp", "websocket"]);

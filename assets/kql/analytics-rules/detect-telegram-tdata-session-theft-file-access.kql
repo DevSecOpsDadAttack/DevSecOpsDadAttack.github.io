@@ -4,6 +4,10 @@
 // DeviceFileEvents doesn't emit generic reads. Uses FileCreated/FileModified against tdata's
 // actual write patterns instead.
 // Source: KQL Detection of the Week: The Field That Wasn't There (2026-08-26) — https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/
+// Tactics: Credential Access, Collection
+// Techniques: T1539, T1005
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 let lookback = 1d;
 // LEGITIMATE TELEGRAM PROCESSES. These are the processes that belong in

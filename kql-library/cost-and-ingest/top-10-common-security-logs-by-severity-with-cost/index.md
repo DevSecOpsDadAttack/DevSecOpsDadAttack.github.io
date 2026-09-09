@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/network/' | relative_url }}">Network</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-common-security-logs-by-severity-with-cost">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +50,8 @@ js:
 // combos are driving your CEF/Syslog appliance cost.
 // For a Reason-focused enhanced variant with cost-tier emojis, see the -enhanced-by-reason file
 // in the same folder.
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 CommonSecurityLog

@@ -1,0 +1,67 @@
+---
+layout: page
+title: "DeviceNetworkEvents"
+subtitle: "Data Source — 7 queries"
+permalink: /kql-library/tag/devicenetworkevents/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>DeviceNetworkEvents</h2>
+  <p>7 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-ci-build-egress-to-first-seen-domain/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Ci Build Egress To First Seen Domain</span>
+    </a>
+    <p class="kql-lib-query-desc">CI/CD build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-excel-xll-addin-spawning-shell-or-network/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Excel Xll Addin Spawning Shell Or Network</span>
+    </a>
+    <p class="kql-lib-query-desc">Excel loading an XLL add-in that then spawns a shell or beacons out — the spreadsheet-as-shell malware delivery vector.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-blockchain-rpc-c2-dead-drop/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Blockchain Rpc C2 Dead Drop</span>
+    </a>
+    <p class="kql-lib-query-desc">C2 traffic hidden inside blockchain-RPC calls to public utilities (QuickNode, Alchemy) — 'the dead drop is a public utility.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-c2-beacon-by-connection-window-rhythm/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt C2 Beacon By Connection Window Rhythm</span>
+    </a>
+    <p class="kql-lib-query-desc">Low-and-slow C2 beacon hunt that counts distinct hourly time windows a process was connected in — not raw connection volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-storage-bucket-lookalike-references/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Storage Bucket Lookalike References</span>
+    </a>
+    <p class="kql-lib-query-desc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-dns-aaaa-record-covert-recovery-channel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt DNS Aaaa Record Covert Recovery Channel</span>
+    </a>
+    <p class="kql-lib-query-desc">Project CAV3RN's DNS AAAA-record recovery channel — IPv6 addresses returned in AAAA queries that decode as ASCII or structured config.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+    </a>
+    <p class="kql-lib-query-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+</ul>

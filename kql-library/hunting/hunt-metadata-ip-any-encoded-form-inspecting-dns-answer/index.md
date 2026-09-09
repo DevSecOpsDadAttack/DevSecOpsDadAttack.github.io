@@ -20,6 +20,25 @@ js:
 
 <p class="kql-lib-query-longdesc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/discovery/' | relative_url }}">Discovery</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1552-005/' | relative_url }}">T1552.005</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/multi-cloud/' | relative_url }}">Multi-cloud</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/dnsevents/' | relative_url }}">DnsEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-metadata-ip-any-encoded-form-inspecting-dns-answer">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +57,10 @@ js:
 // resolver level. Compares the resolved IP against 169.254.169.254 / fd00:ec2::254 rather than
 // trying to enumerate every writable form.
 // Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+// Tactics: Credential Access, Discovery
+// Techniques: T1552.005
+// Platforms: Multi-cloud
+// Data: DnsEvents
 
 let lookback = 1d;
 // ============================================================

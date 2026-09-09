@@ -1,6 +1,9 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This is great for tracking down activity for 'those' users (every company has one). 
 // Be warned, this is a powerful query that could get you into GDPR trouble as it returns a detailed account of user activity history, including browser URLs etc. 
+// Tactics: Discovery
+// Platforms: Microsoft 365, Entra ID
+// Data: OfficeActivity, SigninLogs, AuditLogs
 
 union DeviceEvents,DeviceNetworkEvents,DeviceFileEvents    //<-- query Device Events, DeviceNetworkEvents, and DeviceFileEvents tables and combine the results.
 | where RemoteUrl contains '' or FileOriginUrl != '' or FileOriginReferrerUrl != ''    //<-- show me every website URL, file URL, etc. that this user has touched.

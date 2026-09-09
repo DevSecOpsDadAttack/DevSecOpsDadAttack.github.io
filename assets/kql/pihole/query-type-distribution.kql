@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Determine the distribution of query types
+// Platforms: Pi-hole
+// Data: pihole_CL
 
 PiHole
 | summarize Count = count() by QueryType  // Aggregate counts by query type

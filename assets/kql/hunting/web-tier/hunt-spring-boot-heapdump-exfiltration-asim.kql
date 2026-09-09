@@ -3,6 +3,10 @@
 // as a path segment (position-independent) instead of hardcoding /actuator/heapdump — recovers the real
 // base path from traffic and ranks by response-size verdict, not by request volume.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Collection, Credential Access, Exfiltration
+// Techniques: T1552.001, T1005, T1567
+// Platforms: Web, Multi-cloud
+// Data: _Im_WebSession
 
 let lookback = 7d;
 // Endpoint IDs are fixed by Spring. The BASE PATH is not -- the ISC capture shows

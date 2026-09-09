@@ -1,0 +1,67 @@
+---
+layout: page
+title: "Multi-cloud"
+subtitle: "Platform — 7 queries"
+permalink: /kql-library/tag/multi-cloud/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Platform</p>
+  <h2>Multi-cloud</h2>
+  <p>7 queries tagged with this platform.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-blockchain-rpc-c2-dead-drop/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Blockchain Rpc C2 Dead Drop</span>
+    </a>
+    <p class="kql-lib-query-desc">C2 traffic hidden inside blockchain-RPC calls to public utilities (QuickNode, Alchemy) — 'the dead drop is a public utility.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-storage-bucket-lookalike-references/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Storage Bucket Lookalike References</span>
+    </a>
+    <p class="kql-lib-query-desc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+    </a>
+    <p class="kql-lib-query-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+    </a>
+    <p class="kql-lib-query-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/inventory-exposed-spring-boot-actuator-endpoints/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-query-title">Inventory Exposed Spring Boot Actuator Endpoints</span>
+    </a>
+    <p class="kql-lib-query-desc">Inventory of Spring Boot Actuator endpoints that answer 200 anywhere in your estate — flips the entity from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). Recovers the real management base path from traffic.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/which-devices-are-internet-facing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-query-title">Which Devices Are Internet Facing</span>
+    </a>
+    <p class="kql-lib-query-desc">Identify internet-facing devices — walks through what "public" actually means for both IPv4 and IPv6 before matching.</p>
+  </li>
+</ul>

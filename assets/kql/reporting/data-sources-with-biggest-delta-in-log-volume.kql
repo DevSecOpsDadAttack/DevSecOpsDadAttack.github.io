@@ -4,6 +4,8 @@
 // -------------------------------
 // Cost per GB for Microsoft Sentinel ingest
 // (Update this to match your region’s pricing)
+// Platforms: Microsoft Sentinel
+// Data: Usage
 let CostPerGB = 4.30;
 // Define the end of the current reporting window (now)
 let CurrentEnd = now();

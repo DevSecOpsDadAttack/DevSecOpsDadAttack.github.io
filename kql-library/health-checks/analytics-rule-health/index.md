@@ -20,6 +20,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Analytics Rules that ran successfully in the last 90 days but never produced an alert — candidates for review or tuning.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityalert/' | relative_url }}">SecurityAlert</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-analytics-rule-health">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -33,6 +43,8 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: SecurityAlert
 let activeRules = SentinelHealth
 | where TimeGenerated >= ago(90d)
 | where SentinelResourceType == "Analytics Rule" and Status == "Success"

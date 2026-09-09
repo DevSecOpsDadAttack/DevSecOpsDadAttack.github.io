@@ -1,0 +1,39 @@
+---
+layout: page
+title: "Syslog"
+subtitle: "Data Source — 3 queries"
+permalink: /kql-library/tag/syslog/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>Syslog</h2>
+  <p>3 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-successful-login-following-distributed-ssh-brute-force/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Successful Login Following Distributed Ssh Brute Force</span>
+    </a>
+    <p class="kql-lib-query-desc">Successful SSH login against a host that just weathered a distributed brute-force campaign. Pair with the Act-I hunt to know if the lightning hit anything.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-syslog-events-by-severity/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Syslog Events By Severity</span>
+    </a>
+    <p class="kql-lib-query-desc">Cost of Syslog events grouped by severity level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-distributed-ssh-brute-force-per-target/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Distributed Ssh Brute Force Per Target</span>
+    </a>
+    <p class="kql-lib-query-desc">SSH brute-force hunt that pivots on the target host, not the source IP — catches distributed attacks that stay under per-source thresholds by using thousands of IPs.</p>
+  </li>
+</ul>

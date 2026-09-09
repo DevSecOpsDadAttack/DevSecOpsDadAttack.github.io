@@ -4,6 +4,10 @@
 // request hit the endpoint even when the web tier didn't log the URL. Classifies web-endpoint vs OOM
 // vs operator origins, and lists nearby operator diagnostic runs as a triage lane — not an exclusion.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Collection, Credential Access
+// Techniques: T1552.001, T1005
+// Platforms: Linux, Windows
+// Data: DeviceFileEvents
 
 let lookback = 30d;
 // Spring's HeapDumpWebEndpoint: createTempFile("heapdump" + yyyy-MM-dd-HH-mm

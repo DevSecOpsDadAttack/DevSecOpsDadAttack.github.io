@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Estimated dollar cost of a single table over a chosen window, given your effective per-GB rate.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-a-table">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +49,8 @@ js:
 // The rate for your region can be found here: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the rate variable
 // This doesn't have to be over 30 days, you can adjust the TimeGenerated parameter to a a week (7d), a day (1d), or even hourly (1h) etc.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 let rate = 4.30;                                  //<-- Effective per GB Price in EastUS (LAW & Sentinel per GB cost combined)
 SecurityEvent                                     //<-- We're querying the SecurityEvent table in this one

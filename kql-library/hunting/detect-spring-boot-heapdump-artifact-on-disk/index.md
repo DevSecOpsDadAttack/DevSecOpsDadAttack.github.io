@@ -21,6 +21,27 @@ js:
 
 <p class="kql-lib-query-longdesc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/collection/' | relative_url }}">Collection</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1552-001/' | relative_url }}">T1552.001</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1005/' | relative_url }}">T1005</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/linux/' | relative_url }}">Linux</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicefileevents/' | relative_url }}">DeviceFileEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-spring-boot-heapdump-artifact-on-disk">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -39,6 +60,10 @@ js:
 // request hit the endpoint even when the web tier didn't log the URL. Classifies web-endpoint vs OOM
 // vs operator origins, and lists nearby operator diagnostic runs as a triage lane — not an exclusion.
 // Source: KQL Detection of the Week: A Heap of Trouble (2026-08-03) — https://devsecopsdadattack.com/2026-08-03-KQL-Detection-of-the-Week_-A-Heap-of-Trouble-Detecting-Spring-Boot-Heapdump-Theft-When-the-Exfiltration-Is-a-GET-Request_/
+// Tactics: Collection, Credential Access
+// Techniques: T1552.001, T1005
+// Platforms: Linux, Windows
+// Data: DeviceFileEvents
 
 let lookback = 30d;
 // Spring's HeapDumpWebEndpoint: createTempFile("heapdump" + yyyy-MM-dd-HH-mm

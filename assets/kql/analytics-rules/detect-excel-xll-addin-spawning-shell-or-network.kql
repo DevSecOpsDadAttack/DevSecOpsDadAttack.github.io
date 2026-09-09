@@ -3,6 +3,10 @@
 // spreadsheet-as-shell malware delivery vector. Weekly-freshest detection built around Excel.exe
 // as InitiatingProcess and XLL file activity as the trigger.
 // Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+// Tactics: Execution, Initial Access
+// Techniques: T1204.002, T1137.006
+// Platforms: Windows
+// Data: DeviceProcessEvents, DeviceNetworkEvents
 
 let lookback = 1h;
 let csvUploads = DeviceFileEvents

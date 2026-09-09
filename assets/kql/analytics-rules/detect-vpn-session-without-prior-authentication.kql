@@ -4,6 +4,10 @@
 // join + windowed countif instead of leftanti with range predicates (the latter silently
 // suppresses alerts when any same-IP auth exists anywhere in the lookback).
 // Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+// Tactics: Defense Evasion, Initial Access
+// Techniques: T1556, T1078
+// Platforms: Network
+// Data: CommonSecurityLog
 
 let lookback = 1d;
 let window = 5m;

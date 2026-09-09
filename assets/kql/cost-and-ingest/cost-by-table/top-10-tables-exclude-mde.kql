@@ -4,6 +4,8 @@
 // instead of scanning every row in every table. Use this by default; only fall back to the
 // `search *` variant (top-10-tables-exclude-mde-search-star.kql) if you need per-table event
 // counts alongside billable volume.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 let CostPerGB = 4.30;   // <-- Set to Effective Cost per GB for your region: https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/
 Usage

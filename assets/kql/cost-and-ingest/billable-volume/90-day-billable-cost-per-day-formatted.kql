@@ -3,6 +3,8 @@
 // ('$X.XX / Day' and 'X.XXGB / Day'). Best for tables and dashboards where readability
 // matters more than plottability — the string formatting means these columns are not
 // chart-friendly. For a numeric CostUSD variant, see 90-day-billable-cost-per-day.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage                                                                                   // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                        // <--Query the last 90 days

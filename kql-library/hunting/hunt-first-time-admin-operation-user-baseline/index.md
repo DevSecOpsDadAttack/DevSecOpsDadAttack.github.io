@@ -20,6 +20,27 @@ js:
 
 <p class="kql-lib-query-longdesc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/privilege-escalation/' | relative_url }}">Privilege Escalation</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/persistence/' | relative_url }}">Persistence</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1078/' | relative_url }}">T1078</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1098/' | relative_url }}">T1098</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/sharepoint/' | relative_url }}">SharePoint</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/officeactivity/' | relative_url }}">OfficeActivity</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-first-time-admin-operation-user-baseline">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +58,10 @@ js:
 // outside that set successfully performs one — 'the admin who has never administered.' First-seen
 // baseline structurally similar to first-country-seen for OAuth tokens.
 // Source: KQL Detection of the Week: The Query That Wrote Itself Eight Times (2026-08-18) — https://devsecopsdadattack.com/2026-08-18-KQL-Detection-of-the-Week-The-Query-That-Wrote-Itself-Eight-Times/
+// Tactics: Privilege Escalation, Persistence
+// Techniques: T1078, T1098
+// Platforms: Microsoft 365, SharePoint
+// Data: OfficeActivity
 
 let baseline_window = 60d;
 let detection_window = 1d;

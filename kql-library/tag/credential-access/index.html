@@ -1,0 +1,124 @@
+---
+layout: page
+title: "Credential Access"
+subtitle: "MITRE ATT&amp;CK Tactic — 15 queries"
+permalink: /kql-library/tag/credential-access/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Tactic</p>
+  <h2>Credential Access</h2>
+  <p>15 queries tagged with this tactic.
+  <br><a href="https://attack.mitre.org/tactics/TA0006/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-oauth-token-used-from-novel-country/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Oauth Token Used From Novel Country</span>
+    </a>
+    <p class="kql-lib-query-desc">OAuth token used from a country the user has never signed in from — ToddyCat/Umbrij downstream shape where the token itself is the payload.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-successful-login-following-distributed-ssh-brute-force/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Successful Login Following Distributed Ssh Brute Force</span>
+    </a>
+    <p class="kql-lib-query-desc">Successful SSH login against a host that just weathered a distributed brute-force campaign. Pair with the Act-I hunt to know if the lightning hit anything.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-telegram-tdata-session-theft-file-access/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Telegram Tdata Session Theft File Access</span>
+    </a>
+    <p class="kql-lib-query-desc">Theft of Telegram's tdata session directory by an unexpected process. Uses actual DeviceFileEvents ActionTypes (FileCreated/Modified) — `FileRead` doesn't exist.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/failed-login-attempts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Failed Logins</span>
+      <span class="kql-lib-query-title">Failed Login Attempts</span>
+    </a>
+    <p class="kql-lib-query-desc">3+ failed sign-ins (`ResultType == 50126` — invalid username or password) for the same UPN within a 2-minute window. Written for a demo that pairs with a Logic App to auto-disable or lock the account.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-low-and-slow-password-spray/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Password Spray</span>
+      <span class="kql-lib-query-title">Detect Low And Slow Password Spray</span>
+    </a>
+    <p class="kql-lib-query-desc">Low-and-slow spray pattern (Storm-0940-shaped): many unique users from the *same* IP in a day, with roughly one failed attempt per user; includes optional legacy-user-agent hints.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-wide-low-volume-password-sprays/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Password Spray</span>
+      <span class="kql-lib-query-title">Detect Wide Low Volume Password Sprays</span>
+    </a>
+    <p class="kql-lib-query-desc">Wide, low-volume spray: from a single IP, exactly one failed attempt per user in a day, but against many different users.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-distributed-ssh-brute-force-per-target/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Distributed Ssh Brute Force Per Target</span>
+    </a>
+    <p class="kql-lib-query-desc">SSH brute-force hunt that pivots on the target host, not the source IP — catches distributed attacks that stay under per-source thresholds by using thousands of IPs.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+    </a>
+    <p class="kql-lib-query-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-teams-phishing-then-suspicious-login-correlation/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Teams Phishing Then Suspicious Login Correlation</span>
+    </a>
+    <p class="kql-lib-query-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
+      <span class="kql-lib-query-title">Detect Spring Boot Heapdump Artifact On Disk</span>
+    </a>
+    <p class="kql-lib-query-desc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whos Logging In And When</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+    </a>
+    <p class="kql-lib-query-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+    </a>
+    <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
+  </li>
+</ul>

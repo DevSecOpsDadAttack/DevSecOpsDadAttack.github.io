@@ -1,0 +1,53 @@
+---
+layout: page
+title: "Azure"
+subtitle: "Platform — 5 queries"
+permalink: /kql-library/tag/azure/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Platform</p>
+  <h2>Azure</h2>
+  <p>5 queries tagged with this platform.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-autogen-studio-agent-tool-execution-anomaly/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Autogen Studio Agent Tool Execution Anomaly</span>
+    </a>
+    <p class="kql-lib-query-desc">AutoGen Studio-hosted AI agent taking code-execution or sensitive-tool actions outside its baseline set — the 'AutoJack' agent-abuse shape.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-ci-build-egress-to-first-seen-domain/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Ci Build Egress To First Seen Domain</span>
+    </a>
+    <p class="kql-lib-query-desc">CI/CD build process reaching out to a domain never seen from your build fleet before — 'the build that called a stranger.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-same-session/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Diagnostic Deletion Then Tenant Activity Same Session</span>
+    </a>
+    <p class="kql-lib-query-desc">Enhanced log-suppression sequence detection that further requires the follow-on activity to share the same CallerIpAddress — same session, not just same identity.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-diagnostic-deletion-then-tenant-activity-sequence/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Diagnostic Deletion Then Tenant Activity Sequence</span>
+    </a>
+    <p class="kql-lib-query-desc">T1562.008 sequence: Azure diagnostic-setting deletion followed by any activity from the same Caller within 60 minutes.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-azure-diagnostic-setting-deletions/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Azure Diagnostic Setting Deletions</span>
+    </a>
+    <p class="kql-lib-query-desc">Deletions of Azure diagnostic settings — the moment an attacker turns off logging (T1562.008). Step 1 of a two-step sequence.</p>
+  </li>
+</ul>

@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-workstations-logging-direct-to-sentinel">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +49,8 @@ js:
 // For this query, the ingestioncost variable is manually configured based on the workspace's region.
 // Go here for effective cost per GB based on your region: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 let rate=3.96;                                                                  //<-- Plug in Effective per GB Rate Here)
 Heartbeat                                                                       //<-- Query the Heartbeat table

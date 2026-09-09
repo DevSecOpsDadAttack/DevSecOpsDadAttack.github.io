@@ -3,6 +3,8 @@
 // Use this variant when you want the raw numbers — CostUSD stays a float so it plays nicely with
 // dashboards and downstream aggregation. For a display-friendly variant with cost-tier emojis,
 // see top-10-log-sources-with-cost-enhanced.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 Usage

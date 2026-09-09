@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Ingest volume in GB per Event ID from the `SecurityEvent` table.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-eventid-by-billedsize">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -35,6 +46,8 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //Return the ingest volume in GB for a given EventID from the SecurityEvent table
+// Platforms: Windows, Microsoft Sentinel
+// Data: SecurityEvent
 
 SecurityEvent		             		        //<-- Query the SecurityEvent table
 | where TimeGenerated > ago(1h)		            	//<-- Query the last hour

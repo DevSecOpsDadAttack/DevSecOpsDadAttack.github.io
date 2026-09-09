@@ -20,6 +20,29 @@ js:
 
 <p class="kql-lib-query-longdesc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/initial-access/' | relative_url }}">Initial Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1078/' | relative_url }}">T1078</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1110/' | relative_url }}">T1110</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/entra-id/' | relative_url }}">Entra ID</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/auditlogs/' | relative_url }}">AuditLogs</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityalert/' | relative_url }}">SecurityAlert</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-credential-compromise-signin-audit-alert-three-table">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +61,10 @@ js:
 // AuditLogs, and SecurityAlert into one row-per-user timeline instead of leaving analysts to hop
 // tables.
 // Source: KQL Detection of the Week: The Field That Wasn't There (2026-08-26) — https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/
+// Tactics: Credential Access, Initial Access
+// Techniques: T1078, T1110
+// Platforms: Entra ID, Microsoft 365
+// Data: SigninLogs, AuditLogs, SecurityAlert
 
 let lookback = 24h;
 let failWindow = 30m;

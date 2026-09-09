@@ -21,6 +21,16 @@ js:
 
 <p class="kql-lib-query-longdesc">Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-log-sources-with-cost-enhanced">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -38,6 +48,8 @@ js:
 // indicator and a formatted '$X.XX' cost column. Best for tables and human-readable dashboards.
 // For a numeric CostUSD variant that plays nicely with charts and downstream aggregation,
 // see top-10-log-sources-with-cost.kql.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage
 | where TimeGenerated > ago(30d)

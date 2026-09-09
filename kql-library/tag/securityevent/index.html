@@ -1,0 +1,144 @@
+---
+layout: page
+title: "SecurityEvent"
+subtitle: "Data Source — 18 queries"
+permalink: /kql-library/tag/securityevent/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>SecurityEvent</h2>
+  <p>18 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/gb-per-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">GB Per Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Ingest volume in GB for a single table (defaults to `SecurityEvent`, swap as needed).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid-by-computer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Eventid By Computer</span>
+    </a>
+    <p class="kql-lib-query-desc">Breaks the cost of a specific Event ID out by originating computer (defaults to `EventID == 4672`).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/eventid-by-billedsize/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Eventid By Billedsize</span>
+    </a>
+    <p class="kql-lib-query-desc">Ingest volume in GB per Event ID from the `SecurityEvent` table.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-eventids-windows-securityevents/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Top 10 Eventids Windows Securityevents</span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most expensive Event IDs from the `SecurityEvent` table over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-workstations-logging-direct-to-sentinel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Cost Of Workstations Logging Direct To Sentinel</span>
+    </a>
+    <p class="kql-lib-query-desc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">How Many Times Does This Eventid Fire From This Machine</span>
+    </a>
+    <p class="kql-lib-query-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Accounts Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Devices Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventid Fires The Most In A Month</span>
+    </a>
+    <p class="kql-lib-query-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+    </a>
+    <p class="kql-lib-query-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird</span>
+    </a>
+    <p class="kql-lib-query-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">RDP Logins Per Day Per User</span>
+    </a>
+    <p class="kql-lib-query-desc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whos Logging In And When</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/who-deleted-an-ad-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Who Deleted An AD User</span>
+    </a>
+    <p class="kql-lib-query-desc">Who deleted an AD user (`SecurityEvent` EventID `4726`) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/reference/sort-function-result-comparison/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Reference</span>
+      <span class="kql-lib-query-title">Sort Function Result Comparison</span>
+    </a>
+    <p class="kql-lib-query-desc">Side-by-side of `sort by` vs `top` on a cost-per-EventID query, showing that both produce identical results in this case — a small worked example for anyone learning KQL sort semantics.</p>
+  </li>
+</ul>

@@ -4,6 +4,10 @@
 // IsSigned/SigningStatus fields against the actual verification result rather than treating a null
 // hash as evidence of signing state.
 // Source: KQL Detection of the Week: The String Is Not the Thing (2026-09-01) — https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/
+// Tactics: Defense Evasion, Persistence
+// Techniques: T1574.002, T1027
+// Platforms: Windows
+// Data: DeviceImageLoadEvents
 
 let lookback = 7d;
 let followOnWindow = 5m;

@@ -3,6 +3,10 @@
 // observation that legitimate remote code execution rarely originates from an
 // outbound-then-inbound-executed script. Third-listener honorable mention pattern.
 // Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+// Tactics: Execution, Lateral Movement
+// Techniques: T1021.002, T1059
+// Platforms: Windows
+// Data: DeviceProcessEvents, DeviceLogonEvents
 
 let psexec_shells = DeviceProcessEvents
 | where Timestamp > ago(7d)

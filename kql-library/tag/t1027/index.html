@@ -1,0 +1,33 @@
+---
+layout: page
+title: "T1027"
+subtitle: "MITRE ATT&amp;CK Technique — 2 queries"
+permalink: /kql-library/tag/t1027/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1027</h2>
+  <p>2 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1027/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-unsigned-dll-load-verified-signing-state/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Unsigned Dll Load Verified Signing State</span>
+    </a>
+    <p class="kql-lib-query-desc">Unsigned DLL loads, using IsSigned/SigningStatus rather than treating an empty SHA256 as unsigned (the field is documented as usually-populated, not always).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+</ul>

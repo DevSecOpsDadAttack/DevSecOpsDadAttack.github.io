@@ -1,0 +1,74 @@
+---
+layout: page
+title: "SigninLogs"
+subtitle: "Data Source — 8 queries"
+permalink: /kql-library/tag/signinlogs/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>SigninLogs</h2>
+  <p>8 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-oauth-token-used-from-novel-country/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Oauth Token Used From Novel Country</span>
+    </a>
+    <p class="kql-lib-query-desc">OAuth token used from a country the user has never signed in from — ToddyCat/Umbrij downstream shape where the token itself is the payload.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-smartconnect-session-without-signin/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Smartconnect Session Without Signin</span>
+    </a>
+    <p class="kql-lib-query-desc">Microsoft SmartConnect (CVE-2026-55040) sessions lacking a corresponding sign-in event — absence-detection with windowed leftouter + countif.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/failed-login-attempts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Failed Logins</span>
+      <span class="kql-lib-query-title">Failed Login Attempts</span>
+    </a>
+    <p class="kql-lib-query-desc">3+ failed sign-ins (`ResultType == 50126` — invalid username or password) for the same UPN within a 2-minute window. Written for a demo that pairs with a Logic App to auto-disable or lock the account.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-low-and-slow-password-spray/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Password Spray</span>
+      <span class="kql-lib-query-title">Detect Low And Slow Password Spray</span>
+    </a>
+    <p class="kql-lib-query-desc">Low-and-slow spray pattern (Storm-0940-shaped): many unique users from the *same* IP in a day, with roughly one failed attempt per user; includes optional legacy-user-agent hints.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-wide-low-volume-password-sprays/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Password Spray</span>
+      <span class="kql-lib-query-title">Detect Wide Low Volume Password Sprays</span>
+    </a>
+    <p class="kql-lib-query-desc">Wide, low-volume spray: from a single IP, exactly one failed attempt per user in a day, but against many different users.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-teams-phishing-then-suspicious-login-correlation/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Teams Phishing Then Suspicious Login Correlation</span>
+    </a>
+    <p class="kql-lib-query-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whats-this-user-doing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whats This User Doing</span>
+    </a>
+    <p class="kql-lib-query-desc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
+  </li>
+</ul>

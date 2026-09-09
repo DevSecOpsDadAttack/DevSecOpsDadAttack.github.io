@@ -1,0 +1,96 @@
+---
+layout: page
+title: "Discovery"
+subtitle: "MITRE ATT&amp;CK Tactic — 11 queries"
+permalink: /kql-library/tag/discovery/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Tactic</p>
+  <h2>Discovery</h2>
+  <p>11 queries tagged with this tactic.
+  <br><a href="https://attack.mitre.org/tactics/TA0007/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-metadata-ip-any-encoded-form-inspecting-dns-answer/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Metadata IP Any Encoded Form Inspecting DNS Answer</span>
+    </a>
+    <p class="kql-lib-query-desc">Inspects what DNS actually resolved to (the Answer field), not what the caller wrote — catches every obfuscated string form of the metadata IPs at the resolver level.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">How Many Times Does This Eventid Fire From This Machine</span>
+    </a>
+    <p class="kql-lib-query-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Accounts Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Devices Are Throwing This Eventid</span>
+    </a>
+    <p class="kql-lib-query-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventid Fires The Most In A Month</span>
+    </a>
+    <p class="kql-lib-query-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+    </a>
+    <p class="kql-lib-query-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird</span>
+    </a>
+    <p class="kql-lib-query-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/file-activity-audit/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
+      <span class="kql-lib-query-title">File Activity Audit</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped file activity (open, read, modify, delete, create) by user and device. Written for a client that needed to demonstrate this capability to an auditor.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/rdp-logins-per-day-per-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">RDP Logins Per Day Per User</span>
+    </a>
+    <p class="kql-lib-query-desc">RDP logins per user per day (30d) rendered as a timechart. Use for baselining "normal" login volume before hunting for anomalies.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whats-this-user-doing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whats This User Doing</span>
+    </a>
+    <p class="kql-lib-query-desc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
+  </li>
+</ul>

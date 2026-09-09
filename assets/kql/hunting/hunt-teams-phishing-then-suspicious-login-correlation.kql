@@ -3,6 +3,10 @@
 // 'the phishing message that correlates with every login.' Deals with the ExternalAccess field not
 // being populated in every tenant by falling back to sender-domain-outside-org detection.
 // Source: KQL Detection of the Week: The Field That Wasn't There (2026-08-26) — https://devsecopsdadattack.com/2026-08-26-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/
+// Tactics: Initial Access, Credential Access
+// Techniques: T1566.003, T1078
+// Platforms: Microsoft 365, Entra ID
+// Data: OfficeActivity, SigninLogs
 
 let baseline_window = 30d;
 let detection_window = 24h;

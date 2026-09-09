@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Top `CommonSecurityLog` rows by `Reason` and `LogSeverity` (90d), ranked by event count, with an emoji cost-tier column. Filters out empty/`N/A` reasons.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/network/' | relative_url }}">Network</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/commonsecuritylog/' | relative_url }}">CommonSecurityLog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-top-10-common-security-logs-by-reason-with-cost-enhanced">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -40,6 +51,8 @@ js:
 // contain common noise like "N/A" — those are filtered out here).
 // For a DeviceVendor/DeviceProduct-focused variant with numeric cost, see
 // top-10-common-security-logs-by-severity-with-cost.kql.
+// Platforms: Network, Microsoft Sentinel
+// Data: CommonSecurityLog
 
 CommonSecurityLog
 | where TimeGenerated > ago(90d)

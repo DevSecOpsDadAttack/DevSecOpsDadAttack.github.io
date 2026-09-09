@@ -20,6 +20,26 @@ js:
 
 <p class="kql-lib-query-longdesc">Employees using Outlook on corporate machines to send email via third-party SMTP servers, with attachments — a common data-exfiltration pattern.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/exfiltration/' | relative_url }}">Exfiltration</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1567/' | relative_url }}">T1567</a>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1048-003/' | relative_url }}">T1048.003</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-365/' | relative_url }}">Microsoft 365</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/emailevents/' | relative_url }}">EmailEvents</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/emailattachmentinfo/' | relative_url }}">EmailAttachmentInfo</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-external-email-accounts-synced-to-outlook-sending-attachments">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -36,6 +56,10 @@ js:
 //
 // This query is written in Kusto Query Language (KQL) and is designed to identify employees who are using Outlook on their work machines to
 // send emails via third-party SMTP servers, potentially with attachments.
+// Tactics: Exfiltration
+// Techniques: T1567, T1048.003
+// Platforms: Microsoft 365
+// Data: EmailEvents, EmailAttachmentInfo
 
 let corpDomains=dynamic(["yourDomain", "subsidiary.org"]); // internal domains
 let mailDomains=dynamic(["smtp.gmail.com","smtp.mail.yahoo.com","smtp.zoho.com","smtp.mail.me.com"]); // 3rd-party SMTP

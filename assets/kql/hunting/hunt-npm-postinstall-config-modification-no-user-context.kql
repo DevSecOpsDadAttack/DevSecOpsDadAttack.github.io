@@ -3,6 +3,11 @@
 // interactive user command — the AsyncAPI-shaped supply-chain compromise where the config change
 // is real but no human ever asked for it.
 // Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+// Tactics: Initial Access, Execution, Persistence
+// Techniques: T1195.002, T1546
+// Actors: AsyncAPI
+// Platforms: Linux, Windows
+// Data: DeviceProcessEvents, DeviceFileEvents
 
 DeviceFileEvents
 | where TimeGenerated > ago(1d)

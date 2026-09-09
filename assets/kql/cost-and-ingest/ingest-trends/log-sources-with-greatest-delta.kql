@@ -1,4 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 //This query:
 //-->Finds the exact time ranges for comparison periods (previous 30 days vs current 30 days)

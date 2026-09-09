@@ -21,6 +21,17 @@ js:
 
 <p class="kql-lib-query-longdesc">Cost of Syslog events grouped by severity level.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/linux/' | relative_url }}">Linux</a>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/syslog/' | relative_url }}">Syslog</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-syslog-events-by-severity">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +48,8 @@ js:
 // Calculate your effective Per GB Price https://azure.microsoft.com/en-ca/pricing/details/microsoft-sentinel/?cdn=disable
 // If your environment has different commitment tiers for your workspace and sentinel instances, follow this guide to calculate your effective Per GB rate: 
 // https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/
+// Platforms: Linux, Microsoft Sentinel
+// Data: Syslog
 
 let rate = 2.53;  //<-- Effective Cost per GB (500GB / Day Commitment Tier in EastUS)
 Syslog                                            //<-- Query the Syslog table

@@ -1,0 +1,40 @@
+---
+layout: page
+title: "T1552.001"
+subtitle: "MITRE ATT&amp;CK Technique — 3 queries"
+permalink: /kql-library/tag/t1552-001/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1552.001</h2>
+  <p>3 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1552/001/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
+      <span class="kql-lib-query-title">Detect Spring Boot Heapdump Artifact On Disk</span>
+    </a>
+    <p class="kql-lib-query-desc">Detects Spring Boot Actuator heap-dump theft by the artifact Spring writes to disk during the request (`heapdump<lt;timestamp>gt;[-live]<lt;digits>gt;.hprof`). The filename is proof an HTTP request hit the endpoint even when the web tier didn't log the URL.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-asim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Asim</span>
+    </a>
+    <p class="kql-lib-query-desc">Hunts Spring Boot Actuator heap-dump exfiltration in ASIM Web Session data by matching the endpoint ID as a path segment (position-independent) instead of hardcoding `/actuator/heapdump`. Recovers the real base path from traffic and ranks by response-size verdict.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+    </a>
+    <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
+  </li>
+</ul>

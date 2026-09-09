@@ -3,6 +3,10 @@
 // — the classic absence-detection pattern applied to the SmartConnect auth-bypass. Uses windowed
 // leftouter + countif for reliable time-bounded absence.
 // Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+// Tactics: Defense Evasion, Initial Access
+// Techniques: T1550, T1078.004
+// Platforms: Microsoft 365, SharePoint
+// Data: OfficeActivity, SigninLogs, AADNonInteractiveUserSignInLogs
 
 let accessWindow = 1d;
 let signinWindow = 2d;

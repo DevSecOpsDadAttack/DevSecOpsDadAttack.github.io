@@ -3,6 +3,10 @@
 // authenticated routes without going through the expected auth path. Catches the exploitation of
 // the specific middleware weakness by shape rather than by known payload.
 // Source: KQL Detection of the Week: A Name Is a Claim, Not a Fact (2026-06-29) — https://devsecopsdadattack.com/2026-06-29-KQL-Detection-of-the-Week_-A-Name-Is-a-Claim_-Not-a-Fact/
+// Tactics: Initial Access, Defense Evasion
+// Techniques: T1190, T1550
+// Platforms: Web, Linux
+// Data: _Im_WebSession, CommonSecurityLog
 
 CommonSecurityLog
 | where TimeGenerated > ago(24h)

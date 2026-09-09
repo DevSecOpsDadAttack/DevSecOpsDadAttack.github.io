@@ -3,6 +3,10 @@
 // Graph permissions to an app the user has never seen before. Focuses on the CONSENT event (the
 // identity backdoor being installed) rather than the login events that follow.
 // Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+// Tactics: Persistence, Privilege Escalation
+// Techniques: T1550.001, T1098.003
+// Platforms: Entra ID, Microsoft 365
+// Data: AuditLogs
 
 let lookback = 1d;
 let googleKeywords = dynamic(["google", "gmail", "googleapis", "workspace"]);

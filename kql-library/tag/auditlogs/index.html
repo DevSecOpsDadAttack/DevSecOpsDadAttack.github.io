@@ -1,0 +1,46 @@
+---
+layout: page
+title: "AuditLogs"
+subtitle: "Data Source — 4 queries"
+permalink: /kql-library/tag/auditlogs/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>AuditLogs</h2>
+  <p>4 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-suspicious-user-consented-oauth-app-grants/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Suspicious User Consented Oauth App Grants</span>
+    </a>
+    <p class="kql-lib-query-desc">'The backdoor you approved yourself' — OAuth application consents granting broad Graph permissions to unfamiliar apps. Focuses on CONSENT events, not the logins that follow.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whats-this-user-doing/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whats This User Doing</span>
+    </a>
+    <p class="kql-lib-query-desc">Unions `DeviceEvents`, `DeviceNetworkEvents`, and `DeviceFileEvents` to give a timestamped activity trace for a single user, including URLs touched. Swiss-army knife for user investigations — includes a Facebook-usage example.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/whos-activating-roles-via-pim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Whos Activating Roles Via PIM</span>
+    </a>
+    <p class="kql-lib-query-desc">PIM role activations from `AuditLogs` — useful for tracking privileged-role usage.</p>
+  </li>
+</ul>

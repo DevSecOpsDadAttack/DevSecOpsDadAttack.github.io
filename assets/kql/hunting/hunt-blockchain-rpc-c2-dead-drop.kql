@@ -4,6 +4,10 @@
 // commands. Looks for anomalous RPC method sequences and payload sizes to services that are
 // legitimately used but rarely by dev workstations.
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Command and Control
+// Techniques: T1071.001, T1102
+// Platforms: Endpoint, Multi-cloud
+// Data: DeviceNetworkEvents
 
 let lookback  = 14d;   // findings window
 let baseline  = 45d;   // total window; baseline is (45d .. 14d ago)

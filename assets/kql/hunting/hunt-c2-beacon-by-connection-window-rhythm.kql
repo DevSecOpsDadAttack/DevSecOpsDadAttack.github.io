@@ -4,6 +4,11 @@
 // spread-over-time and hide under any volume threshold. Filters to user-writable paths
 // (Downloads/Temp/AppData) with an allowlist for legit beacons (Slack, VS Code, Teams, etc.).
 // Source: KQL Detection of the Week: Argamal Beaconing (2026-06-05) — https://devsecopsdadattack.com/2026-06-05-Kql-of-the-Week_-Argamal-Beaconing/
+// Tactics: Command and Control
+// Techniques: T1071, T1029
+// Actors: Argamal
+// Platforms: Windows
+// Data: DeviceNetworkEvents
 
 let lookback = 24h;
 let beaconCandidates = DeviceNetworkEvents

@@ -21,6 +21,24 @@ js:
 
 <p class="kql-lib-query-longdesc">Wide, low-volume spray: from a single IP, exactly one failed attempt per user in a day, but against many different users.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/credential-access/' | relative_url }}">Credential Access</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1110-003/' | relative_url }}">T1110.003</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/entra-id/' | relative_url }}">Entra ID</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-detect-wide-low-volume-password-sprays">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -36,6 +54,10 @@ js:
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Sentinel (SigninLogs) — detect “wide, low-volume” password sprays
 // Heuristic: from a single IP, exactly one failed attempt per user in a day, but against many different users.
+// Tactics: Credential Access
+// Techniques: T1110.003
+// Platforms: Entra ID
+// Data: SigninLogs
 
 SigninLogs
 | where ResultType != 0                             // Keep only failed sign-ins (ResultType==0 is success)

@@ -1,0 +1,81 @@
+---
+layout: page
+title: "CommonSecurityLog"
+subtitle: "Data Source — 9 queries"
+permalink: /kql-library/tag/commonsecuritylog/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">Data Source</p>
+  <h2>CommonSecurityLog</h2>
+  <p>9 queries tagged with this data source.
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-nextjs-middleware-authorization-bypass/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Nextjs Middleware Authorization Bypass</span>
+    </a>
+    <p class="kql-lib-query-desc">Next.js middleware authorization-bypass pattern — successful requests to authenticated routes without going through the expected auth path.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-vpn-session-without-prior-authentication/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Vpn Session Without Prior Authentication</span>
+    </a>
+    <p class="kql-lib-query-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-reason-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Reason With Cost Enhanced</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` rows by `Reason` and `LogSeverity` (90d), ranked by event count, with an emoji cost-tier column. Filters out empty/`N/A` reasons.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-severity-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Severity With Cost</span>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/30-60-90-day-common-security-log-ingest-trends/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">30 60 90 Day Common Security Log Ingest Trends</span>
+    </a>
+    <p class="kql-lib-query-desc">Compare `CommonSecurityLog` volume by `DeviceAction` across 30-, 60-, and 90-day periods to spot which actions are driving growth.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-metadata-ssrf-normalized-forms/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Metadata Ssrf Normalized Forms</span>
+    </a>
+    <p class="kql-lib-query-desc">Cloud instance-metadata SSRF across every string-form the attacker can write — dotted, dotless, octal, hex, IPv6, dashed hostnames, encoded slashes. Normalizes before matching.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cloud-storage-bucket-lookalike-references/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cloud Storage Bucket Lookalike References</span>
+    </a>
+    <p class="kql-lib-query-desc">References to cloud storage buckets whose names are lookalikes of your real ones — homoglyphs, dashes-for-underscores, plausibly-typosquatted variants.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-spring-boot-heapdump-exfiltration-commonsecuritylog/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Web Tier</span>
+      <span class="kql-lib-query-title">Hunt Spring Boot Heapdump Exfiltration Commonsecuritylog</span>
+    </a>
+    <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/posture/inventory-exposed-spring-boot-actuator-endpoints/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Posture</span>
+      <span class="kql-lib-query-title">Inventory Exposed Spring Boot Actuator Endpoints</span>
+    </a>
+    <p class="kql-lib-query-desc">Inventory of Spring Boot Actuator endpoints that answer 200 anywhere in your estate — flips the entity from "who scanned us" (infinite) to "which of my services answer" (finite and fixable). Recovers the real management base path from traffic.</p>
+  </li>
+</ul>

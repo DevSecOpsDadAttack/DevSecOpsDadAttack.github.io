@@ -3,6 +3,11 @@
 // install lifecycle scripts — the finite, closable population for the sins-of-the-grandfather
 // class of attacks. Not adversary telemetry, configuration inventory: 'the thing you can close.'
 // Source: KQL Detection of the Week: Sins of the Grandfather (2026-08-12) — https://devsecopsdadattack.com/2026-08-12-KQL-Detection-of-the-Week-Sins-of-the-Grandfather/
+// Tactics: Initial Access
+// Techniques: T1195.002
+// Actors: AsyncAPI
+// Platforms: Linux, Windows
+// Data: DeviceFileEvents, DeviceProcessEvents
 
 let window = 30d;
 let Bare = (s:string) {

@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // day by day change in percentage
+// Platforms: Microsoft Sentinel
+// Data: Usage
 Usage
 | where TimeGenerated > startofday(ago(31d))
 | summarize IngestedGB = round(sum(Quantity)/1024,3) by bin(TimeGenerated, 1d)

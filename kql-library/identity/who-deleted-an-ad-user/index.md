@@ -20,6 +20,24 @@ js:
 
 <p class="kql-lib-query-longdesc">Who deleted an AD user (`SecurityEvent` EventID `4726`) over the last 90 days.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/impact/' | relative_url }}">Impact</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1531/' | relative_url }}">T1531</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-who-deleted-an-ad-user">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -33,6 +51,10 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Tactics: Impact
+// Techniques: T1531
+// Platforms: Windows
+// Data: SecurityEvent
 SecurityEvent
 | where TimeGenerated > ago (90d)
 | where EventID == "4726"

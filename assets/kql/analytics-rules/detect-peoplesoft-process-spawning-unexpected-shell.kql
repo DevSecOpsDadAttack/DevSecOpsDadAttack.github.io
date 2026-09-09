@@ -4,6 +4,10 @@
 // Honorable-mention detection built around the fact that a legitimate PeopleSoft process has no
 // business launching cmd, bash, whoami, curl, or net.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Execution, Initial Access
+// Techniques: T1190, T1059
+// Platforms: Linux, Windows
+// Data: DeviceProcessEvents
 
 DeviceProcessEvents
 | where Timestamp > ago(7d)

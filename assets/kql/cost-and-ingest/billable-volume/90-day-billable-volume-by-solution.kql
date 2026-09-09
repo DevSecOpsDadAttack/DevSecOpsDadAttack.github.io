@@ -1,6 +1,8 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Billable GB per day for the past 90 days, broken out by Solution and rendered as a column chart.
 // Great for spotting which solution is driving your ingest curve over the quarter.
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 Usage                                                                                   // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                        // <--Query the last 90 days

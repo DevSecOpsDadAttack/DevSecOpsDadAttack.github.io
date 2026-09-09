@@ -4,6 +4,10 @@
 // identity. Reduces false positives when the same admin identity is legitimately active in an
 // unrelated session at the same time.
 // Source: KQL Detection of the Week: Detecting Cloud Logging Suppression (T1562.008) (2026-06-12) — https://devsecopsdadattack.com/2026-06-12-KQL-of-the-Week_-Detecting-Cloud-Logging-Suppression-T1562-008/
+// Tactics: Defense Evasion
+// Techniques: T1562.008
+// Platforms: Azure
+// Data: AzureActivity
 
 let followOnActivity = AzureActivity
     | where TimeGenerated > ago(lookback)

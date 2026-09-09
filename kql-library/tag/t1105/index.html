@@ -1,0 +1,33 @@
+---
+layout: page
+title: "T1105"
+subtitle: "MITRE ATT&amp;CK Technique — 2 queries"
+permalink: /kql-library/tag/t1105/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1105</h2>
+  <p>2 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1105/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-cav3rn-endpoint-local-log-file-artifact/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Cav3rn Endpoint Local Log File Artifact</span>
+    </a>
+    <p class="kql-lib-query-desc">Endpoint-side hunt for Project CAV3RN's local file artifact (`logAzure.txt` and family) — config persistence written by the module.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-npm-postinstall-grandchild-network-payload/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Npm Postinstall Grandchild Network Payload</span>
+    </a>
+    <p class="kql-lib-query-desc">npm supply-chain worms where the payload runs two process generations down — 'sins of the grandfather' shape. Traces npm → sh -c → curl.</p>
+  </li>
+</ul>

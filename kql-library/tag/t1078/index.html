@@ -1,0 +1,61 @@
+---
+layout: page
+title: "T1078"
+subtitle: "MITRE ATT&amp;CK Technique — 6 queries"
+permalink: /kql-library/tag/t1078/
+---
+
+<p class="kql-lib-crumbs"><a href="{{ '/kql-library/' | relative_url }}">&larr; All KQL categories</a></p>
+
+<section class="attack-home-intro attack-home-intro-lib">
+  <p class="attack-eyebrow">MITRE ATT&amp;CK Technique</p>
+  <h2>T1078</h2>
+  <p>6 queries tagged with this technique.
+  <br><a href="https://attack.mitre.org/techniques/T1078/" target="_blank" rel="noopener">View on MITRE ATT&amp;CK &rarr;</a>
+  </p>
+</section>
+
+<ul class="kql-lib-query-list list-unstyled" role="list">
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-successful-login-following-distributed-ssh-brute-force/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Successful Login Following Distributed Ssh Brute Force</span>
+    </a>
+    <p class="kql-lib-query-desc">Successful SSH login against a host that just weathered a distributed brute-force campaign. Pair with the Act-I hunt to know if the lightning hit anything.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/detect-vpn-session-without-prior-authentication/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules</span>
+      <span class="kql-lib-query-title">Detect Vpn Session Without Prior Authentication</span>
+    </a>
+    <p class="kql-lib-query-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-credential-compromise-signin-audit-alert-three-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Credential Compromise Signin Audit Alert Three Table</span>
+    </a>
+    <p class="kql-lib-query-desc">Three-table credential-compromise chain: joins risky sign-ins, audit follow-up, and downstream SecurityAlert on the same user.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-first-time-admin-operation-user-baseline/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt First Time Admin Operation User Baseline</span>
+    </a>
+    <p class="kql-lib-query-desc">Baselines identities that have ever executed admin operations, then alerts when an account outside that set succeeds — 'the admin who has never administered.'</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/hunt-teams-phishing-then-suspicious-login-correlation/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting</span>
+      <span class="kql-lib-query-title">Hunt Teams Phishing Then Suspicious Login Correlation</span>
+    </a>
+    <p class="kql-lib-query-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/whos-logging-in-and-when/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / User Activity</span>
+      <span class="kql-lib-query-title">Whos Logging In And When</span>
+    </a>
+    <p class="kql-lib-query-desc">Timestamped feed of RDP logon (4624/LogonType 10), logoff (4634), and reconnect/disconnect (4778/4779) events over 30 days.</p>
+  </li>
+</ul>

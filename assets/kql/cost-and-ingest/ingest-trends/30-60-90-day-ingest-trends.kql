@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Compare Usage trends across 30, 60, and 90 day periods to highlight ingest trends
+// Platforms: Microsoft Sentinel
+// Data: Usage
 
 // Get data from 60–90 days ago
 let Period90Days = Usage

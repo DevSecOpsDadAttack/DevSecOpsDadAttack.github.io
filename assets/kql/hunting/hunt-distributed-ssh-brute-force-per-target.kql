@@ -4,6 +4,10 @@
 // each. Counts distinct source IPs failing against the same destination, which is the signature of
 // the botnet-scale spray.
 // Source: KQL Detection of the Week: The Attack That Stayed Under the Threshold (2026-06-19) — https://devsecopsdadattack.com/2026-06-19-KQL-of-the-Week_-The-Attack-That-Stayed-Under-the-Threshold/
+// Tactics: Credential Access
+// Techniques: T1110.003
+// Platforms: Linux
+// Data: Syslog
 
 let WindowMinutes = 10;
 let DistinctIPThreshold = 10;

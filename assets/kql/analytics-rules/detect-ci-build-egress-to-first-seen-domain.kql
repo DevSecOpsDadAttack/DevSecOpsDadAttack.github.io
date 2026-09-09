@@ -3,6 +3,10 @@
 // 'the build that called a stranger.' Baselines the fleet's egress destinations over 30 days and
 // alerts on first-seen contacts during builds.
 // Source: KQL Detection of the Week: The Dog That Didn't Bark (2026-07-20) — https://devsecopsdadattack.com/2026-07-20-KQL-Detection-of-the-Week_-The-Dog-That-Didn_t-Bark/
+// Tactics: Command and Control, Exfiltration
+// Techniques: T1071.001, T1567
+// Platforms: Linux, Azure
+// Data: DeviceNetworkEvents, AzureDiagnostics
 
 let KnownRegistries = dynamic([
     "registry.npmjs.org",

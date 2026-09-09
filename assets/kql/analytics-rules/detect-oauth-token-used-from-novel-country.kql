@@ -3,6 +3,11 @@
 // downstream half of the ToddyCat/Umbrij shape where the token itself is the payload. Correlates
 // SigninLogs and AADServicePrincipalSignInLogs against a rolling per-user country baseline.
 // Source: KQL Detection of the Week: The Login Was Never the Point (2026-07-06) — https://devsecopsdadattack.com/2026-07-06-KQL-Detection-of-the-Week_-The-Login-Was-Never-the-Point/
+// Tactics: Defense Evasion, Credential Access
+// Techniques: T1550.001, T1528
+// Actors: ToddyCat, Umbrij
+// Platforms: Entra ID, Microsoft 365
+// Data: SigninLogs, AADNonInteractiveUserSignInLogs
 
 let baselineStart = ago(30d);
 let baselineEnd = ago(1d);

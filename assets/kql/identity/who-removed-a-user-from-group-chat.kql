@@ -1,5 +1,9 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //This is a targeted audit query for: “Show me all Teams-related removal actions performed by a specific user in the last 7 days.”
+// Tactics: Impact
+// Techniques: T1531
+// Platforms: Microsoft 365, Teams
+// Data: OfficeActivity
 
 OfficeActivity                             // Pull from Office 365 activity logs (Unified Audit Log)
 | where TimeGenerated > ago(7d)            // Scope to last 7 days → keeps query performant and relevant

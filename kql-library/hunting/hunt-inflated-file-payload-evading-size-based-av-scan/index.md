@@ -20,6 +20,28 @@ js:
 
 <p class="kql-lib-query-longdesc">File downloads anomalously large for their kind — Vidar's null-byte padding trick to slip past AV scanners that skip files above a size ceiling.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/defense-evasion/' | relative_url }}">Defense Evasion</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Techniques</span>
+    <a class="kql-lib-tag kql-lib-tag-technique" href="{{ '/kql-library/tag/t1027-001/' | relative_url }}">T1027.001</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Actors</span>
+    <a class="kql-lib-tag kql-lib-tag-actor" href="{{ '/kql-library/tag/vidar-stealer/' | relative_url }}">Vidar Stealer</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/windows/' | relative_url }}">Windows</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicefileevents/' | relative_url }}">DeviceFileEvents</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-hunt-inflated-file-payload-evading-size-based-av-scan">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -37,6 +59,11 @@ js:
 // where the payload is padded with null bytes to slip past AV scanners that skip files above a
 // size ceiling. Ranks downloads whose size:entropy ratio suggests inflation.
 // Source: KQL Detection of the Week: Nice Costume, Wrong Address (2026-07-13) — https://devsecopsdadattack.com/2026-07-13-KQL-Detection-of-the-Week_-Nice-Costume_-Wrong-Address/
+// Tactics: Defense Evasion
+// Techniques: T1027.001
+// Actors: Vidar Stealer
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 DeviceFileEvents
 | where Timestamp > ago(7d)

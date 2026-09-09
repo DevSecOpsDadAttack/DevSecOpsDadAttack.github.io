@@ -1,5 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Top 10 Alerts with Percentage of Total Alerts - Updated/Advanced
+// Platforms: Microsoft Sentinel
+// Data: SecurityAlert
 
 let totalAlerts = toscalar(SecurityAlert
     | where TimeGenerated > ago(90d)

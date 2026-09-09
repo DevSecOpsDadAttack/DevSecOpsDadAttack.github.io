@@ -20,6 +20,21 @@ js:
 
 <p class="kql-lib-query-longdesc">Devices running at least one end-of-support / end-of-life software title or version, from `DeviceTvmSoftwareInventory`.</p>
 
+<div class="kql-lib-tags-block">
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Tactics</span>
+    <a class="kql-lib-tag kql-lib-tag-tactic" href="{{ '/kql-library/tag/reconnaissance/' | relative_url }}">Reconnaissance</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Platforms</span>
+    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/endpoint/' | relative_url }}">Endpoint</a>
+  </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Data</span>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicetvmsoftwareinventory/' | relative_url }}">DeviceTvmSoftwareInventory</a>
+    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/devicetvmsoftwarevulnerabilities/' | relative_url }}">DeviceTvmSoftwareVulnerabilities</a>
+  </div>
+</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-which-devices-or-software-are-eol">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -34,6 +49,9 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Devices that have at least one end-of-support (EOL/EOS) title or version
+// Tactics: Reconnaissance
+// Platforms: Endpoint
+// Data: DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities
 
 DeviceTvmSoftwareInventory
 | where isnotempty(DeviceName)

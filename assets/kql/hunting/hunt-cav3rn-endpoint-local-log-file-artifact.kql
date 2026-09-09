@@ -3,6 +3,11 @@
 // family) the module writes for config persistence. Written for the endpoint victim rather than
 // the calendar-hosting tenant.
 // Source: KQL Detection of the Week: A Meeting in 2050 (2026-07-27) — https://devsecopsdadattack.com/2026-07-27-KQL-Detection-of-the-Week_-A-Meeting-in-2050-_Detecting-Project-CAV3RN_s-Outlook-Calendar-C2-and-DNS-AAAA-Recovery-Channel_/
+// Tactics: Persistence, Command and Control
+// Techniques: T1547, T1105
+// Actors: CAV3RN
+// Platforms: Windows
+// Data: DeviceFileEvents
 
 let lookback = 30d;
 let ConfigArtifacts = dynamic(["logAzure.txt"]);
