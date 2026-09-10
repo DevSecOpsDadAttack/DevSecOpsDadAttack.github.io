@@ -30,8 +30,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-a-table">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -49,6 +55,7 @@ js:
 // The rate for your region can be found here: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the rate variable
 // This doesn't have to be over 30 days, you can adjust the TimeGenerated parameter to a a week (7d), a day (1d), or even hourly (1h) etc.
+// Source: Sentinel Cost Optimization Part 2 (2023-05-15) — https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 

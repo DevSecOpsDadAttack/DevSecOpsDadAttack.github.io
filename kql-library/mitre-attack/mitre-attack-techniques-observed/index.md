@@ -29,8 +29,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityalert/' | relative_url }}">SecurityAlert</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2026-02-08-KQL-Toolbox-7-From-Detection-Coverage-to-Response-Reality/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-mitre-attack-techniques-observed">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -44,6 +50,7 @@ js:
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This query identifies events mapped against the MITRE ATT&CK Matrix that have been observed in the environment
+// Source: KQL Toolbox #7: From Detection Coverage To Response Reality (2026-02-08) — https://www.hanley.cloud/2026-02-08-KQL-Toolbox-7-From-Detection-Coverage-to-Response-Reality/
 // Platforms: Microsoft Sentinel
 // Data: SecurityAlert
 

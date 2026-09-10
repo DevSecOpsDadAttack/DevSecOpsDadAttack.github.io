@@ -30,8 +30,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-90-day-billable-cost-per-day">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -47,6 +53,7 @@ js:
 // Daily billable GB and cost for the past 90 days, with CostUSD as a numeric column.
 // Use this variant when you want to graph cost over time — CostUSD stays a float,
 // which the chart renderers can plot directly. For a display-friendly '$X.XX / Day'
+// Source: KQL Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs (2025-12-14) — https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/
 // string version, see 90-day-billable-cost-per-day-formatted.kql.
 // Platforms: Microsoft Sentinel
 // Data: Usage

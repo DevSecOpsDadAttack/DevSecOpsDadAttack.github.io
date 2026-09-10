@@ -39,8 +39,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/signinlogs/' | relative_url }}">SigninLogs</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2024-08-16-Logic-Apps-%26-Automation/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-failed-login-attempts">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -56,6 +62,7 @@ js:
 // This is the KQL behind an Analytics Rule I built for a demo to create alerts in Sentinel for 3 or more Failed Login Attempts in under 2 minutes. 
 // The idea here was to create a logic app to trigger on this rule and disable/lockout the account.
 // ErrorID 50126 is thrown when an invalid username or password is used: https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50126.html
+// Source: Logic Apps & Automation (2024-08-16) — https://www.hanley.cloud/2024-08-16-Logic-Apps-%26-Automation/
 // Tactics: Credential Access
 // Techniques: T1110.001, T1110.003
 // Platforms: Entra ID

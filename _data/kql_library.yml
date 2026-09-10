@@ -130,6 +130,7 @@ categories:
             category_slug: analytics-rules
             subcategory_slug: failed-logins
             subcategory_title: Failed Logins
+            deep_dive_url: "https://www.hanley.cloud/2024-08-16-Logic-Apps-%26-Automation/"
       - slug: password-spray
         title: Password Spray
         description: "Detections for password-spray patterns against Entra ID sign-in logs (`SigninLogs`). Both queries are heuristic — tune the thresholds to your environment before promoting to an Analytics Rule."
@@ -169,6 +170,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: billable-volume
             subcategory_title: Billable Volume
+            deep_dive_url: "https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/"
           - slug: 90-day-billable-cost-per-day
             title: 90 Day Billable Cost Per Day
             description: "Daily billable GB and cost over 90 days with numeric `CostUSD`. The default cost-over-time view — plottable and aggregatable."
@@ -177,6 +179,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: billable-volume
             subcategory_title: Billable Volume
+            deep_dive_url: "https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/"
           - slug: 90-day-billable-volume-by-solution
             title: 90 Day Billable Volume By Solution
             description: Billable GB per day for the past 90 days, sliced by Solution, rendered as a column chart.
@@ -185,6 +188,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: billable-volume
             subcategory_title: Billable Volume
+            deep_dive_url: "https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/"
           - slug: efficiency-exercise
             title: Efficiency Exercise
             description: "Teaching walkthrough of the \"average daily ingest\" question written four ways, from a slow `search *` to an efficient `Usage`-scoped version with cost. Read this before writing your own daily-average query."
@@ -221,6 +225,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-eventid
             subcategory_title: Cost By Eventid
+            deep_dive_url: "https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/"
           - slug: cost-of-syslog-events-by-severity
             title: Cost Of Syslog Events By Severity
             description: Cost of Syslog events grouped by severity level.
@@ -265,6 +270,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/"
           - slug: cost-of-workstations-logging-direct-to-sentinel
             title: Cost Of Workstations Logging Direct To Sentinel
             description: "Find workstations shipping logs directly to Sentinel and estimate what it's costing you."
@@ -273,6 +279,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2023-05-17-Sentinel-Cost-Optimization-Exercise-Part-2/"
           - slug: how-loud-is-a-table
             title: How Loud Is A Table
             description: "Row-count-per-day graph for a given table (defaults to `Syslog`) — a quick \"is this table getting louder?\" check."
@@ -281,6 +288,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/"
           - slug: top-10-billable-mde-tables
             title: Top 10 Billable MDE Tables
             description: Top 10 most expensive Microsoft Defender for Endpoint tables over the last 90 days.
@@ -297,6 +305,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-common-security-logs-by-severity-with-cost
             title: Top 10 Common Security Logs By Severity With Cost
             description: "Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`."
@@ -305,6 +314,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-log-sources-with-cost-enhanced
             title: Top 10 Log Sources With Cost Enhanced
             description: "Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly."
@@ -313,6 +323,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-log-sources-with-cost
             title: Top 10 Log Sources With Cost
             description: "Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default."
@@ -321,6 +332,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-security-events-with-cost-enhanced
             title: Top 10 Security Events With Cost Enhanced
             description: "Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string."
@@ -329,6 +341,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-security-events-with-cost
             title: Top 10 Security Events With Cost
             description: "Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`."
@@ -337,6 +350,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: cost-by-table
             subcategory_title: Cost By Table
+            deep_dive_url: "https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/"
           - slug: top-10-tables-exclude-mde
             title: Top 10 Tables Exclude MDE
             description: "Top 10 most expensive log sources over 90 days, excluding MDE, via the fast `Usage` table."
@@ -373,6 +387,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: ingest-trends
             subcategory_title: Ingest Trends
+            deep_dive_url: "https://www.hanley.cloud/2026-01-18-KQL-Toolbox-4-What-Changed-Finding-Log-Sources-with-the-Biggest-Delta-in-Volume-%26-Cost/"
           - slug: log-sources-with-greatest-delta
             title: Log Sources With Greatest Delta
             description: "Which data sources moved the most between the previous 30 days and the current 30 days — the \"who suddenly got loud\" query."
@@ -381,6 +396,7 @@ categories:
             category_slug: cost-and-ingest
             subcategory_slug: ingest-trends
             subcategory_title: Ingest Trends
+            deep_dive_url: "https://www.hanley.cloud/2026-01-18-KQL-Toolbox-4-What-Changed-Finding-Log-Sources-with-the-Biggest-Delta-in-Volume-%26-Cost/"
     query_count: 26
   - slug: email-and-phishing
     title: "Email & Phishing"
@@ -600,6 +616,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2023-04-13-Anatomy-of-a-KQL-Query-Part-2/"
           - slug: which-accounts-are-throwing-this-eventid
             title: Which Accounts Are Throwing This Eventid
             description: Which accounts fire a specific Event ID and how often, per day.
@@ -608,6 +625,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/"
           - slug: which-devices-are-throwing-this-eventid
             title: Which Devices Are Throwing This Eventid
             description: Which computers fire a specific Event ID and how often, per day.
@@ -616,6 +634,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/"
           - slug: which-eventid-fires-the-most-in-a-month
             title: Which Eventid Fires The Most In A Month
             description: Noisiest Event IDs across the last month — good for spotting new noise sources.
@@ -624,6 +643,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/"
           - slug: which-eventids-are-suddenly-acting-weird-with-context
             title: Which Eventids Are Suddenly Acting Weird With Context
             description: "Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise."
@@ -632,6 +652,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/"
           - slug: which-eventids-are-suddenly-acting-weird
             title: Which Eventids Are Suddenly Acting Weird
             description: Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.
@@ -640,6 +661,7 @@ categories:
             category_slug: hunting
             subcategory_slug: eventid-forensics
             subcategory_title: Eventid Forensics
+            deep_dive_url: "https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/"
       - slug: file-activity
         title: File Activity
         description: "File-level activity queries — the \"prove to an auditor we can track this\" set, plus artifact-based detections that read files as evidence of network events."
@@ -723,6 +745,7 @@ categories:
         file_name: who-deleted-an-ad-user.kql
         asset_path: identity/who-deleted-an-ad-user.kql
         category_slug: identity
+        deep_dive_url: "https://www.hanley.cloud/2026-01-31-KQL-Toolbox-6-From-Junk-Clicks-to-Identity-%26-Privilege-Control/"
       - slug: who-removed-a-user-from-group-chat
         title: Who Removed A User From Group Chat
         description: "Teams-related removal actions performed by a specific user in the last 7 days, from `OfficeActivity` / Unified Audit Log."
@@ -735,6 +758,7 @@ categories:
         file_name: whos-activating-roles-via-pim.kql
         asset_path: identity/whos-activating-roles-via-pim.kql
         category_slug: identity
+        deep_dive_url: "https://www.hanley.cloud/2026-01-31-KQL-Toolbox-6-From-Junk-Clicks-to-Identity-%26-Privilege-Control/"
     subcategories: []
     query_count: 3
   - slug: mitre-attack
@@ -748,12 +772,14 @@ categories:
         file_name: mitre-attack-tactics-observed.kql
         asset_path: mitre-attack/mitre-attack-tactics-observed.kql
         category_slug: mitre-attack
+        deep_dive_url: "https://www.hanley.cloud/2026-02-08-KQL-Toolbox-7-From-Detection-Coverage-to-Response-Reality/"
       - slug: mitre-attack-techniques-observed
         title: Mitre Attack Techniques Observed
         description: "Events mapped against MITRE ATT&CK Techniques that have been observed in the environment, with percentage of total."
         file_name: mitre-attack-techniques-observed.kql
         asset_path: mitre-attack/mitre-attack-techniques-observed.kql
         category_slug: mitre-attack
+        deep_dive_url: "https://www.hanley.cloud/2026-02-08-KQL-Toolbox-7-From-Detection-Coverage-to-Response-Reality/"
     subcategories: []
     query_count: 2
   - slug: pihole
@@ -767,54 +793,63 @@ categories:
         file_name: blocked-queries-over-time.kql
         asset_path: pihole/blocked-queries-over-time.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: dns-query-volume
         title: DNS Query Volume
         description: "Total DNS query volume over time — the baseline \"how loud is DNS\" view."
         file_name: dns-query-volume.kql
         asset_path: pihole/dns-query-volume.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: most-queried-domains
         title: Most Queried Domains
         description: Top 10 most-queried domains.
         file_name: most-queried-domains.kql
         asset_path: pihole/most-queried-domains.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: new-or-rarely-seen-domains
         title: New Or Rarely Seen Domains
         description: "Domains seen in the last 24h that haven't been seen recently — a classic new-domain-observed hunt."
         file_name: new-or-rarely-seen-domains.kql
         asset_path: pihole/new-or-rarely-seen-domains.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: pihole-usage
         title: Pihole Usage
         description: Billable ingest volume for the Pi-hole custom log over the last 90 days.
         file_name: pihole-usage.kql
         asset_path: pihole/pihole-usage.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: query-type-distribution
         title: Query Type Distribution
         description: Distribution of DNS query types (A, AAAA, TXT, etc.).
         file_name: query-type-distribution.kql
         asset_path: pihole/query-type-distribution.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: success-vs-failure
         title: Success Vs Failure
         description: Successful vs failed DNS query counts.
         file_name: success-vs-failure.kql
         asset_path: pihole/success-vs-failure.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: top-blocked-domains
         title: Top Blocked Domains
         description: Top 10 blocked domains.
         file_name: top-blocked-domains.kql
         asset_path: pihole/top-blocked-domains.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
       - slug: top-clients
         title: Top Clients
         description: Top 10 clients by DNS query count.
         file_name: top-clients.kql
         asset_path: pihole/top-clients.kql
         category_slug: pihole
+        deep_dive_url: "https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/"
     subcategories: []
     query_count: 9
   - slug: posture

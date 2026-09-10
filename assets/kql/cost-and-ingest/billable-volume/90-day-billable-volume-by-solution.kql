@@ -1,6 +1,7 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Billable GB per day for the past 90 days, broken out by Solution and rendered as a column chart.
 // Great for spotting which solution is driving your ingest curve over the quarter.
+// Source: KQL Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs (2025-12-14) — https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 

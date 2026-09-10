@@ -21,16 +21,6 @@ js:
 
 <p class="kql-lib-query-longdesc">Teaching walkthrough of the "average daily ingest" question written four ways, from a slow `search *` to an efficient `Usage`-scoped version with cost. Read this before writing your own daily-average query.</p>
 
-<div class="kql-lib-tags-block">
-  <div class="kql-lib-tag-row">
-    <span class="kql-lib-tag-label">Platforms</span>
-    <a class="kql-lib-tag kql-lib-tag-platform" href="{{ '/kql-library/tag/microsoft-sentinel/' | relative_url }}">Microsoft Sentinel</a>
-  </div>
-  <div class="kql-lib-tag-row">
-    <span class="kql-lib-tag-label">Data</span>
-    <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
-  </div>
-</div>
 <div class="kql-lib-query-actions">
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-efficiency-exercise">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
@@ -44,11 +34,15 @@ js:
 
 ```kusto
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+
+// Source: Peeling The KQL Potato (2023-08-02) — https://www.hanley.cloud/2023-08-02-Peeling-the-KQL-Potato/
+// Platforms: Microsoft Sentinel
+// Data: Usage
+
 // This query doesn't just output the total average across the last 30 days' worth of data, this query breaks the data up into GB per day and takes the average from that.
 // This step is crucial to get the most accurate and meaningful results. 
 // Check out the evolution of this query; different iterations of this query from oldest to newest are listed from top to bottom below:
-// Platforms: Microsoft Sentinel
-// Data: Usage
+
 
 //Original Query (this one takes forever and is not efficient):
 

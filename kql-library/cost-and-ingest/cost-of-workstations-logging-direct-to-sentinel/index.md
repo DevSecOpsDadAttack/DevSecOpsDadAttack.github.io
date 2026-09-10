@@ -31,8 +31,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2023-05-17-Sentinel-Cost-Optimization-Exercise-Part-2/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-workstations-logging-direct-to-sentinel">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -48,7 +54,8 @@ js:
 // Are there workstations logging directly to Sentinel and how much is this costing you? 
 // For this query, the ingestioncost variable is manually configured based on the workspace's region.
 // Go here for effective cost per GB based on your region: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
-// You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable
+// You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable.
+// Source: Sentinel Cost Optimization Exercise Part 2 (2023-05-17) — https://www.hanley.cloud/2023-05-17-Sentinel-Cost-Optimization-Exercise-Part-2/
 // Platforms: Windows, Microsoft Sentinel
 // Data: SecurityEvent
 

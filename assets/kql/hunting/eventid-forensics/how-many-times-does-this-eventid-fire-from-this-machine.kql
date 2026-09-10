@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 //How Many Times Has This Machine Thrown This Event Today?
+// Source: Anatomy Of A KQL Query Part 2 (2023-04-13) — https://www.hanley.cloud/2023-04-13-Anatomy-of-a-KQL-Query-Part-2/
 // Tactics: Discovery
 // Platforms: Windows
 // Data: SecurityEvent

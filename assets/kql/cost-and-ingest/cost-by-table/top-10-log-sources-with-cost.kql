@@ -3,6 +3,7 @@
 // Use this variant when you want the raw numbers — CostUSD stays a float so it plays nicely with
 // dashboards and downstream aggregation. For a display-friendly variant with cost-tier emojis,
 // see top-10-log-sources-with-cost-enhanced.kql.
+// Source: KQL Toolbox #2: Find Your Noisiest Log Sources (with Cost) (2026-01-05) — https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 

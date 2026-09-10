@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Ever wonder how many times each computer in your environment throws a specific EventID per day?
+// Source: KQL Toolbox #3: Which Event ID Noises Up Your Logs (and Who’s Causing It)? (2026-01-10) — https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-%28and-Who-s-Causing-It%29/
 // Tactics: Discovery
 // Platforms: Windows
 // Data: SecurityEvent

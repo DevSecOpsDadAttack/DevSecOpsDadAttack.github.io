@@ -32,8 +32,14 @@ js:
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/securityevent/' | relative_url }}">SecurityEvent</a>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/windowsevent/' | relative_url }}">WindowsEvent</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-cost-of-eventid">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -51,6 +57,7 @@ js:
 // You can calculate the LAW cost and Sentinel cost separately, or both (effective cost per GB) by setting the rate variable
 // The rate for your region can be found here: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // This doesn't have to be over the last hour, you can adjust the TimeGenerated parameter to a week (7d), a day (1d), or even a month (30d) etc.
+// Source: Sentinel Cost Optimization Part 2 (2023-05-15) — https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/
 // Platforms: Windows, Microsoft Sentinel
 // Data: SecurityEvent, WindowsEvent
 

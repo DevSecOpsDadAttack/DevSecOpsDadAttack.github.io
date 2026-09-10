@@ -4,6 +4,7 @@
 // successfully logged on) apart from 4625 etc. at a glance.
 // For a display-friendly variant with cost-tier emojis (and simpler EventID-only grouping),
 // see top-10-security-events-with-cost-enhanced.kql.
+// Source: KQL Toolbox #2: Find Your Noisiest Log Sources (with Cost) (2026-01-05) — https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/
 // Platforms: Windows, Microsoft Sentinel
 // Data: SecurityEvent
 

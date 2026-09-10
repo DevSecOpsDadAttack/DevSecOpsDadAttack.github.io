@@ -5,6 +5,7 @@
 // contain common noise like "N/A" — those are filtered out here).
 // For a DeviceVendor/DeviceProduct-focused variant with numeric cost, see
 // top-10-common-security-logs-by-severity-with-cost.kql.
+// Source: KQL Toolbox #2: Find Your Noisiest Log Sources (with Cost) (2026-01-05) — https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/
 // Platforms: Network, Microsoft Sentinel
 // Data: CommonSecurityLog
 

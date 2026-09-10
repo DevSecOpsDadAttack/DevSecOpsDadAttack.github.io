@@ -2,7 +2,8 @@
 // Are there workstations logging directly to Sentinel and how much is this costing you? 
 // For this query, the ingestioncost variable is manually configured based on the workspace's region.
 // Go here for effective cost per GB based on your region: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
-// You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable
+// You can calculate the LAW cost, Sentinel cost, or both (effective cost per GB) by setting the ingestioncost variable.
+// Source: Sentinel Cost Optimization Exercise Part 2 (2023-05-17) — https://www.hanley.cloud/2023-05-17-Sentinel-Cost-Optimization-Exercise-Part-2/
 // Platforms: Windows, Microsoft Sentinel
 // Data: SecurityEvent
 

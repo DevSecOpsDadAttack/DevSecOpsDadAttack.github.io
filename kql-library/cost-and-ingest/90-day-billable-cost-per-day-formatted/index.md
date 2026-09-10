@@ -30,8 +30,14 @@ js:
     <span class="kql-lib-tag-label">Data</span>
     <a class="kql-lib-tag kql-lib-tag-data" href="{{ '/kql-library/tag/usage/' | relative_url }}">Usage</a>
   </div>
+  <div class="kql-lib-tag-row">
+    <span class="kql-lib-tag-label">Deep Dive</span>
+    <a class="kql-lib-tag kql-lib-tag-deepdive" href="{{ '/kql-library/tag/deep-dive/' | relative_url }}"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive</a>
 </div>
 <div class="kql-lib-query-actions">
+  <a class="kql-lib-deep-dive-btn" href="https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/" target="_blank" rel="noopener">
+    <i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Deep Dive
+  </a>
   <button type="button" class="kql-lib-copy-btn" data-copy-target="kql-code-90-day-billable-cost-per-day-formatted">
     <i class="far fa-copy" aria-hidden="true"></i>&nbsp;Copy query
   </button>
@@ -48,6 +54,7 @@ js:
 // ('$X.XX / Day' and 'X.XXGB / Day'). Best for tables and dashboards where readability
 // matters more than plottability — the string formatting means these columns are not
 // chart-friendly. For a numeric CostUSD variant, see 90-day-billable-cost-per-day.kql.
+// Source: KQL Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs (2025-12-14) — https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 

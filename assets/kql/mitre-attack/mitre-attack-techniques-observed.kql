@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This query identifies events mapped against the MITRE ATT&CK Matrix that have been observed in the environment
+// Source: KQL Toolbox #7: From Detection Coverage To Response Reality (2026-02-08) — https://www.hanley.cloud/2026-02-08-KQL-Toolbox-7-From-Detection-Coverage-to-Response-Reality/
 // Platforms: Microsoft Sentinel
 // Data: SecurityAlert
 

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Deep Dive"
-subtitle: "Deep Dive — 47 queries"
+subtitle: "Deep Dive — 82 queries"
 permalink: /kql-library/tag/deep-dive/
 ---
 
@@ -10,7 +10,7 @@ permalink: /kql-library/tag/deep-dive/
 <section class="attack-home-intro attack-home-intro-lib">
   <p class="attack-eyebrow">Deep Dive</p>
   <h2>Deep Dive</h2>
-  <p>47 queries backed by a KQL Detection of the Week Deep Dive article — long-form research explaining the design rationale, telemetry assumptions, tuning, and ATT&amp;CK context behind each detection.</p>
+  <p>82 queries backed by a KQL Detection of the Week Deep Dive article — long-form research explaining the design rationale, telemetry assumptions, tuning, and ATT&amp;CK context behind each detection.</p>
 </section>
 
 <ul class="kql-lib-query-list list-unstyled" role="list">
@@ -141,6 +141,134 @@ permalink: /kql-library/tag/deep-dive/
       <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
     </a>
     <p class="kql-lib-query-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/analytics-rules/failed-login-attempts/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Analytics Rules / Failed Logins</span>
+      <span class="kql-lib-query-title">Failed Login Attempts</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">3+ failed sign-ins (`ResultType == 50126` — invalid username or password) for the same UPN within a 2-minute window. Written for a demo that pairs with a Logic App to auto-disable or lock the account.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day-formatted/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day Formatted</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days, formatted as human-readable strings (`$X.XX / Day`, `XGB / Day`). Table-friendly, not chart-friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-cost-per-day/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Cost Per Day</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Daily billable GB and cost over 90 days with numeric `CostUSD`. The default cost-over-time view — plottable and aggregatable.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/90-day-billable-volume-by-solution/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Billable Volume</span>
+      <span class="kql-lib-query-title">90 Day Billable Volume By Solution</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Billable GB per day for the past 90 days, sliced by Solution, rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Eventid</span>
+      <span class="kql-lib-query-title">Cost Of Eventid</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Estimated cost of a single Event ID over a time window, using your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Cost Of A Table</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Estimated dollar cost of a single table over a chosen window, given your effective per-GB rate.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/cost-of-workstations-logging-direct-to-sentinel/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Cost Of Workstations Logging Direct To Sentinel</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Find workstations shipping logs directly to Sentinel and estimate what it's costing you.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/how-loud-is-a-table/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">How Loud Is A Table</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Row-count-per-day graph for a given table (defaults to `Syslog`) — a quick "is this table getting louder?" check.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-reason-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Reason With Cost Enhanced</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` rows by `Reason` and `LogSeverity` (90d), ranked by event count, with an emoji cost-tier column. Filters out empty/`N/A` reasons.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-common-security-logs-by-severity-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Common Security Logs By Severity With Cost</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top `CommonSecurityLog` groupings by `DeviceVendor`, `DeviceProduct`, and `LogSeverity` (30d), with numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost Enhanced</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with an emoji cost-tier and formatted `$X.XX` string — table/dashboard friendly.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-log-sources-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Log Sources With Cost</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top log sources by `DataType` (30d) with numeric `CostUSD`. The chart-friendly default.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost-enhanced/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost Enhanced</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s (30d) with GiB, emoji cost-tier, and formatted `$X.XX` string.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/top-10-security-events-with-cost/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Cost By Table</span>
+      <span class="kql-lib-query-title">Top 10 Security Events With Cost</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top `SecurityEvent` `EventID`s with `Activity` (30d) and numeric `CostUSD`.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/day-by-day-change/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">Day By Day Change</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Percent change in daily ingest volume vs the previous day over the last 31 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/cost-and-ingest/log-sources-with-greatest-delta/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Cost &amp; Ingest / Ingest Trends</span>
+      <span class="kql-lib-query-title">Log Sources With Greatest Delta</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Which data sources moved the most between the previous 30 days and the current 30 days — the "who suddenly got loud" query.</p>
   </li>
   <li class="kql-lib-query-item">
     <a href="{{ '/kql-library/email-and-phishing/top-blocked-malware-email-events/' | relative_url }}">
@@ -335,6 +463,54 @@ permalink: /kql-library/tag/deep-dive/
     <p class="kql-lib-query-desc">Teams phishing messages correlated with subsequent suspicious sign-ins for the same recipient — deals with ExternalAccess not being populated by falling back to sender-domain-outside-org.</p>
   </li>
   <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/how-many-times-does-this-eventid-fire-from-this-machine/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">How Many Times Does This Eventid Fire From This Machine</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Count of a specific Event ID from a specific machine, bucketed daily and rendered as a column chart.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-accounts-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Accounts Are Throwing This Eventid</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Which accounts fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-devices-are-throwing-this-eventid/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Devices Are Throwing This Eventid</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Which computers fire a specific Event ID and how often, per day.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventid-fires-the-most-in-a-month/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventid Fires The Most In A Month</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Noisiest Event IDs across the last month — good for spotting new noise sources.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird-with-context/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird With Context</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Same deviation analysis as the basic variant, joined with `Computer` and `Account` so you can see which host or user is driving the spike in one shot. Uses a 30-day recent window to reduce join noise.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/hunting/which-eventids-are-suddenly-acting-weird/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Hunting / Eventid Forensics</span>
+      <span class="kql-lib-query-title">Which Eventids Are Suddenly Acting Weird</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Which Event IDs have recently spiked (7d) versus their 90-day baseline, sorted by deviation ratio. Basic variant — just EventID + counts.</p>
+  </li>
+  <li class="kql-lib-query-item">
     <a href="{{ '/kql-library/hunting/detect-spring-boot-heapdump-artifact-on-disk/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Hunting / File Activity</span>
       <span class="kql-lib-query-title">Detect Spring Boot Heapdump Artifact On Disk</span>
@@ -357,6 +533,110 @@ permalink: /kql-library/tag/deep-dive/
       <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
     </a>
     <p class="kql-lib-query-desc">Non-ASIM (`CommonSecurityLog`) variant of the heap-dump hunt. Uses correct CEF field names (`ReceivedBytes` / `SentBytes`) and carries both byte directions because CEF doesn't tell you which side is the response.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/who-deleted-an-ad-user/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Who Deleted An AD User</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Who deleted an AD user (`SecurityEvent` EventID `4726`) over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/identity/whos-activating-roles-via-pim/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Identity</span>
+      <span class="kql-lib-query-title">Whos Activating Roles Via PIM</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">PIM role activations from `AuditLogs` — useful for tracking privileged-role usage.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-tactics-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-query-title">Mitre Attack Tactics Observed</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Events mapped against MITRE ATT&amp;CK Tactics that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/mitre-attack/mitre-attack-techniques-observed/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">MITRE ATT&amp;CK</span>
+      <span class="kql-lib-query-title">Mitre Attack Techniques Observed</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Events mapped against MITRE ATT&amp;CK Techniques that have been observed in the environment, with percentage of total.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/blocked-queries-over-time/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Blocked Queries Over Time</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Count of blocked DNS queries bucketed over time.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/dns-query-volume/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">DNS Query Volume</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Total DNS query volume over time — the baseline "how loud is DNS" view.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/most-queried-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Most Queried Domains</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 most-queried domains.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/new-or-rarely-seen-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">New Or Rarely Seen Domains</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Domains seen in the last 24h that haven't been seen recently — a classic new-domain-observed hunt.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/pihole-usage/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Pihole Usage</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Billable ingest volume for the Pi-hole custom log over the last 90 days.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/query-type-distribution/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Query Type Distribution</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Distribution of DNS query types (A, AAAA, TXT, etc.).</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/success-vs-failure/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Success Vs Failure</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Successful vs failed DNS query counts.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/top-blocked-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Top Blocked Domains</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 blocked domains.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/pihole/top-clients/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Pi-hole</span>
+      <span class="kql-lib-query-title">Top Clients</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top 10 clients by DNS query count.</p>
   </li>
   <li class="kql-lib-query-item">
     <a href="{{ '/kql-library/posture/inventory-exposed-spring-boot-actuator-endpoints/' | relative_url }}">

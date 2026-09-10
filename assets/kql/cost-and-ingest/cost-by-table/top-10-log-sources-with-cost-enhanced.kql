@@ -3,6 +3,7 @@
 // indicator and a formatted '$X.XX' cost column. Best for tables and human-readable dashboards.
 // For a numeric CostUSD variant that plays nicely with charts and downstream aggregation,
 // see top-10-log-sources-with-cost.kql.
+// Source: KQL Toolbox #2: Find Your Noisiest Log Sources (with Cost) (2026-01-05) — https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-%28with-Cost-%29/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 

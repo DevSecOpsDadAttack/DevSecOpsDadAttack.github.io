@@ -4,6 +4,7 @@
 // You can calculate the LAW cost and Sentinel cost separately, or both (effective cost per GB) by setting the rate variable
 // The rate for your region can be found here: https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/
 // This doesn't have to be over the last hour, you can adjust the TimeGenerated parameter to a week (7d), a day (1d), or even a month (30d) etc.
+// Source: Sentinel Cost Optimization Part 2 (2023-05-15) — https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/
 // Platforms: Windows, Microsoft Sentinel
 // Data: SecurityEvent, WindowsEvent
 

@@ -2,6 +2,7 @@
 // Daily billable GB and cost for the past 90 days, with CostUSD as a numeric column.
 // Use this variant when you want to graph cost over time — CostUSD stays a float,
 // which the chart renderers can plot directly. For a display-friendly '$X.XX / Day'
+// Source: KQL Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs (2025-12-14) — https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-%26-Price-Your-Microsoft-Sentinel-Ingest-Costs/
 // string version, see 90-day-billable-cost-per-day-formatted.kql.
 // Platforms: Microsoft Sentinel
 // Data: Usage

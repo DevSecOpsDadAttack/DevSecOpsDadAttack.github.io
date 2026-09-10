@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // This example queries the last 30 days of the syslog table, aggregates the number of hits per day, and the graphs results
+// Source: Anatomy Of A KQL Query Part 1 (2023-04-06) — https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/
 // Platforms: Microsoft Sentinel
 // Data: Usage
 
