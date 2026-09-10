@@ -399,30 +399,35 @@ categories:
         file_name: top-blocked-malware-email-events.kql
         asset_path: email-and-phishing/top-blocked-malware-email-events.kql
         category_slug: email-and-phishing
+        deep_dive_url: "https://www.hanley.cloud/2026-01-25-KQL-Toolbox-5-Phishing-%26-Malware-Hunting/"
       - slug: top-phishing-domains
         title: Top Phishing Domains
         description: "Top phishing *sender domains* with severity categorized by volume."
         file_name: top-phishing-domains.kql
         asset_path: email-and-phishing/top-phishing-domains.kql
         category_slug: email-and-phishing
+        deep_dive_url: "https://www.hanley.cloud/2026-01-25-KQL-Toolbox-5-Phishing-%26-Malware-Hunting/"
       - slug: top-phishing-sender-recipient-pairs
         title: Top Phishing Sender Recipient Pairs
         description: "Top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users."
         file_name: top-phishing-sender-recipient-pairs.kql
         asset_path: email-and-phishing/top-phishing-sender-recipient-pairs.kql
         category_slug: email-and-phishing
+        deep_dive_url: "https://www.hanley.cloud/2026-01-25-KQL-Toolbox-5-Phishing-%26-Malware-Hunting/"
       - slug: top-phishing-targets
         title: Top Phishing Targets
         description: "Top *recipients* of phishing emails (targeted individuals) with severity by volume."
         file_name: top-phishing-targets.kql
         asset_path: email-and-phishing/top-phishing-targets.kql
         category_slug: email-and-phishing
+        deep_dive_url: "https://www.hanley.cloud/2026-01-25-KQL-Toolbox-5-Phishing-%26-Malware-Hunting/"
       - slug: whos-clicking-on-junk-mail
         title: Whos Clicking On Junk Mail
         description: "Users who clicked links in messages that landed in the Junk folder — a strong \"who needs training\" signal."
         file_name: whos-clicking-on-junk-mail.kql
         asset_path: email-and-phishing/whos-clicking-on-junk-mail.kql
         category_slug: email-and-phishing
+        deep_dive_url: "https://www.hanley.cloud/2026-01-31-KQL-Toolbox-6-From-Junk-Clicks-to-Identity-%26-Privilege-Control/"
     subcategories: []
     query_count: 6
   - slug: health-checks

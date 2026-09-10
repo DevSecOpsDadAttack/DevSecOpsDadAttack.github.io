@@ -1,4 +1,5 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
+// Source: KQL Toolbox #6: From Junk Clicks to Identity & Privilege Control (2026-01-31) — https://www.hanley.cloud/2026-01-31-KQL-Toolbox-6-From-Junk-Clicks-to-Identity-%26-Privilege-Control/
 // Tactics: Initial Access
 // Techniques: T1566.002
 // Platforms: Microsoft 365

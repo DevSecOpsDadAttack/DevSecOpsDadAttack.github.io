@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Deep Dive"
-subtitle: "Deep Dive — 42 queries"
+subtitle: "Deep Dive — 47 queries"
 permalink: /kql-library/tag/deep-dive/
 ---
 
@@ -10,7 +10,7 @@ permalink: /kql-library/tag/deep-dive/
 <section class="attack-home-intro attack-home-intro-lib">
   <p class="attack-eyebrow">Deep Dive</p>
   <h2>Deep Dive</h2>
-  <p>42 queries backed by a KQL Detection of the Week Deep Dive article — long-form research explaining the design rationale, telemetry assumptions, tuning, and ATT&amp;CK context behind each detection.</p>
+  <p>47 queries backed by a KQL Detection of the Week Deep Dive article — long-form research explaining the design rationale, telemetry assumptions, tuning, and ATT&amp;CK context behind each detection.</p>
 </section>
 
 <ul class="kql-lib-query-list list-unstyled" role="list">
@@ -141,6 +141,46 @@ permalink: /kql-library/tag/deep-dive/
       <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
     </a>
     <p class="kql-lib-query-desc">PAN-OS GlobalProtect VPN sessions established without a matching auth event in the preceding 5 minutes — the shape of CVE-2026-0257. Uses windowed leftouter, not range-predicate leftanti.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-blocked-malware-email-events/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">Top Blocked Malware Email Events</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top blocked malware email events. Does what it says on the tin.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-domains/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">Top Phishing Domains</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top phishing *sender domains* with severity categorized by volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-sender-recipient-pairs/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">Top Phishing Sender Recipient Pairs</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/top-phishing-targets/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">Top Phishing Targets</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Top *recipients* of phishing emails (targeted individuals) with severity by volume.</p>
+  </li>
+  <li class="kql-lib-query-item">
+    <a href="{{ '/kql-library/email-and-phishing/whos-clicking-on-junk-mail/' | relative_url }}">
+      <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-query-title">Whos Clicking On Junk Mail</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive article available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+    </a>
+    <p class="kql-lib-query-desc">Users who clicked links in messages that landed in the Junk folder — a strong "who needs training" signal.</p>
   </li>
   <li class="kql-lib-query-item">
     <a href="{{ '/kql-library/hunting/hunt-azure-diagnostic-setting-deletions/' | relative_url }}">

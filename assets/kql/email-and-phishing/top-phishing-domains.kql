@@ -1,5 +1,6 @@
 // Author: Ian D. Hanley (DevSecOpsDad) | linkedin.com/in/ianhanley | devsecopsdad.com | devsecopsdadattack.com
 // Identifies top phishing sender domains and categorizes severity based on volume
+// Source: KQL Toolbox #5: Phishing & Malware Hunting (2026-01-25) — https://www.hanley.cloud/2026-01-25-KQL-Toolbox-5-Phishing-%26-Malware-Hunting/
 // Tactics: Initial Access
 // Techniques: T1566.002
 // Platforms: Microsoft 365

@@ -27,7 +27,7 @@ js:
     <span aria-hidden="true">·</span>
     <span><strong>32</strong>&nbsp;Hunts</span>
     <span aria-hidden="true">·</span>
-    <span class="kql-lib-hero-count-dd"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;<strong>42</strong>&nbsp;Deep&nbsp;Dives</span>
+    <span class="kql-lib-hero-count-dd"><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;<strong>47</strong>&nbsp;Deep&nbsp;Dives</span>
   </p>
 </section>
 
@@ -493,37 +493,42 @@ js:
     </a>
     <p class="kql-lib-result-desc">Employees using Outlook on corporate machines to send email via third-party SMTP servers, with attachments — a common data-exfiltration pattern.</p>
   </li>
-  <li class="kql-lib-result" data-title="top blocked malware email events" data-desc="top blocked malware email events. does what it says on the tin." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-001 t1566.001 microsoft-365 microsoft 365 emailevents emailevents ">
+  <li class="kql-lib-result" data-title="top blocked malware email events" data-desc="top blocked malware email events. does what it says on the tin." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-001 t1566.001 microsoft-365 microsoft 365 emailevents emailevents deep-dive deep dive " data-deepdive="1">
     <a href="{{ '/kql-library/email-and-phishing/top-blocked-malware-email-events/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
       <span class="kql-lib-result-title">Top Blocked Malware Email Events</span>
     </a>
     <p class="kql-lib-result-desc">Top blocked malware email events. Does what it says on the tin.</p>
   </li>
-  <li class="kql-lib-result" data-title="top phishing domains" data-desc="top phishing *sender domains* with severity categorized by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-002 t1566.002 microsoft-365 microsoft 365 emailevents emailevents ">
+  <li class="kql-lib-result" data-title="top phishing domains" data-desc="top phishing *sender domains* with severity categorized by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-002 t1566.002 microsoft-365 microsoft 365 emailevents emailevents deep-dive deep dive " data-deepdive="1">
     <a href="{{ '/kql-library/email-and-phishing/top-phishing-domains/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
       <span class="kql-lib-result-title">Top Phishing Domains</span>
     </a>
     <p class="kql-lib-result-desc">Top phishing *sender domains* with severity categorized by volume.</p>
   </li>
-  <li class="kql-lib-result" data-title="top phishing sender recipient pairs" data-desc="top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-001 t1566.001 t1566-002 t1566.002 microsoft-365 microsoft 365 emailevents emailevents ">
+  <li class="kql-lib-result" data-title="top phishing sender recipient pairs" data-desc="top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-001 t1566.001 t1566-002 t1566.002 microsoft-365 microsoft 365 emailevents emailevents deep-dive deep dive " data-deepdive="1">
     <a href="{{ '/kql-library/email-and-phishing/top-phishing-sender-recipient-pairs/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
       <span class="kql-lib-result-title">Top Phishing Sender Recipient Pairs</span>
     </a>
     <p class="kql-lib-result-desc">Top phishing volume grouped by *(recipient, sender-domain)* pair — useful for spotting targeted campaigns against specific users.</p>
   </li>
-  <li class="kql-lib-result" data-title="top phishing targets" data-desc="top *recipients* of phishing emails (targeted individuals) with severity by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566 t1566 microsoft-365 microsoft 365 emailevents emailevents ">
+  <li class="kql-lib-result" data-title="top phishing targets" data-desc="top *recipients* of phishing emails (targeted individuals) with severity by volume." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566 t1566 microsoft-365 microsoft 365 emailevents emailevents deep-dive deep dive " data-deepdive="1">
     <a href="{{ '/kql-library/email-and-phishing/top-phishing-targets/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
       <span class="kql-lib-result-title">Top Phishing Targets</span>
     </a>
     <p class="kql-lib-result-desc">Top *recipients* of phishing emails (targeted individuals) with severity by volume.</p>
   </li>
-  <li class="kql-lib-result" data-title="whos clicking on junk mail" data-desc="users who clicked links in messages that landed in the junk folder — a strong "who needs training" signal." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-002 t1566.002 microsoft-365 microsoft 365 urlclickevents urlclickevents ">
+  <li class="kql-lib-result" data-title="whos clicking on junk mail" data-desc="users who clicked links in messages that landed in the junk folder — a strong "who needs training" signal." data-cat="email &amp; phishing" data-catslug="email-and-phishing" data-tags="initial-access initial access t1566-002 t1566.002 microsoft-365 microsoft 365 urlclickevents urlclickevents deep-dive deep dive " data-deepdive="1">
     <a href="{{ '/kql-library/email-and-phishing/whos-clicking-on-junk-mail/' | relative_url }}">
       <span class="attack-badge attack-badge-lib">Email &amp; Phishing</span>
+      <span class="kql-lib-deep-dive-mini" title="Deep Dive available"><i class="fas fa-bolt" aria-hidden="true"></i></span>
       <span class="kql-lib-result-title">Whos Clicking On Junk Mail</span>
     </a>
     <p class="kql-lib-result-desc">Users who clicked links in messages that landed in the Junk folder — a strong "who needs training" signal.</p>
