@@ -2,7 +2,7 @@
 layout: post
 title: "KQL Detection of the Week: The Stage Is Not the Chain"
 subtitle: "Chaining Identity Attack Stages into a Single Detection, Fixing a Fragile IP Extraction in LLM Credential Farming, and Why max('high', 'medium') Returns 'medium'"
-date: 2026-09-15
+date: 2026-09-14
 author: DevSecOpsDad
 tags:
   - KQL Detection of the Week
