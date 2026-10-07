@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![The Activity Log Is Not The Activity](/assets/img/TheActivityLogIsNotTheActivity/1.png)
+![The Activity Log Is Not The Activity](/assets/img/ActivityLogIsNotTheActivity/01-hero-activity-log-is-not-the-activity.png)
 
 After a couple of weeks away (a KQL Café appearance, among other things — it's good to be back), the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) ([run on a Raspberry Pi](https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/)) handed me thirty detections across seven days, and three clusters of six: six for Storm-3168's service principal destruction spree in Azure, six for the BPFDoor/AVERAT staging chain on Linux edge appliances, and six for ScreenConnect abuse. The most interesting cluster is the first one, and it's interesting for an uncomfortable reason. Microsoft's [Storm-3168 write-up](https://www.microsoft.com/en-us/security/blog/2026/09/25/storm-3168-agentic-driven-cloud-attacks-using-compromised-service-principals/) describes the attack as reconnaissance, then destruction, then credential collection. Three of the six detections the pipeline wrote need a reconnaissance stage or a Key Vault secret read to fire — and `AzureActivity`, the table all six touch, records neither. A fourth detects a different attack altogether. **The pipeline modelled the attack correctly. It modelled the log incorrectly.**
 
@@ -27,7 +27,7 @@ One note before any of the queries: every replacement in this edition has been c
 
 ## 🥇 Act I: Six Detections, One Log, Zero Reads
 
-![Act I](/assets/img/TheActivityLogIsNotTheActivity/2.png)
+![Act I — Six Detections, One Log, Zero Reads](/assets/img/ActivityLogIsNotTheActivity/02-act-i-six-detections-one-log-zero-reads.png)
 
 Microsoft published the [Storm-3168 blog](https://www.microsoft.com/en-us/security/blog/2026/09/25/storm-3168-agentic-driven-cloud-attacks-using-compromised-service-principals/) on Friday, 25 September, and the pipeline responded on Monday and Tuesday with six detections:
 
@@ -110,6 +110,8 @@ One fires, one maybe. And the one that fires sees the least interesting version 
 - **Every SQL deletion attempt.** The intent to destroy databases is evidence of scope, even though the API version saved them.
 - **The deletions that resource locks blocked.** And this is the part that should bother everyone: the better your preventive controls, the less your detection sees. In a tenant with locks on every storage account, Storm-3168's entire destructive sequence fails — and a success-only rule stays silent while an attacker with Contributor works through your estate trying to delete it.
 - **The failed ListKeys probe that immediately preceded destruction.** Less than one second separates it from the first delete.
+
+![Success vs Failure — Protective Controls](/assets/img/ActivityLogIsNotTheActivity/03-success-vs-failure-protective-controls.png)
 
 So the problems are three, and they stack: the detections ask for an event class the table doesn't record (resource-enumeration reads), they discard the outcome that carries the intent (failures), and they identify operations by searching English display names (`OperationName has "delete"`, `has_any ("list", "get", "read")`) when the same row carries a machine-readable operation path that already says exactly what happened.
 
@@ -314,7 +316,7 @@ AzureActivity
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/TheActivityLogIsNotTheActivity/3.png)
+![Structured Parsing vs Free-Text Search](/assets/img/ActivityLogIsNotTheActivity/04-structured-parsing-vs-free-text-search.png)
 
 <br/>
 
@@ -430,7 +432,7 @@ Check one tells you whether Monday Detection 1 can even resolve its `ResourceTyp
 
 ## 🥈 Act II: The Name Is Not the Binary
 
-![Act II](/assets/img/TheActivityLogIsNotTheActivity/4.png)
+![Act II — The Name Is Not the Binary](/assets/img/ActivityLogIsNotTheActivity/05-act-ii-name-is-not-the-binary.png)
 
 Rapid7's [BPFDoor and AVERAT report](https://www.rapid7.com/blog/post/tr-smtp-is-the-key-bpfdoor-averat-hitting-the-network-edge) describes a staging chain on Linux mail-security appliances: a dropper writes a shell script to the appliance's storage mount and runs it; the script copies two binaries from the appliance's add-on package directory into `/sbin` as `ntpdate` and `udevds`, launches each, and deletes it ten seconds later while the process keeps running. One of those payloads is the dropper re-executing itself as a watchdog; the other is AVERAT, which beacons out over SMTP. Both end up resident with no on-disk image.
 
@@ -446,6 +448,8 @@ Two filenames. The same report notes that the South Korean BPFDoor cluster rotat
 Here's the thing, though: Saturday and Sunday's Detection 2 already found the right *shape*. "Process launched from a path, file at that path deleted seconds later" is exactly the behavior that makes this chain distinctive, and it's behavior the operator can't easily drop — the whole point of the chain is to leave nothing to hash or quarantine. The shape was right. The names were the problem. Remove them and the detection gets stronger, not noisier, provided you replace the names with something that discriminates as well as they did.
 
 That something is *survival*. Legitimate execute-then-delete happens constantly on Linux — autoconf's `conftest` binaries, installer stubs in `/tmp`, package maintainer scripts — but in nearly every legitimate case the process *exits* and then the file is removed. The BPFDoor chain does it the other way around: the file is removed while the process is still running. That ordering — unlinked, then still acting — is the attacker's mechanism, not the attacker's costume.
+
+![Execute, Unlink, Survive](/assets/img/ActivityLogIsNotTheActivity/06-execute-unlink-survive.png)
 
 And the hunting queries have a different problem. Saturday Detection 3 and Sunday Detection 3 look for scripts via:
 
@@ -721,7 +725,7 @@ A shell script called `updIptable.php`, written by a binary and executed seconds
 
 ## 🎖 Honorable Mention: "Without Prior Installation Record" — Without Checking One
 
-![Honorable Mention](/assets/img/TheActivityLogIsNotTheActivity/5.png)
+![ScreenConnect — The Connection Gives It Away](/assets/img/ActivityLogIsNotTheActivity/07-screenconnect-connection-gives-it-away.png)
 
 [Sunday's Detection 4](https://devsecopsdadattack.com/2026-10-04-detection-engineering-brief-sunday-october-4-2026/) is titled *ScreenConnect Client Execution on Host Without Prior Installation Record*, drawing on [SANS ISC's reporting on ScreenConnect abuse](https://isc.sans.edu/diary/rss/33388) and arriving the same week as Microsoft's report on [phishing that abused MSP360 to deploy ScreenConnect](https://www.microsoft.com/en-us/security/blog/2026/09/29/phishing-abuses-rmm-tools-persistent-access/). The title describes exactly the right detection: the client appearing on a device where it never existed before. The query summarises every ScreenConnect execution and joins network activity — and never compares against a baseline. There is no "prior" anywhere in it. It's a ScreenConnect inventory with a detection's name on it.
 
@@ -780,7 +784,7 @@ Two changes from the source: identify the client by the connection arguments it'
 
 ## 🥊 Bonus Round: `split(ResourceId, "/")[6]` Is the Namespace, and Resource Groups Don't Have an Index 6
 
-![Bonus Round](/assets/img/TheActivityLogIsNotTheActivity/6.png)
+![ResourceId split indexing bug](/assets/img/ActivityLogIsNotTheActivity/08-resourceid-split-indexing-bug.png)
 
 Tuesday's Detection 1 and Detection 3 derive the resource type for their "distinct resource types deleted" threshold like this:
 
@@ -837,7 +841,7 @@ The general rule: if a string starts with its delimiter, index 0 is empty, and e
 
 ## 🪡 The Common Thread
 
-![Common-Thread](/assets/img/TheActivityLogIsNotTheActivity/7.png)
+![The Common Thread — Labels vs Behaviour](/assets/img/ActivityLogIsNotTheActivity/09-common-thread-labels-vs-behaviour.png)
 
 The last few editions have each had a version of the same lesson. Representation versus meaning. Character lists versus codepoint ranges. Stages versus chains. This week it's one level further down: **the label versus the mechanism, and the record versus the reality.**
 
@@ -853,7 +857,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheActivityLogIsNotTheActivity/8.png)
+![Detection to Action](/assets/img/ActivityLogIsNotTheActivity/10-outro-detection-to-action.png)
 
 <br/>
 
