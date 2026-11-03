@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![The Story Is Not the Process Tree](/assets/img/StoryIsNotTheProcessTree/01-hero-story-is-not-the-process-tree.png)
+![The Story Is Not the Process Tree](/assets/img/StoryIsNotTheProcessTree/Story%20Versus%20Telemetry.png)
 
 Short version of the last fortnight: one server, one Raspberry Pi, and one laptop all died in the same week. Mercury is apparently in retrograde about 90% of the time now. Everything's rebuilt, the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) is back on its feet, and it handed me twenty-six detections across seven days: six for the LiteLLM supply-chain compromise, four for AD CS ESC1/ESC8 abuse, three for the Node.js Brotli CVE, three for a malicious Claude Code-branded Cursor extension, two each for BeyondTrust, PHP, and Kubernetes isolation bypass, and one each for OpenCTI, ClickFix, NetamLoader, and Metasploit.
 
@@ -46,7 +46,7 @@ Same note as always: every replacement in this edition has been checked structur
 
 ## 🥇 Act I: ClickFix Never Has a Browser Parent
 
-![Act I — ClickFix Never Has a Browser Parent](/assets/img/StoryIsNotTheProcessTree/02-act-i-clickfix-never-has-a-browser-parent.png)
+![Act I — ClickFix Never Has a Browser Parent](/assets/img/StoryIsNotTheProcessTree/ClickFix%20Browser%20Parent%20Investigation.png)
 
 [Friday's only detection](https://devsecopsdadattack.com/2026-10-30-detection-engineering-brief-friday-october-30-2026/), drawn from [SANS ISC's latest ClickFix diary](https://isc.sans.edu/diary/rss/33466), is *ClickFix – Browser-Spawned Script Interpreter Execution*. The brief's intelligence context describes "the established ClickFix pattern" as a browser process spawning `cmd.exe`, `powershell.exe`, `mshta.exe`, or `wscript.exe`. The query does exactly that:
 
@@ -62,7 +62,7 @@ Here is what a ClickFix lure actually asks the victim to do. A fake CAPTCHA or f
 
 Getting around the browser sandbox is the whole design goal. The browser's only job in a ClickFix attack is writing to the clipboard. The Run dialog belongs to `explorer.exe`, so `explorer.exe` launches the pasted command. The newer "FileFix" variant swaps the Run dialog for the File Explorer address bar. That's still `explorer.exe`. The variant that tells the user to press **Win+X** and open Terminal runs the pasted command *inside* an interactive PowerShell whose ancestors are `WindowsTerminal.exe` and `explorer.exe`. In none of these copy-paste variants, which are the mechanism that defines ClickFix, does the browser call `CreateProcess`. The story says the user was "in the browser" when it happened, and the process tree has no record of that.
 
-![Story vs Tree — ClickFix](/assets/img/StoryIsNotTheProcessTree/03-clickfix-story-vs-tree.png)
+![Story vs Tree — ClickFix](/assets/img/StoryIsNotTheProcessTree/Ninja%20Cat’s%20Neon%20Forensics%20Desk.png)
 
 So the detection is aimed at the one parent the technique was built to avoid. When it does fire, it fires on the cases ClickFix *isn't*: drive-by exploits that break out of the renderer, browser-launched protocol handlers, and enterprise portals that launch scripts (the brief's own false-positive list). And it has a second, quieter problem in the network correlation:
 
@@ -271,7 +271,7 @@ Check one is the argument of this act, run against your own data. If browsers ap
 
 ## 🥈 Act II: Nobody Types the Compromised Version
 
-![Act II — Nobody Types the Compromised Version](/assets/img/StoryIsNotTheProcessTree/04-act-ii-nobody-types-the-compromised-version.png)
+![Act II — Nobody Types the Compromised Version](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Package%20Supply%20Chain%20Investigation.png)
 
 Microsoft's [LiteLLM 1.107.0 write-up](https://www.microsoft.com/en-us/security/blog/2026/10/23/inside-the-litellm-1-107-0-supply-chain-compromise-credential-theft-through-python-startup-hooks/) produced six detections across [Monday](https://devsecopsdadattack.com/2026-10-26-detection-engineering-brief-monday-october-26-2026/) and [Tuesday](https://devsecopsdadattack.com/2026-10-27-detection-engineering-brief-tuesday-october-27-2026/): two "startup hook file written to site-packages," two "Python outbound connection shortly after pip install," and two "pip installation of compromised version 1.107.0." Four of the six depend on the same anchor, a pip command line with the version string in it:
 
@@ -303,7 +303,7 @@ Nobody types the version, but every install writes it down. When pip, uv, poetry
 
 To be precise about what that proves: a `dist-info` write means the package's files landed on disk. The process that wrote them tells you how. A Python interpreter or `uv` writing them is *probably* an install. `cp`, `tar`, or a container runtime writing them *suggests* a copied or restored environment, which is still exposure, just arriving a different way. A process name is evidence, not proof, so the query labels these `LikelyInstaller` and `OtherWriter` and leaves the conclusion to the analyst. Neither label proves the code ran.
 
-![What Was Asked vs What Was Installed](/assets/img/StoryIsNotTheProcessTree/05-asked-vs-installed.png)
+![What Was Asked vs What Was Installed](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Cat%20Forensics%20Workstation.png)
 
 ### The KQL
 
@@ -480,7 +480,7 @@ Check one will almost certainly show `python3.x` / `python.exe` and maybe `uv`. 
 
 ## 🎖 Honorable Mention: kubelet Is the Story, containerd-shim Is the Parent
 
-![kubelet vs containerd-shim](/assets/img/StoryIsNotTheProcessTree/06-kubelet-vs-containerd-shim.png)
+![kubelet vs containerd-shim](/assets/img/StoryIsNotTheProcessTree/Kubelet%20Is%20the%20Story.png)
 
 [Wednesday's Detection 3](https://devsecopsdadattack.com/2026-10-28-detection-engineering-brief-wednesday-october-28-2026/), from [Securelist's cloud isolation-bypass research](https://securelist.com/cloud-infrastructure-isolation-bypass/121609/), looks for shells whose parent is a Kubernetes component:
 
@@ -521,6 +521,8 @@ DeviceProcessEvents
 | order by FirstExec desc
 ```
 
+![kubelet vs containerd-shim](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Kubernetes%20Control%20Center.png)
+
 Caveats: one shim can serve every container in a pod, so a sidecar or init container started late can look like an exec. Raise the grace period, or check the pod spec, before treating that as a finding. `exec`-type probes go through this exact path, which is why there's a repetition filter. And whether your sensor reports container processes with the shim as their initiating process depends on how it handles PID namespaces. Before trusting the query, run `DeviceProcessEvents | where FileName in~ ("sh","bash") | summarize count() by InitiatingProcessFileName` on a Kubernetes node. If the sensor doesn't see into containers, Defender for Containers' runtime sensor is the better source for this signal.
 
 <br/>
@@ -531,7 +533,7 @@ Caveats: one shim can serve every container in a pod, so a sidecar or init conta
 
 ## 🥊 Bonus Round: Joining on a FileName Is Joining on a Rumor
 
-![Name vs Identity Join](/assets/img/StoryIsNotTheProcessTree/07-name-vs-identity-join.png)
+![Name vs Identity Join](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Forensics_%20Filename%20Is%20Not%20Identity.png)
 
 [Thursday's NetamLoader detection](https://devsecopsdadattack.com/2026-10-29-detection-engineering-brief-thursday-october-29-2026/) wants a suspicious process that loads an unsigned image. Here's how it connects the two:
 
@@ -656,7 +658,7 @@ Before building any correlation on it, run `SecurityEvent | where EventID == 488
 
 ## 🪡 The Common Thread
 
-![The Common Thread — Ask What Wrote the Row](/assets/img/StoryIsNotTheProcessTree/08-common-thread-ask-what-wrote-the-row.png)
+![The Common Thread — Ask What Wrote the Row](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Feline%20Telemetry%20Detective.png)
 
 Last edition was about the label versus the mechanism and the record versus the reality. This week takes it one step further: **the narrative versus the instrumentation.**
 
@@ -672,7 +674,7 @@ This kind of detection content is published _daily_: fresh threat intel turned s
 
 <br/>
 
-![Detection to Action](/assets/img/StoryIsNotTheProcessTree/09-outro-detection-to-action.png)
+![Detection to Action](/assets/img/StoryIsNotTheProcessTree/Cyber%20Ninja%20Detection%20Command%20Center.png)
 
 <br/>
 
