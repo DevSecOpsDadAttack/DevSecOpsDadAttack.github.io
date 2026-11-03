@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "KQL Detection of the Week: The Story Is Not the Process Tree"
-subtitle: "Why ClickFix Never Has a Browser Parent, Why Nobody Types the Compromised Version, and Why Joining on a FileName Is Joining on a Rumor"
+title: "KQL Detection of the Week: Your Detection Is Looking for a Process That Never Existed"
+subtitle: "Why ClickFix Breaks Browser-Parent Assumptions, How LiteLLM Hides in Plain Sight, and Why Filename Joins Blame the Wrong Process"
 date: 2026-11-02
 author: DevSecOpsDad
 tags:
@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![The Story Is Not the Process Tree](/assets/img/StoryIsNotTheProcessTree/Story%20Versus%20Telemetry.png)
+![Your Detection Is Looking for a Process That Never Existed](/assets/img/StoryIsNotTheProcessTree/Story%20Versus%20Telemetry.png)
 
 Short version of the last fortnight: one server, one Raspberry Pi, and one laptop all died in the same week 💀. Mercury is apparently in retrograde about 90% of the time now. Everything's rebuilt, the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) is back on its feet, and it handed me twenty-six detections across seven days: six for the LiteLLM supply-chain compromise, four for AD CS ESC1/ESC8 abuse, three for the Node.js Brotli CVE, three for a malicious Claude Code-branded Cursor extension, two each for BeyondTrust, PHP, and Kubernetes isolation bypass, and one each for OpenCTI, ClickFix, NetamLoader, and Metasploit.
 
@@ -18,6 +18,8 @@ Read them back to back and one shape keeps showing up. **Eleven of the twenty-si
 A threat report is a story. *The user visited a malicious page and ran a command. The developer installed the compromised version. The attacker exec'd into the cluster through kubelet.* Those are sentences with subjects, verbs, and causes. The pipeline translated the cause in each sentence into a parent in a process tree. The process tree isn't a record of causes, though. It's a record of which process called `CreateProcess` or `execve`, and that is very often not the thing the story was about.
 
 **The story says the browser. The tree says explorer.exe.**
+
+That's what the title means. PowerShell runs and the browser runs, so both processes exist. What never existed is the browser-to-PowerShell parent-child relationship the detection was waiting for.
 
 Act I is ClickFix: a technique whose whole design goal is to keep the browser out of the process tree, detected by looking for the browser in the process tree. Act II is LiteLLM: six detections built around the version string the victim typed, for an attack where the victim never types the version. The honorable mention is Kubernetes, where kubelet is the story and `containerd-shim` is the parent. The bonus round is NetamLoader, which joins a child process to its image loads by *filename*. That's a join on a rumor about a process, not on the process. A lightning round on `SecurityEvent.EventData` closes it out, where the rendered message is the story and the XML is the record.
 
