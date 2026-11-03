@@ -74,7 +74,7 @@ SuspiciousChildProcs
 | where isempty(NetworkTime) or (NetworkTime >= ProcessTime and NetworkTime <= ProcessTime + NetworkCorrelationWindow)
 ```
 
-That's the left-outer-then-filter pattern from [The Stage Is Not the Chain](https://www.hanley.cloud/2026-09-14-KQL-Detection-of-the-Week-The-Stage-Is-Not-The-Chain/). If the device has *any* `cmd.exe` or `powershell.exe` network event in the seven-day lookback, the outer join produces matched rows, `NetworkTime` is never empty, and every one of those rows that falls outside the five-minute window gets filtered. The suspicious process row disappears completely instead of being reported without network enrichment. On a typical Windows fleet, where PowerShell talks to the network all day, that removes most of the results. The join is also keyed on `DeviceId` alone, so any interpreter on the device, for any user, counts as "follow-on" activity for any other interpreter.
+That's the left-outer-then-filter pattern from [The Stage Is Not the Chain](https://devsecopsdadattack.com/2026-09-14-KQL-Detection-of-the-Week-The-Stage-Is-Not-The-Chain/). If the device has *any* `cmd.exe` or `powershell.exe` network event in the seven-day lookback, the outer join produces matched rows, `NetworkTime` is never empty, and every one of those rows that falls outside the five-minute window gets filtered. The suspicious process row disappears completely instead of being reported without network enrichment. On a typical Windows fleet, where PowerShell talks to the network all day, that removes most of the results. The join is also keyed on `DeviceId` alone, so any interpreter on the device, for any user, counts as "follow-on" activity for any other interpreter.
 
 <br/>
 
@@ -589,7 +589,7 @@ union ByName, ByIdentity
 
 The name join returns one row, and it's the wrong process. The binary that actually loaded the DLL (PID 7300) was collapsed into its 09:00 first sighting, which is five hours outside the window, so it's gone. A *different* binary that happens to share the name, launched five seconds later from Downloads, takes the blame. The analyst opens the row, sees a confident attribution to the wrong file and the wrong hash, and quarantines the wrong thing. Nothing about the result looks broken.
 
-The identity join needs no time window at all. `InitiatingProcessId` plus `InitiatingProcessCreationTime` on the image-load side *is* the process that loaded it, and it matches exactly one row on the process side. The window in the brief's version was there to make up for not knowing which process was which. With identity, there's nothing to make up for. That's the third time this series has made the point ([The Character Is Not the Payload](https://www.hanley.cloud/2026-09-08-KQL-Detection-of-the-Week-The-Character-Is-Not-The-Payload/) joined on `DeviceName` alone; [last edition's](https://devsecopsdadattack.com/2026-10-06-KQL-Detection-of-the-Week-The-Activity-Log-Is-Not-The-Activity/) BPFDoor query keyed on PID plus creation time because PIDs recycle). It keeps coming back because name joins never error. They just answer a different question.
+The identity join needs no time window at all. `InitiatingProcessId` plus `InitiatingProcessCreationTime` on the image-load side *is* the process that loaded it, and it matches exactly one row on the process side. The window in the brief's version was there to make up for not knowing which process was which. With identity, there's nothing to make up for. That's the third time this series has made the point ([The Character Is Not the Payload](https://devsecopsdadattack.com/2026-09-08-KQL-Detection-of-the-Week-The-Character-Is-Not-The-Payload/) joined on `DeviceName` alone; [last edition's](https://devsecopsdadattack.com/2026-10-05-KQL-Detection-of-the-Week-The-Activity-Log-Is-Not-The-Activity/) BPFDoor query keyed on PID plus creation time because PIDs recycle). It keeps coming back because name joins never error. They just answer a different question.
 
 The same query has a second issue worth checking: `DeviceImageLoadEvents | where IsSigned != true`. Signature information isn't part of the documented `DeviceImageLoadEvents` schema. It lives in `DeviceFileCertificateInfo`, keyed on `SHA1`. Run `DeviceImageLoadEvents | getschema | where ColumnName has "Sign"` before trusting that line. If it returns nothing, the filter can't resolve. The fix:
 
@@ -609,7 +609,7 @@ DeviceImageLoadEvents
                                "Unsigned")
 ```
 
-Keep `NoCertificateRecord` as its own state. As [The String Is Not the Thing](https://www.hanley.cloud/) covered, a missing record is not evidence of a missing signature.
+Keep `NoCertificateRecord` as its own state. As [The String Is Not the Thing](https://devsecopsdadattack.com/2026-09-01-KQL-Detection-of-the-Week-The-String-Is-Not-The-Thing/) covered, a missing record is not evidence of a missing signature.
 
 <br/>
 
@@ -756,8 +756,8 @@ References:
 - MITRE ATT&CK. *IDE Extensions (T1176.002).* <https://attack.mitre.org/techniques/T1176/002/>
 - MITRE ATT&CK. *SSH Authorized Keys (T1098.004).* <https://attack.mitre.org/techniques/T1098/004/>
 - MITRE ATT&CK. *Steal or Forge Authentication Certificates (T1649).* <https://attack.mitre.org/techniques/T1649/>
-- DevSecOpsDadAttack.com. *Last Edition: The Activity Log Is Not the Activity.* <https://devsecopsdadattack.com/2026-10-06-KQL-Detection-of-the-Week-The-Activity-Log-Is-Not-The-Activity/>
-- DevSecOpsDad.com. *The Stage Is Not the Chain.* <https://www.hanley.cloud/2026-09-14-KQL-Detection-of-the-Week-The-Stage-Is-Not-The-Chain/>
+- DevSecOpsDadAttack.com. *Last Edition: The Activity Log Is Not the Activity.* <https://devsecopsdadattack.com/2026-10-05-KQL-Detection-of-the-Week-The-Activity-Log-Is-Not-The-Activity/>
+- DevSecOpsDadAttack.com. *The Stage Is Not the Chain.* <https://devsecopsdadattack.com/2026-09-14-KQL-Detection-of-the-Week-The-Stage-Is-Not-The-Chain/>
 
 <br/>
 
