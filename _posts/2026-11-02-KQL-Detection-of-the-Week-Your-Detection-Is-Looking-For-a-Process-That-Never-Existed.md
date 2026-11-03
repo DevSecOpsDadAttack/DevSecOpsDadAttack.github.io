@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![Your Detection Is Looking for a Process That Never Existed](/assets/img/StoryIsNotTheProcessTree/Story%20Versus%20Telemetry.png)
+![Your Detection Is Looking for a Process That Never Existed](/assets/img/StoryIsNotTheProcessTree/Cyberpunk%20Cat%20Investigates%20the%20Gap.png)
 
 Short version of the last fortnight: one server, one Raspberry Pi, and one laptop all died in the same week 💀. Mercury is apparently in retrograde about 90% of the time now. Everything's rebuilt, the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) is back on its feet, and it handed me twenty-six detections across seven days: six for the LiteLLM supply-chain compromise, four for AD CS ESC1/ESC8 abuse, three for the Node.js Brotli CVE, three for a malicious Claude Code-branded Cursor extension, two each for BeyondTrust, PHP, and Kubernetes isolation bypass, and one each for OpenCTI, ClickFix, NetamLoader, and Metasploit.
 
