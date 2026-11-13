@@ -2,7 +2,7 @@
 layout: post
 title: "KQL Detection of the Week: Two Things Called SharePoint"
 subtitle: "Why ToolShell Was Hunted in the Wrong SharePoint, a Stolen App Secret in the Wrong Sign-In Log, and a 2023 Cisco CVE with a 2001 URL"
-date: 2026-12-09
+date: 2026-11-12
 author: DevSecOpsDad
 tags:
   - KQL Detection of the Week
