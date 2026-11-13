@@ -9,7 +9,7 @@ tags:
   - kql
 ---
 
-![Two Things Called SharePoint](/assets/img/TwoThingsCalledSharePoint/Hero.png)
+![Two Things Called SharePoint](/assets/img/TwoThingsCalledSharepoint/Hero.png)
 
 Five weeks ago, [The Activity Log Is Not the Activity](https://devsecopsdadattack.com/2026-10-05-KQL-Detection-of-the-Week-The-Activity-Log-Is-Not-The-Activity/) argued that a table records only certain classes of event, so a detection has to start by asking whether its table can see the attack at all. [Last week's edition](https://devsecopsdadattack.com/2026-11-02-KQL-Detection-of-the-Week-Your-Detection-Is-Looking-For-a-Process-That-Never-Existed/) argued that the parent a story names often isn't the parent the process tree records. This week the [DevSecOpsDadAttack Detection Engineering pipeline](https://devsecopsdadattack.com/detectionengineering/) handed me twenty-three detections across seven days. Six cover ARTEX-driven OAuth abuse, four cover Storm-2603's ToolShell intrusions, three cover trojanized Inno Setup installers, two each cover Cisco IOS XE, the malicious Cursor extension, and AD CS, and one each covers BeyondTrust, Ivanti, email spoofing, and Metasploit.
 
@@ -57,7 +57,7 @@ The column counts detections that can't see their own attack because one of the 
 
 ## 🥇 Act I: Two Things Called "Sign-In," Two Things Called "the App"
 
-![Act I — Two Things Called Sign-In](assets/img/TwoThingsCalledSharepoint/Cyber Ninja Cat_ Service Principal Flow.png) 
+![Act I — Two Things Called Sign-In](/assets/img/TwoThingsCalledSharepoint/Cyber%20Ninja%20Cat_%20Service%20Principal%20Flow.png) 
 
 Microsoft's two ARTEX write-ups ([the November 5 post](https://www.microsoft.com/en-us/security/blog/2026/11/05/threat-actors-use-agentic-ai-tooling-to-find-and-abuse-exposed-secrets/) and [the November 6 follow-up on Storm-3358](https://www.microsoft.com/en-us/security/blog/2026/11/06/artex-abuse-expands-as-cybercriminals-target-financial-sector/)) produced six detections across Friday, Saturday, and Sunday. The story they describe is short: an agentic framework searches GitHub for OAuth application secrets that developers committed by accident, then uses those secrets to authenticate *as the application* and act inside the victim's tenant.
 
@@ -86,7 +86,7 @@ Five of the six wait for a consent. The sixth waits for the app to show up in th
 | "the app acted in the tenant" | `AzureActivity` | `MicrosoftGraphActivityLogs` and `AuditLogs` |
 | "this app" | consent `TargetResources[0].id` (object ID) joined to `InitiatedBy.app.appId` (client ID) | `InitiatedBy.app.servicePrincipalId` is the object ID |
 
-![Two Meanings — ARTEX](/assets/img/TwoThingsCalledSharePoint/ActI-StoryVsTerritory.png)
+![Two Meanings — ARTEX](/assets/img/TwoThingsCalledSharepoint/Cyber%20Ninja%20Forensics%20Lab.png)
 
 <br/>
 
@@ -330,7 +330,7 @@ Check one is the argument of this act, run against your own data. Check two show
 
 ## 🥈 Act II: Two Things Called SharePoint
 
-![Act II — Two Things Called SharePoint](/assets/img/TwoThingsCalledSharePoint/ActII-SharePointFarm.png)
+![Act II — Two Things Called SharePoint](/assets/img/TwoThingsCalledSharepoint/Cyber%20Ninja%20Cat%20Tracks%20SharePoint%20Intrusion.png)
 
 Securelist's [Storm-2603 SOC Files write-up](https://securelist.com/storm-2603-fileless-toolshell-attack/121467/) produced four detections across Thursday and Friday. Two watch `w3wp.exe` spawn suspicious children in `DeviceProcessEvents`. Two look for unusual SharePoint operations in `OfficeActivity`:
 
@@ -473,6 +473,8 @@ ToolPanePosts
 
 ### The lines that do the work
 
+![Two Things Called Setup](/assets/img/TwoThingsCalledSharepoint/Cyber%20Ninja%20Investigates%20SharePoint%20Logs.png)
+
 `W3CIISLog` is the fix, for the same reason `AADServicePrincipalSignInLogs` was in Act I. It's the other meaning of the word: the SharePoint that was actually attacked.
 
 `RequestShape` keeps the broad hunt and the precise match apart. The where clause deliberately accepts partial matches. `FullExploitShape` (spoofed referer *and* edit mode) is the documented exploit request, and it's the only shape that can reach severity 2. `SpoofedRefererOnly` is still worth a look, because legitimate web-part editing doesn't arrive from the sign-out page. `EditModeOnly` also matches people legitimately editing web parts, which is why it sits at severity 5. Drop that branch entirely if it's noisy in your farm.
@@ -535,7 +537,7 @@ Check two is the act in one query. Expect the hosts it returns to be your tenant
 
 ## 🎖 Honorable Mention: Two Things Called Cisco IOS
 
-![Two Things Called Cisco IOS](/assets/img/TwoThingsCalledSharePoint/HonorableMention-CiscoSyslog.png)
+![Two Things Called Cisco IOS](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Cat%20Decodes%20Network%20Logs.png)
 
 Friday D4 and Saturday D3 both come from a [SANS ISC diary](https://isc.sans.edu/diary/rss/33492) about scanning that the brief says is "suspected" to target CVE-2023-20198, the Cisco IOS XE web UI privilege escalation from October 2023. Saturday's query looks for these URI fragments in `CommonSecurityLog.RequestURL`:
 
@@ -599,7 +601,7 @@ Caveats: this detects exploitation, not probing. A scan that fails leaves nothin
 
 ## 🥊 Bonus Round: Two Things Called Setup
 
-![Two Things Called Setup](/assets/img/TwoThingsCalledSharePoint/Bonus-InnoEnvelope.png)
+![Two Things Called Setup](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Cat%20Investigates%20a%20Temp%20File.png)
 
 Microsoft's [fake-download campaign write-up](https://www.microsoft.com/en-us/security/blog/2026/11/03/fake-download-campaign-uses-trojanized-installers-deliver-monetization-payloads/) produced three Inno Setup detections on Wednesday and Thursday. Thursday's two share this anchor:
 
@@ -662,6 +664,8 @@ Validate the anchor before anything else: `DeviceProcessEvents | where ProcessCo
 <br/>
 
 ### ⚡ Lightning Round: Names With Nothing Behind Them
+
+![Lightning Round](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Cat%20Investigates%20False%20Assumptions.png)
 
 The acts were about names with two meanings. The lightning round is the opposite: names with none. [The Field That Wasn't There](https://devsecopsdadattack.com/2026-08-24-KQL-Detection-of-the-Week-The-Field-That-Wasnt-There/) was about fields that exist in the schema but aren't populated. Most of these are a step worse. Five quick ones, including one last homonym and two repeat offenders:
 
@@ -726,7 +730,7 @@ And one that isn't a column at all: **Wednesday's Inno Setup detection carries t
 
 ## 🪡 The Common Thread
 
-![The Common Thread — Which One Did You Mean?](/assets/img/TwoThingsCalledSharePoint/CommonThread.png)
+![The Common Thread — Which One Did You Mean?](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Cat’s%20Term%20Disambiguation%20Board.png)
 
 This series has been working down a ladder. Representation versus meaning. The label versus the mechanism. Five weeks ago, the log versus the activity: whether a table records a class of event at all. Last week, the narrative versus the instrumentation: which process actually wrote the row. This week's failures sit on the rung below all of those, at the first step a detection takes: **turning a word in the report into a thing in the telemetry.**
 
@@ -773,7 +777,7 @@ This kind of detection content is published _daily_: fresh threat intel turned s
 
 <br/>
 
-![Detection to Action](/assets/img/TwoThingsCalledSharePoint/Outro.png)
+![Detection to Action](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Ninja%20Cat%20Completes%20Detection%20Checklist.png)
 
 <br/>
 
