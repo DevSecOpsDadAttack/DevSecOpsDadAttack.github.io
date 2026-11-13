@@ -589,7 +589,7 @@ Syslog
 | order by FirstSeen desc
 ```
 
-![Probe vs Breach](/assets/img/TwoThingsCalledSharePoint/HonorableMention-ProbeVsBreach.png)
+![Probe vs Breach](/assets/img/TwoThingsCalledSharepoint/Cyber%20Ninja%20Cat_%20Probe%20vs%20Breach.png)
 
 Caveats: this detects exploitation, not probing. A scan that fails leaves nothing on the device. That's acceptable, because what you need to know is whether a probe succeeded, and only the device can say. Legitimate admins who use the web UI generate all three message types, so the signal is the *combination* plus an unfamiliar `WebUser`, or an `InstalledFiles` entry nobody scheduled. The verdicts are deliberately named "observed": the query summarizes a week per device and never checks which message came first. If order matters to your triage, compare the per-signal timestamps before treating a login and a config push as one session. Only an install message with an `ADD` and a filename reaches `WebUIInstallAddObserved`. Other install-operation messages land in `WebUIInstallOperationOther`, and in either case the filename is the thing to investigate. Check the device's `logging` configuration before trusting a zero. Severity-6 messages are dropped if the trap level is set to `warnings`. And the best detection here isn't a query: `no ip http server` and `no ip http secure-server` on every internet-facing device.
 
