@@ -57,7 +57,7 @@ The column counts detections that can't see their own attack because one of the 
 
 ## 🥇 Act I: Two Things Called "Sign-In," Two Things Called "the App"
 
-![Act I — Two Things Called Sign-In](/assets/img/TwoThingsCalledSharePoint/ActI-ServicePrincipal.png)
+![Act I — Two Things Called Sign-In](assets/img/TwoThingsCalledSharepoint/Cyber Ninja Cat_ Service Principal Flow.png) 
 
 Microsoft's two ARTEX write-ups ([the November 5 post](https://www.microsoft.com/en-us/security/blog/2026/11/05/threat-actors-use-agentic-ai-tooling-to-find-and-abuse-exposed-secrets/) and [the November 6 follow-up on Storm-3358](https://www.microsoft.com/en-us/security/blog/2026/11/06/artex-abuse-expands-as-cybercriminals-target-financial-sector/)) produced six detections across Friday, Saturday, and Sunday. The story they describe is short: an agentic framework searches GitHub for OAuth application secrets that developers committed by accident, then uses those secrets to authenticate *as the application* and act inside the victim's tenant.
 
