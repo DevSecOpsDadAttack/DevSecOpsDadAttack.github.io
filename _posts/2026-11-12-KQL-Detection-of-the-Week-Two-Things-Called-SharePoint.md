@@ -777,7 +777,7 @@ This kind of detection content is published _daily_: fresh threat intel turned s
 
 <br/>
 
-![Detection to Action](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Ninja%20Cat%20Completes%20Detection%20Checklist.png)
+![Detect! (The Right Thing)](/assets/img/TwoThingsCalledSharepoint/Cyberpunk%20Ninja%20Cat%20Completes%20Detection%20Checklist.png)
 
 <br/>
 
